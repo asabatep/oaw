@@ -1,9 +1,9 @@
 renderer_1:
-  privileged: true
-  build: ./renderer
-  restart: always
-  shm_size: '1gb'
-  command: node /opt/prerender/server.js
+    privileged: true
+build: ./renderer
+restart: always
+shm_size: '1gb'
+command: node /opt/prerender/server.js
 
 renderer_2:
   privileged: true
@@ -25,8 +25,6 @@ proxy:
     - "18088:18088"         
   command: node /opt/proxy/index.js
   restart: always
-  links:
-    - nginx  
   container_name: tawdis_proxy   
 
 nginx:
@@ -36,8 +34,9 @@ nginx:
     - ./nginx/certs/server.crt:/etc/nginx/ssl/server.crt
     - ./nginx/certs/server.key:/etc/nginx/ssl/server.key        
   links:
+    - mysql
     - renderer_1
     - renderer_2
     - renderer_3        
-  restart: always
-  container_name: tawdis_nginx
+   restart: always
+   container_name: tawdis_nginx
