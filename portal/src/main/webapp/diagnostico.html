@@ -1,0 +1,495 @@
+<!--
+Copyright (C) 2017 MINHAFP, Ministerio de Hacienda y Función Pública, 
+This program is licensed and may be used, modified and redistributed under the terms
+of the European Public License (EUPL), either version 1.2 or (at your option) any later 
+version as soon as they are approved by the European Commission.
+Unless required by applicable law or agreed to in writing, software distributed under the 
+License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF 
+ANY KIND, either express or implied. See the License for the specific language governing 
+permissions and more details.
+You should have received a copy of the EUPL1.2 license along with this program; if not, 
+you may find it at http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32017D0863
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="es" lang="es">
+<head>
+<title>RASTREADOR WEB - Servicio de diagn&oacute;stico</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="keywords" content="inteco,malware,rastreador" />
+<meta name="version" content="4.3.2" />
+<!-- Bootstrap -->
+<link href="/oaw/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="styles/estilo.css" />
+	<link rel="icon" href="images/favicon.ico" type="image/x-icon" />
+
+	<script src="/oaw/js/jquery-3.1.1.min.js"></script>
+</head>
+
+<body>
+	<div id="cabeza">
+		<h1>
+			<img class="pull-left" src="/oaw/images/logo.jpg"
+				alt="Observatorio de Accesibilidad Web" /> <img
+				src="/oaw/images/logo-mptfp.png"
+				alt="MINHAFP - Ministerio de Pol&iacute;tica Territorial y Funci&oacute;n P&uacute;blica" width="265px"/>
+		</h1>
+	</div>
+	<!-- fin cabecera -->
+
+	<div id="main">
+		<div id="cuerpoprincipal">
+
+			<div id="migas">
+				<p class="sr-only">Est&aacute; usted en</p>
+				<ol class="breadcrumb">
+					<li class="active"><span class="glyphicon glyphicon-home"
+						aria-hidden="true"></span>Servicio diagn&oacute;stico</li>
+				</ol>
+			</div>
+
+			<div id="cajaformularios">
+				<h2>Servicio de diagn&oacute;stico</h2>
+
+				<form id="basic_service" action="/oaw/conexion_oaw.jsp"
+					method="post" enctype="multipart/form-data">
+					<p>El servicio on-line de diagn&oacute;stico de la
+						Accesibilidad web remitir&aacute; en diferido, al correo
+						electr&oacute;nico indicado, el informe de la web o c&oacute;digo
+						fuente analizado. Las peticiones son encoladas y procesadas
+						progresivamente.</p>
+
+					<p>Puede realizar el an&aacute;lisis de una p&aacute;gina web
+						p&uacute;blica en Internet, o del c&oacute;digo fuente de una
+						p&aacute;gina interna a la que el analizador no pueda acceder (por
+						ejemplo una Intranet o una p&aacute;gina que requiera
+						autenticaci&oacute;n previa mediante certificado
+						electr&oacute;nico).</p>
+
+					<p>
+						<strong>Nota:</strong> En caso de que rellene los campos URL y
+						c&oacute;digo, se analizar&aacute; unicamente la URL.
+					</p>
+
+					<fieldset class="servicioAccesibilidad">
+						<legend>Destinatario</legend>
+						<div class="form-inline">
+							<label for="correo"> <span style="font-weight: bold">Correo
+									electr&oacute;nico:</span>
+							</label> <input id="correo" name="correo" size="50" type="email"
+								required="required" class="form-control" />
+						</div>
+					</fieldset>
+
+					<style type="text/css">
+.servicioAccesibilidad {
+	width: 98% !important;
+}
+
+#tipo-analisis {
+	border: 0 !important;
+}
+
+#tipo-analisis label {
+	font-weight: bold;
+	padding-left: 5px;
+}
+
+#tipo-analisis {
+	column-count: 3;
+	-moz-columns: 3;
+	width: 100%;
+}
+
+fieldset#urlset, fieldset#source {
+	display: none;
+}
+
+fieldset p {
+	margin: 5px 0;
+}
+
+#opciones-rastreo {
+	border: 0 !important;
+}
+
+#cajaformularios form, #cajaformularios form fieldset {
+	background-color: #fff;
+}
+
+#cajaformularios fieldset.servicioAccesibilidad, #cajaformularios fieldset.servicioAccesibilidad fieldset
+	{
+	border: 1px solid #e5e5e5;
+	margin-top: 25px;
+	padding: 15px 25px;
+}
+</style>
+
+					<fieldset class="servicioAccesibilidad">
+						<legend>Seleccionar el tipo de an&aacute;lisis</legend>
+						<ul>
+							<li class="col-sm-3">
+								<div class="form-inline">
+									<input type="radio" name="type" id="radio-1" class="radio"
+										checked="checked" value="url" /> <label for="radio-1">Sitio
+										Web</label>
+								</div>
+								<p>
+									Analiza un sitio web a partir de una URL. <span
+										data-toggle="tooltip" tabindex="0"
+										title="An&aacute;lisis online de la/s p&aacute;gina/s de un sitio web p&uacute;blico en Internet a partir de una URL inicial.">
+										<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+										<span class="tooltiptext sr-only">An&aacute;lisis
+											online de la/s p&aacute;gina/s de un sitio web p&uacute;blico
+											en Internet a partir de una URL inicial.</span>
+									</span>
+								</p>
+							</li>
+							<li class="col-sm-3">
+								<div class="form-inline">
+									<input type="radio" name="type" id="radio-2" class="radio"
+										value="lista_urls" /> <label for="radio-2">Conjunto
+										de URLs</label>
+								</div>
+								<p>
+									Analiza un conjunto cerrado de URLs. <span
+										data-toggle="tooltip" tabindex="0"
+										title="An&aacute;lisis online de un conjunto predefinido de p&aacute;ginas de un sitio web p&uacute;blico en Internet.">
+										<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+										<span class="tooltiptext sr-only">An&aacute;lisis
+											online de un conjunto predefinido de p&aacute;ginas de un
+											sitio web p&uacute;blico en Internet.</span>
+									</span>
+								</p>
+							</li>
+							<li class="col-sm-3">
+								<div class="form-inline">
+									<input type="radio" name="type" id="radio-3" class="radio"
+										value="c&oacute;digo_fuente" /> <label for="radio-3">C&oacute;digo
+										fuente</label>
+								</div>
+								<p>
+									Analiza el c&oacute;digo fuente introducido <span
+										data-toggle="tooltip" tabindex="0"
+										title="An&aacute;lisis del c&oacute;digo fuente de una p&aacute;gina (p. ej. p&aacute;gina de una Intranet a la que el analizador no pueda acceder).">
+										<span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+										<span class="tooltiptext sr-only">An&aacute;lisis del
+											c&oacute;digo fuente de una p&aacute;gina (p. ej.
+											p&aacute;gina de una Intranet a la que el analizador no pueda
+											acceder).</span>
+									</span>
+								</p>
+							</li>
+						</ul>
+					</fieldset>
+
+					<fieldset class="servicioAccesibilidad" id="crawler">
+						<legend>An&aacute;lisis de sitio web</legend>
+						<div>
+							<p class="form-inline">
+								<label for="url"> <span class="bold">URL del
+										portal o p&aacute;gina a analizar:</span></label> <input id="url"
+									class="form-control" type="url" name="url" size="80" />
+							</p>
+							<fieldset>
+								<legend>Opciones de rastreo</legend>
+
+								<p>La profundidad y la amplitud determinan cuantas
+									p&aacute;ginas se analizar&aacute;n en el informe
+									(profundidad*amplitud) y c&oacute;mo se hace la
+									selecci&oacute;n aleatoria de &eacute;stas. Si se desea
+									analizar una p&aacute;gina en concreto se puede indicar su URL
+									y especificar profundidad=1 y amplitud=1</p>
+
+								<p class="form-inline">
+									<label for="profundidad">Profundidad:</label> <select
+										id="profundidad" name="profundidad" class="form-control">
+										<option selected="selected" value="1">1</option>
+										<option value="2">2</option>
+										<option value="3">3</option>
+										<option value="4">4</option>
+									</select>
+								</p>
+
+								<p class="form-inline">
+									<label for="amplitud">Amplitud:</label> <select id="amplitud"
+										name="amplitud" class="form-control">
+										<option selected="selected" value="1">1</option>
+										<option value="2">2</option>
+										<option value="3">3</option>
+										<option value="4">4</option>
+										<option value="5">5</option>
+										<option value="6">6</option>
+										<option value="7">7</option>
+										<option value="8">8</option> 
+									</select>
+								</p>
+
+								<p>Si desea que la selecci&oacute;n aleatoria de
+									p&aacute;ginas se realice dentro del &uacute;ltimo
+									&quot;directorio&quot; (hasta la &uacute;ltima &quot;/&quot;)
+									indicado en la URL (por ejemplo
+									http://www.dominio.com/directorio/pagina), marque la siguiente
+									opci&oacute;n.</p>
+
+								<p>
+									<label for="inDirectory"> <input id="inDirectory"
+										name="inDirectory" type="checkbox" value="true" />
+									</label> <strong> <label for="inDirectory">No rastrear
+											fuera del directorio</label>
+									</strong>
+								</p>
+							</fieldset>
+
+						</div>
+					</fieldset>
+
+					<fieldset class="servicioAccesibilidad" id="urlset">
+						<legend>An&aacute;lisis de conjunto de URLs</legend>
+						<div>
+							<p>
+								<label for="urls"><span class="bold">Listado de
+										p&aacute;ginas a analizar:</span><br /></label>
+								<textarea id="urls" class="form-control" name="urls" rows="10" 
+									cols="50"></textarea>
+								<span style="display: block; padding-left: 5px">Introduce
+									una URL por l&iacute;nea. Solo se analizar&aacute;n un
+									m&aacute;ximo de <span id="maxUrl">17</span> p&aacute;ginas</span>
+							</p>
+						</div>
+					</fieldset>
+
+					<fieldset class="servicioAccesibilidad" id="source">
+						<legend>An&aacute;lisis de c&oacute;digo fuente</legend>
+						<div>
+							<p>
+								<label for="content"><span class="bold">C&oacute;digo
+										fuente a analizar (tama&ntilde;o m&aacute;ximo del fichero 4MB):</span><br /></label> <input id="content"
+									class="form-control" name="content" type="file" />
+							</p>
+						</div>
+					</fieldset>
+
+					<fieldset class="servicioAccesibilidad" id="historico">
+						<legend>Hist&oacute;rico</legend>
+						<p>El servicio de diagn&oacute;stico puede guardar el
+							resultado del an&aacute;lisis asoci&aacute;ndolo a la url (p. ej.
+							para www.dominio.es) e incorporar en el informe su evolutivo
+							respecto a ejecuciones anteriores.</p>
+						<input id="registerAnalysis" type="checkbox"
+							name="registerAnalysis" value="true" disabled="true" /> <label
+							id="lb-registerAnalysis" for="registerAnalysis"
+							style="padding-left: 7px"> <span class="bold">Añadir
+								al hist&oacute;rico <span id="disabled_info">(Esta opción
+									solo está disponible para análisis de 17 páginas)</span>
+						</span>
+						</label> <span class="help-block">Guarda los resultados y añade el
+							evolutivo en el informe.</span>
+					</fieldset>
+
+					<fieldset class="servicioAccesibilidad">
+						<legend>Tipo de informe</legend>
+
+						<p>El servicio generar&aacute; un informe con el detalle de
+							todos los problemas seg&uacute;n la metodolog&iacute;a de alguno
+							de los siguientes Observatorios de Accesibilidad:</p>
+
+						<ul class="informes">
+
+							<!-- Nueva metodología -->
+
+  							<li><input id="informe-obs-3" type="radio" name="informe"
+								value="observatorio-3" checked> <label
+									for="informe-obs-3">Observatorio UNE 2012 (versi&oacute;n 2)</label> <span
+									class="help-block"> Informe conforme a la <a
+										href="http://administracionelectronica.gob.es/PAe/accesibilidad/metodologiaUNE2012v2">metodolog&iacute;a
+											del Observatorio de Accesibilidad, basada en la UNE
+											139803:2012</a>.
+								</span></li> 
+
+
+							<li><input id="informe-obs-2" type="radio" name="informe"
+								value="observatorio-2"> <label
+									for="informe-obs-2">Observatorio UNE 2012 (antigua)</label> <span
+									class="help-block"> Informe conforme a la <a
+										href="http://administracionelectronica.gob.es/PAe/accesibilidad/metodologiaUNE2012">metodolog&iacute;a
+											del Observatorio de Accesibilidad, basada en la UNE
+											139803:2012</a>.
+								</span></li>
+							<li><input id="informe-obs" type="radio" name="informe"
+								value="observatorio-1"> <label for="informe-obs">Observatorio
+										UNE 2004</label> <span class="help-block"> Informe conforme a
+										la <a
+										href="http://administracionelectronica.gob.es/PAe/accesibilidad/metodologiaUNE2004">metodolog&iacute;a
+											del Observatorio de Accesibilidad, basada en la UNE
+											139803:2004</a>.
+								</span></li>
+						</ul>
+
+						<div>
+							<p>Otras opciones de configuraci&oacute;n:</p>
+							<ul class="informes">
+								<li><input id="informe-nobroken" type="checkbox"
+									name="informe-nobroken" value="true" checked="checked">
+										<label for="informe-nobroken"><strong>Sin
+												comprobaci&oacute;n de enlaces rotos</strong></label> <span
+										class="help-block"> Acelera la ejecuci&oacute;n del
+											servicio de diagn&oacute;stico al no verificar todos los
+											enlaces existentes en la p&aacute;gina analizada. </span></li>
+							</ul>
+						</div>
+					</fieldset>
+					<p id="pCenter">
+						<input id="usuario" name="usuario" type="hidden"
+							value="diagnostico" /> <input name="submit" type="submit"
+							value="Solicitar informe" class="btn btn-primary btn-lg" />
+							<a href="/oaw/secure/CargarObservatorio.do" class="btn btn-default btn-lg">Volver</a>
+					</p>
+				</form>
+				<script type="text/javascript">
+					var userr = document.getElementById("usuario");
+					userr.value = readCookie('Jesi_Template_Username');
+				</script>
+			</div>
+			<!-- fin cajaformularios_login -->
+		</div>
+		<!-- fin CUERPO PRINCIPAL -->
+	</div>
+
+	<!-- Pie -->
+	<div id="pie">
+		<div id="creditos">
+			Copyright &#169; 2019 - <span class="negrita">Ministerio de
+				Pol&iacute;tica Territorial y Funci&oacute;n P&uacute;blica</span>  &nbsp; Versi&#243;n: <b>4.3.2</b> 
+		</div>
+	</div>
+	<script type="application/javascript">
+	<!--
+	
+
+		$("#informe-obs-3").click(function () {
+			
+			if($("#radio-1").prop("checked") ){
+				$("#disabled_info").text("(Esta opción solo está disponible para análisis de 33 páginas [profundidad 4, anchura 8])");	
+			}
+			
+			if($("#radio-2").prop("checked") ){
+				$("#disabled_info").text("(Esta opción solo está disponible para análisis de 33 páginas)");	
+			}
+			
+			$("#maxUrl").text("33");
+			checkHistoricoCrawler();
+			checkHistoricoListaUrls();
+		});
+		
+		$("#informe-obs-2").click(function () {
+			$("#disabled_info").text("(Esta opción solo está disponible para análisis de 17 páginas)")
+			$("#maxUrl").text("17");
+			checkHistoricoCrawler();
+			checkHistoricoListaUrls();
+		});
+		
+		$("#informe-obs").click(function () {
+			$("#disabled_info").text("(Esta opción solo está disponible para análisis de 17 páginas)")
+			$("#maxUrl").text("17");
+			checkHistoricoCrawler();
+		});
+	
+		$("#radio-1").click(function () {
+          $("#crawler").show();
+          $("#urlset").hide();
+          $("#source").hide();
+          $("#historico").show();
+          
+          if($("#informe-obs-3").prop("checked")){
+        	  $("#disabled_info").text("(Esta opción solo está disponible para análisis de 33 páginas [profundidad 4, anchura 8])");
+          }
+          checkHistoricoCrawler();
+        });
+
+        $("#radio-2").click(function () {
+          $("#crawler").hide();
+          $("#urlset").show();
+          $("#source").hide();
+          $("#historico").show();
+          checkHistoricoListaUrls();
+        });
+
+        $("#radio-3").click(function () {
+          $("#crawler").hide();
+          $("#urlset").hide();
+          $("#source").show();
+          $("#historico").hide();
+        });
+
+        $("#profundidad, #amplitud").change(checkHistoricoCrawler);
+        $("#urls").on('input', checkHistoricoListaUrls);
+
+        function checkHistoricoCrawler() {
+            if (($("#profundidad option:selected").val()==4 && $("#amplitud option:selected").val()==4 && $('#informe-obs-2').prop("checked")) || 
+            		($("#profundidad option:selected").val()==4 && $("#amplitud option:selected").val()==8	&& $('#informe-obs-3').prop("checked"))) {
+                $("#registerAnalysis").prop("disabled", false);
+                $("#disabled_info").hide();
+            } else {
+                $("#registerAnalysis").prop("checked", false);
+                $("#registerAnalysis").prop("disabled", true);
+                $("#disabled_info").show();
+            }
+        }
+        function checkHistoricoListaUrls() {
+        	
+        	
+        	if($("#radio-2").prop("checked") ){
+          if ($("#radio-2").prop("checked")
+        		  ($("#urls").val().split("http").length == 18 && $('#informe-obs-2').prop("checked")) ||
+        		  ($("#urls").val().split("http").length == 34 && $('#informe-obs-3').prop("checked"))
+        		  ) {
+        	  
+        
+        	  
+            $("#registerAnalysis").prop("disabled", false);
+            $("#disabled_info").hide();
+          } else {
+            $("#registerAnalysis").prop("checked", false);
+            $("#registerAnalysis").prop("disabled", true);
+            $("#disabled_info").show();
+          }
+        	}
+        }
+        $("form#basic_service").submit(function() {
+          if ($("#radio-1").prop("checked")) {
+            $("#urls").val("");
+            $("#content").val("");
+          } else if ($("#radio-2").prop("checked")) {
+            $("#url").val("");
+            $("#content").val("");
+            var domains = $("#urls").val();
+            var res = domains.replace(/&/g, "%26");
+            $("#urls").val(res);
+            
+            
+          } else if ($("#radio-3").prop("checked")) {
+            $("#url").val("");
+            $("#urls").val("");
+          } else {
+            return false;
+          }
+          return true;
+        });
+        $("#radio-1").click();
+     -->
+    
+	
+	
+	</script>
+	<!-- Bootstrap core JavaScript -->
+	<!-- Placed at the end of the document so the pages load faster -->
+	<script src="/oaw/js/jquery-ui-1.12.4.min.js"></script>
+	<script src="/oaw/bootstrap/js/bootstrap.min.js"></script>
+	<script type="application/javascript">
+		
+		$(function () { $('[data-toggle="tooltip"]').tooltip() })
+	
+	</script>
+</body>
+
+</html>
