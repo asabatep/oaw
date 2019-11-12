@@ -15,39 +15,40 @@
 ******************************************************************************/
 package es.inteco.view.forms;
 
-import es.inteco.rastreador2.actionform.semillas.CategoriaForm;
-import org.apache.struts.util.LabelValueBean;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.struts.util.LabelValueBean;
+
+import es.inteco.rastreador2.actionform.semillas.ComplejidadForm;
+
 /**
- * The Class CategoryViewListForm.
+ * The Class ComplexityViewListForm.
  */
-public class CategoryViewListForm {
+public class ComplexityViewListForm {
 
     /** The category. */
-    private CategoriaForm category;
+    private ComplejidadForm complexity;
     
     /** The view list. */
     private List<LabelValueBean> viewList;
 
     /**
-	 * Instantiates a new category view list form.
+	 * Instantiates a new complexity view list form.
 	 */
-    public CategoryViewListForm() {
-        category = new CategoriaForm();
+    public ComplexityViewListForm() {
+    	complexity = new ComplejidadForm();
         viewList = new ArrayList<>();
     }
 
     /**
-	 * Instantiates a new category view list form.
+	 * Instantiates a new complexity view list form.
 	 *
-	 * @param category the category
-	 * @param viewList the view list
+	 * @param complexity the complexity
+	 * @param viewList   the view list
 	 */
-    public CategoryViewListForm(CategoriaForm category, List<LabelValueBean> viewList) {
-        this.category = category;
+    public ComplexityViewListForm(ComplejidadForm complexity, List<LabelValueBean> viewList) {
+        this.complexity = complexity;
         this.viewList = viewList;
     }
 
@@ -56,17 +57,17 @@ public class CategoryViewListForm {
 	 *
 	 * @return the category
 	 */
-    public CategoriaForm getCategory() {
-        return category;
+    public ComplejidadForm getCategory() {
+        return complexity;
     }
 
     /**
 	 * Sets the category.
 	 *
-	 * @param category the new category
+	 * @param complexity the new category
 	 */
-    public void setCategory(CategoriaForm category) {
-        this.category = category;
+    public void setCategory(ComplejidadForm complexity) {
+        this.complexity = complexity;
     }
 
     /**
