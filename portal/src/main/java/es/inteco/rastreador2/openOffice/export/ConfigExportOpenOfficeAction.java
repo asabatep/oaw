@@ -19,12 +19,14 @@ import static es.inteco.common.Constants.CRAWLER_PROPERTIES;
 
 import java.io.File;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.struts.action.Action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -36,7 +38,6 @@ import es.inteco.common.properties.PropertiesManager;
 import es.inteco.plugin.dao.DataBaseManager;
 import es.inteco.rastreador2.actionform.observatorio.ObservatorioForm;
 import es.inteco.rastreador2.actionform.observatorio.ObservatorioRealizadoForm;
-import es.inteco.rastreador2.dao.cartucho.CartuchoDAO;
 import es.inteco.rastreador2.dao.observatorio.ObservatorioDAO;
 import es.inteco.rastreador2.pdf.ExportAction;
 import es.inteco.rastreador2.pdf.utils.PDFUtils;
@@ -46,7 +47,7 @@ import es.inteco.utils.FileUtils;
 /**
  * The Class ExportOpenOfficeAction.
  */
-public class ExportOpenOfficeAction extends Action {
+public class ConfigExportOpenOfficeAction extends Action {
 	/**
 	 * Execute.
 	 *
@@ -58,47 +59,41 @@ public class ExportOpenOfficeAction extends Action {
 	 */
 	public ActionForward execute(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request, final HttpServletResponse response) {
 		long idExecution = 0;
-		if (request.getParameter(Constants.ID) != null) {
-			idExecution = Long.parseLong(request.getParameter(Constants.ID));
+		if (request.getParameter(Constants.ID_EX_OBS) != null) {
+			idExecution = Long.parseLong(request.getParameter(Constants.ID_EX_OBS));
 		}
 		long idObservatory = 0;
 		if (request.getParameter(Constants.ID_OBSERVATORIO) != null) {
 			idObservatory = Long.parseLong(request.getParameter(Constants.ID_OBSERVATORIO));
 		}
-		long idCartucho = 0;
-		if (request.getParameter(Constants.ID_CARTUCHO) != null) {
-			idCartucho = Long.parseLong(request.getParameter(Constants.ID_CARTUCHO));
+		String[] tagsToFilter = null;
+		if (request.getParameter("tags") != null && !StringUtils.isEmpty(request.getParameter("tags"))) {
+			tagsToFilter = request.getParameter("tags").split(",");
 		}
-		// TODO Get application
-		String application;
-		try {
-			application = CartuchoDAO.getApplication(DataBaseManager.getConnection(), idCartucho);
-			if (Constants.NORMATIVA_UNE_EN2019.equals(application)) {
-				request.setAttribute(Constants.ID_OBSERVATORIO, request.getParameter(Constants.ID_OBSERVATORIO));
-				request.setAttribute(Constants.FULFILLED_OBSERVATORIES, ObservatorioDAO.getFulfilledObservatories(DataBaseManager.getConnection(), idObservatory, -1, null));
-				request.setAttribute(Constants.ID_CARTUCHO, idCartucho);
-				return mapping.findForward(Constants.CONFIGURAR_FILTROS_AGREGADOS);
-			} else {
-				return generateReportWithoutFilters(mapping, request, response, idExecution, idObservatory);
-			}
-		} catch (SQLException e1) {
-			return generateReportWithoutFilters(mapping, request, response, idExecution, idObservatory);
-		} catch (Exception e1) {
-			return generateReportWithoutFilters(mapping, request, response, idExecution, idObservatory);
+		Map<String, Boolean> grpahicConditional = new TreeMap<>();
+		if (request.getParameter(Constants.CHECK_GLOBAL_MODALITY_GRPAHICS) != null) {
+			grpahicConditional.put(Constants.CHECK_GLOBAL_MODALITY_GRPAHICS, Boolean.parseBoolean(request.getParameter(Constants.CHECK_GLOBAL_MODALITY_GRPAHICS)));
 		}
-	}
-
-	/**
-	 * Generate report with filters.
-	 *
-	 * @param mapping       the mapping
-	 * @param request       the request
-	 * @param response      the response
-	 * @param idExecution   the id execution
-	 * @param idObservatory the id observatory
-	 * @return the action forward
-	 */
-	private ActionForward generateReportWithoutFilters(final ActionMapping mapping, final HttpServletRequest request, final HttpServletResponse response, long idExecution, long idObservatory) {
+		if (request.getParameter(Constants.CHECK_GLOBAL_ASPECTS_GRPAHICS) != null) {
+			grpahicConditional.put(Constants.CHECK_GLOBAL_ASPECTS_GRPAHICS, Boolean.parseBoolean(request.getParameter(Constants.CHECK_GLOBAL_ASPECTS_GRPAHICS)));
+		}
+		if (request.getParameter(Constants.CHECK_SEGMENT_MODALITY_GRPAHICS) != null) {
+			grpahicConditional.put(Constants.CHECK_SEGMENT_MODALITY_GRPAHICS, Boolean.parseBoolean(request.getParameter(Constants.CHECK_SEGMENT_MODALITY_GRPAHICS)));
+		}
+		if (request.getParameter(Constants.CHECK_SEGMENT_PMV_GRPAHICS) != null) {
+			grpahicConditional.put(Constants.CHECK_SEGMENT_PMV_GRPAHICS, Boolean.parseBoolean(request.getParameter(Constants.CHECK_SEGMENT_PMV_GRPAHICS)));
+		}
+		if (request.getParameter(Constants.CHECK_SEGMENT_ASPECTS_GRPAHICS) != null) {
+			grpahicConditional.put(Constants.CHECK_SEGMENT_ASPECTS_GRPAHICS, Boolean.parseBoolean(request.getParameter(Constants.CHECK_SEGMENT_ASPECTS_GRPAHICS)));
+		}
+		if (request.getParameter(Constants.CHECK_EVO_COMPLIANCE_VERIFICATION_GRPAHICS) != null) {
+			grpahicConditional.put(Constants.CHECK_EVO_COMPLIANCE_VERIFICATION_GRPAHICS, Boolean.parseBoolean(request.getParameter(Constants.CHECK_EVO_COMPLIANCE_VERIFICATION_GRPAHICS)));
+		}
+		if (request.getParameter(Constants.CHECK_EVO_ASPECTS_GRPAHICS) != null) {
+			grpahicConditional.put(Constants.CHECK_EVO_ASPECTS_GRPAHICS, Boolean.parseBoolean(request.getParameter(Constants.CHECK_EVO_ASPECTS_GRPAHICS)));
+		}
+		// Evol executions ids
+		String[] exObsIds = request.getParameterValues("evol");
 		final PropertiesManager pmgr = new PropertiesManager();
 		final String basePath = pmgr.getValue(CRAWLER_PROPERTIES, "export.open.office") + idObservatory + File.separator + idExecution + File.separator;
 		String filePath = null;
@@ -108,9 +103,8 @@ public class ExportOpenOfficeAction extends Action {
 			final ObservatorioRealizadoForm observatoryFFForm = ObservatorioDAO.getFulfilledObservatory(c, idObservatory, idExecution);
 			filePath = basePath + PDFUtils.formatSeedName(observatoryForm.getNombre()) + ".odt";
 			final String graphicPath = basePath + "temp" + File.separator;
-			final int numObs = ObservatorioDAO.getFulfilledObservatories(c, Long.parseLong(request.getParameter(Constants.ID_OBSERVATORIO)), Constants.NO_PAGINACION, observatoryFFForm.getFecha())
-					.size();
-			ExportOpenOfficeUtils.createOpenOfficeDocument(request, filePath, graphicPath, df.format(observatoryFFForm.getFecha()), observatoryForm.getTipo(), numObs);
+			ExportOpenOfficeUtils.createOpenOfficeDocumentFiltered(request, filePath, graphicPath, df.format(observatoryFFForm.getFecha()), observatoryForm.getTipo(), exObsIds.length, tagsToFilter,
+					grpahicConditional, exObsIds);
 			FileUtils.deleteDir(new File(graphicPath));
 		} catch (Exception e) {
 			Logger.putLog("Error al exportar a pdf", ExportAction.class, Logger.LOG_LEVEL_ERROR, e);
