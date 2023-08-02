@@ -47,6 +47,32 @@ public class TAnalisisAccesibilidadDAO {
 		DataBaseManager.closeConnection(c);
 	}
 
+
+	/**
+	 * Update.
+	 *
+	 * @param c                  the c
+	 * @param idAnalisis         the id analisis
+	 * @param accessibilityLinks the accessibility links
+	 * @throws SQLException the SQL exception
+	 */
+	public static void insertUrls(Connection c, final Long idAnalisis, final List<String> urls) throws SQLException {
+		final String query = "INSERT INTO tanalisis_accesibilidad(id_analisis, url) VALUES (?,?) ON DUPLICATE KEY UPDATE  url = ?";
+		for (String url : urls) {
+			try (PreparedStatement ps = c.prepareStatement(query)) {
+				ps.setLong(1, idAnalisis);
+				ps.setString(2, url);
+				ps.setString(3, url);
+				ps.executeUpdate();
+			} catch (SQLException e) {
+				Logger.putLog("SQL Exception: ", ProxyDAO.class, Logger.LOG_LEVEL_ERROR, e);
+				throw e;
+			}
+		}
+		DataBaseManager.closeConnection(c);
+	}
+
+
 	/**
 	 * Save document.
 	 *
@@ -82,6 +108,39 @@ public class TAnalisisAccesibilidadDAO {
 		}
 	}
 
+
+	/**
+	 * Save document.
+	 *
+	 * @param c                 the c
+	 * @param idAnalisis        the id analisis
+	 * @param url 				the url
+	 * @param documentContent   the document content
+	 * @throws SQLException the SQL exception
+	 */
+	public static void saveDocumentUrl(Connection c, final Long idAnalisis, final String url, final String documentContent) throws SQLException {
+		final String query = "UPDATE tanalisis_accesibilidad SET cod_fuente = ?  WHERE id_analisis = ? AND url = ?";
+		try (PreparedStatement ps = c.prepareStatement(query)) {
+			// Encode BASE64 code
+			if (!StringUtils.isEmpty(documentContent)) {
+				ps.setString(1, new String(Base64.encodeBase64(documentContent.getBytes("UTF-8"))));
+			} else {
+				ps.setString(1, "");
+			}
+			ps.setLong(2, idAnalisis);
+			ps.setString(3, url);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			Logger.putLog("SQL Exception: ", TAnalisisAccesibilidadDAO.class, Logger.LOG_LEVEL_ERROR, e);
+			throw e;
+		} catch (UnsupportedEncodingException e) {
+			Logger.putLog("Exception: ", TAnalisisAccesibilidadDAO.class, Logger.LOG_LEVEL_ERROR, e);
+		} finally {
+			DataBaseManager.closeConnection(c);
+		}
+	}
+
+
 	/**
 	 * Increment check ok.
 	 *
@@ -96,6 +155,28 @@ public class TAnalisisAccesibilidadDAO {
 		if (url.length() > 256) {
 			url = accessibilityLink.getAttribute("href").substring(0, 256);
 		}
+		try (PreparedStatement ps = c.prepareStatement(query)) {
+			ps.setLong(1, idAnalisis);
+			ps.setString(2, url);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			Logger.putLog("SQL Exception: ", ProxyDAO.class, Logger.LOG_LEVEL_ERROR, e);
+			throw e;
+		} finally {
+			DataBaseManager.closeConnection(c);
+		}
+	}
+
+	/**
+	 * Increment check ok.
+	 *
+	 * @param c                 the c
+	 * @param idAnalisis        the id analisis
+	 * @param accessibilityLink the accessibility link
+	 * @throws SQLException the SQL exception
+	 */
+	public static void incrementCheckOk(Connection c, final Long idAnalisis, final String url) throws SQLException {
+		final String query = "UPDATE tanalisis_accesibilidad SET checks_ok = checks_ok +1 WHERE id_analisis = ? AND url = ?";
 		try (PreparedStatement ps = c.prepareStatement(query)) {
 			ps.setLong(1, idAnalisis);
 			ps.setString(2, url);
