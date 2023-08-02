@@ -44,19 +44,7 @@ import es.inteco.rastreador2.manager.importation.database.DatabaseImportManager;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.soap.SOAPHeader;
-import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.MessageContext;
-import org.apache.axis2.description.AxisOperation;
-import org.apache.axis2.description.AxisService;
-import org.apache.axis2.engine.Handler;
-import org.apache.axis2.engine.Phase;
-import org.apache.axis2.phaseresolver.PhaseMetadata;
-import org.apache.axis2.transport.http.HTTPConstants;
-
-import javax.xml.namespace.QName;
-
-import java.util.ArrayList;
-import java.util.List;
 public class OAWService {
 
 	final MessageResources messageResources = MessageResources.getMessageResources(Constants.MESSAGE_RESOURCES_UNE_EN2019);

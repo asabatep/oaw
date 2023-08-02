@@ -131,7 +131,7 @@ public class BasicServiceManager {
 	 * @param messageResources the message resources
 	 */
 	public void executeCrawling(final BasicServiceForm basicServiceForm, final MessageResources messageResources) {
-		Logger.putLog("executeCrawling", BasicServiceManager.class, Logger.LOG_LEVEL_DEBUG);
+		Logger.putLog("executeCrawling", BasicServiceManager.class, Logger.LOG_LEVEL_WARNING);
 		String pdfPath = null;
 		try {
 			// Lanzamos el rastreo de INTAV
