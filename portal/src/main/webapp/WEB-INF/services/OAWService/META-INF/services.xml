@@ -32,6 +32,9 @@
 		<operation name="incrementChecksOkRequest"> 
 			<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver"/>
 		</operation>
+		<operation name="setAnalysisDbRequest"> 
+			<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver"/>
+		</operation>
 		<operation name="setIncidenceListRequest"> 
 			<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver"/>
 		</operation>
