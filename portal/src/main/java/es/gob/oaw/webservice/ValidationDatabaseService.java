@@ -1,12 +1,20 @@
 package es.gob.oaw.webservice;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.jfree.util.Log;
+
 import ca.utoronto.atrc.tile.accessibilitychecker.Evaluation;
 import ca.utoronto.atrc.tile.accessibilitychecker.Evaluator;
+import es.gob.oaw.css.CSSImportedResource;
+import es.gob.oaw.css.CSSResource;
+import es.gob.oaw.webservice.dto.CSSResourceDTO;
+import es.gob.oaw.webservice.dto.SetAnalysisDBRequestDTO;
+import es.gob.oaw.webservice.dto.SetIncidenceListRequestDTO;
 import es.inteco.common.CheckAccessibility;
 import es.inteco.intav.comun.Incidencia;
 import es.inteco.intav.dao.TAnalisisAccesibilidadDAO;
@@ -49,13 +57,30 @@ public class ValidationDatabaseService {
             return "Ha ocurrido un error al incrementar los checks";
         }
     }
-    public int setAnalysisDbRequest(CheckAccessibility checkAccessibility, Evaluation evaluation){
+    public int setAnalysisDbRequest(SetAnalysisDBRequestDTO setAnalysisDBRequestDTO){
+        Log.warn("Insertar analisis en BBDD");
+        Evaluation evaluation = new Evaluation();
+        CheckAccessibility checkAccessibility = new CheckAccessibility();
+        checkAccessibility.setContent(setAnalysisDBRequestDTO.getCheckAccessibilityDTO().getContent());
+        checkAccessibility.setIdRastreo(setAnalysisDBRequestDTO.getCheckAccessibilityDTO().getIdRastreo());
+        checkAccessibility.setGuidelineFile(setAnalysisDBRequestDTO.getCheckAccessibilityDTO().getGuidelineFile());
+        evaluation.setEntidad(setAnalysisDBRequestDTO.getEvaluationDTO().getEntity());
+        CSSResourceDTO[] resources = setAnalysisDBRequestDTO.getEvaluationDTO().getCssResourcesDTO();
+        List<CSSResourceDTO> resourceDTOList = Arrays.asList(resources);
+        List<CSSResource> resourceList = new ArrayList<>();
+        for (CSSResourceDTO cssResourceDTO : resourceDTOList) {
+            CSSImportedResource resource = new CSSImportedResource();
+            resource.setContent(cssResourceDTO.getContent());
+            resource.setSource(cssResourceDTO.getSource());
+            resourceList.add(resource);
+        }
+        evaluation.setCssResources(resourceList);
         return Evaluator.setDbId(evaluation, checkAccessibility);
-    
     }
-    public String setIncidenceListRequest(SetIncidenceListRequest request){
+    public String setIncidenceListRequest(SetIncidenceListRequestDTO setIncidenceListRequestDTO){
+        Log.info("Cargar incidencias en BBDD");
         try (Connection conn = DataBaseManager.getConnection()) {
-            IncidenciaDatos.saveIncidenceList(conn, request.getIdAnalysis(), Arrays.asList(request.getIncidences()));
+            IncidenciaDatos.saveIncidenceList(conn, setIncidenceListRequestDTO.getIdAnalysis(), Arrays.asList(setIncidenceListRequestDTO.getIncidences()));
             return "Se ha insertado la lista de incidencias con éxito";
         
         }
