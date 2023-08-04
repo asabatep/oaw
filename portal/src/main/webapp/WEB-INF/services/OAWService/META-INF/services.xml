@@ -38,5 +38,8 @@
 		<operation name="setIncidenceListRequest"> 
 			<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver"/>
 		</operation>
+		<operation name="setAnalysisSuccessRequest"> 
+			<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver"/>
+		</operation>
 	</service>
 </serviceGroup>
