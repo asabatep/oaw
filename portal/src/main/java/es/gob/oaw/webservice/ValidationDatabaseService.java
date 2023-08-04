@@ -3,7 +3,6 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import org.jfree.util.Log;
@@ -13,19 +12,23 @@ import ca.utoronto.atrc.tile.accessibilitychecker.Evaluator;
 import es.gob.oaw.css.CSSImportedResource;
 import es.gob.oaw.css.CSSResource;
 import es.gob.oaw.webservice.dto.CSSResourceDTO;
+import es.gob.oaw.webservice.dto.IncrementChecksOkRequestDTO;
+import es.gob.oaw.webservice.dto.InsertTAnalysisRequestDTO;
+import es.gob.oaw.webservice.dto.SaveDocumentsRequestDTO;
 import es.gob.oaw.webservice.dto.SetAnalysisDBRequestDTO;
+import es.gob.oaw.webservice.dto.SetAnalysisSuccessRequestDTO;
 import es.gob.oaw.webservice.dto.SetIncidenceListRequestDTO;
 import es.inteco.common.CheckAccessibility;
-import es.inteco.intav.comun.Incidencia;
 import es.inteco.intav.dao.TAnalisisAccesibilidadDAO;
+import es.inteco.intav.datos.AnalisisDatos;
 import es.inteco.intav.datos.IncidenciaDatos;
 import es.inteco.plugin.dao.DataBaseManager;
 
 public class ValidationDatabaseService {
 
-    public String insertTAnalysisRequest(Long idAnalysis, List<String> elements){
+    public String insertTAnalysisRequest(InsertTAnalysisRequestDTO insertTAnalysisRequestDTO){
         try{
-            TAnalisisAccesibilidadDAO.insertUrls(DataBaseManager.getConnection(), idAnalysis, elements);
+            TAnalisisAccesibilidadDAO.insertUrls(DataBaseManager.getConnection(), insertTAnalysisRequestDTO.getIdAnalysis(), Arrays.asList(insertTAnalysisRequestDTO.getElements()));
             return "Se han insertado correctamente los enlaces de accesibilidad";
         }
         catch (Exception e){
@@ -33,10 +36,10 @@ public class ValidationDatabaseService {
         }
     }
 
-    public String saveDocumentsRequest(Long idAnalysis, Map<String,String> documents){
+    public String saveDocumentsRequest(SaveDocumentsRequestDTO saveDocumentsRequestDTO){
         try{
-            for (Entry<String,String> document :documents.entrySet()) {
-                TAnalisisAccesibilidadDAO.saveDocumentUrl(DataBaseManager.getConnection(), idAnalysis, document.getKey(), document.getValue());
+            for (Entry<String,String> document :saveDocumentsRequestDTO.getElements().entrySet()) {
+                TAnalisisAccesibilidadDAO.saveDocumentUrl(DataBaseManager.getConnection(), saveDocumentsRequestDTO.getIdAnalysis(), document.getKey(), document.getValue());
             }
             return "Se han insertado correctamente los documentos de accesibilidad";
         }
@@ -45,10 +48,10 @@ public class ValidationDatabaseService {
         }
     }
 
-    public String incrementChecksOkRequest(Long idAnalysis, List<String> elements){
+    public String incrementChecksOkRequest(IncrementChecksOkRequestDTO incrementChecksOkRequestDTO){
         try{
-            for (String element : elements) {
-                TAnalisisAccesibilidadDAO.incrementCheckOk(DataBaseManager.getConnection(), idAnalysis, element);
+            for (String element : incrementChecksOkRequestDTO.getElements()) {
+                TAnalisisAccesibilidadDAO.incrementCheckOk(DataBaseManager.getConnection(), incrementChecksOkRequestDTO.getIdAnalysis(), element);
             }
             return "Se han incrementado correctamente los checks";
             
@@ -87,6 +90,17 @@ public class ValidationDatabaseService {
         catch (Exception e){
             return "Se ha producido un error al guardar la lista de incidencias";
         }
+    }
+
+    public String setAnalysisSuccessRequest(SetAnalysisSuccessRequestDTO setAnalysisSuccessRequestDTO){
+        Log.warn("insert analysis success");
+        Evaluation evaluation = new Evaluation();
+        evaluation.setChecksExecutedStr(setAnalysisSuccessRequestDTO.getChecksExecuted());
+        evaluation.settevaluation(setAnalysisSuccessRequestDTO.getTAnalisis());
+        evaluation.setIdAnalisis(setAnalysisSuccessRequestDTO.getIdAnalisis());
+        AnalisisDatos.endAnalysisSuccess(evaluation);
+        return "Analisis finalizado con exito";
+        
     }
     
 }
