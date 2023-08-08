@@ -3,6 +3,7 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.jfree.util.Log;
@@ -26,9 +27,9 @@ import es.inteco.plugin.dao.DataBaseManager;
 
 public class ValidationDatabaseService {
 
-    public String insertTAnalysisRequest(InsertTAnalysisRequestDTO insertTAnalysisRequestDTO){
+    public String insertTAnalysisRequest(Long idAnalysis, List<String> elements){
         try{
-            TAnalisisAccesibilidadDAO.insertUrls(DataBaseManager.getConnection(), insertTAnalysisRequestDTO.getIdAnalysis(), Arrays.asList(insertTAnalysisRequestDTO.getElements()));
+            TAnalisisAccesibilidadDAO.insertUrls(DataBaseManager.getConnection(), idAnalysis, elements);
             return "Se han insertado correctamente los enlaces de accesibilidad";
         }
         catch (Exception e){
@@ -36,10 +37,10 @@ public class ValidationDatabaseService {
         }
     }
 
-    public String saveDocumentsRequest(SaveDocumentsRequestDTO saveDocumentsRequestDTO){
+    public String saveDocumentsRequest(Long idAnalysis, Map<String, String> docments){
         try{
-            for (Entry<String,String> document :saveDocumentsRequestDTO.getElements().entrySet()) {
-                TAnalisisAccesibilidadDAO.saveDocumentUrl(DataBaseManager.getConnection(), saveDocumentsRequestDTO.getIdAnalysis(), document.getKey(), document.getValue());
+            for (Entry<String,String> document :docments.entrySet()) {
+                TAnalisisAccesibilidadDAO.saveDocumentUrl(DataBaseManager.getConnection(), idAnalysis, document.getKey(), document.getValue());
             }
             return "Se han insertado correctamente los documentos de accesibilidad";
         }
@@ -48,10 +49,10 @@ public class ValidationDatabaseService {
         }
     }
 
-    public String incrementChecksOkRequest(IncrementChecksOkRequestDTO incrementChecksOkRequestDTO){
+    public String incrementChecksOkRequest(Long idAnalysis, List<String> elements){
         try{
-            for (String element : incrementChecksOkRequestDTO.getElements()) {
-                TAnalisisAccesibilidadDAO.incrementCheckOk(DataBaseManager.getConnection(), incrementChecksOkRequestDTO.getIdAnalysis(), element);
+            for (String element : elements) {
+                TAnalisisAccesibilidadDAO.incrementCheckOk(DataBaseManager.getConnection(), idAnalysis, element);
             }
             return "Se han incrementado correctamente los checks";
             
@@ -80,6 +81,7 @@ public class ValidationDatabaseService {
         evaluation.setCssResources(resourceList);
         return Evaluator.setDbId(evaluation, checkAccessibility);
     }
+
     public String setIncidenceListRequest(SetIncidenceListRequestDTO setIncidenceListRequestDTO){
         Log.info("Cargar incidencias en BBDD");
         try (Connection conn = DataBaseManager.getConnection()) {
@@ -102,6 +104,13 @@ public class ValidationDatabaseService {
         return "Analisis finalizado con exito";
         
     }
+
+    public String setAnalysisErrorRequest(CheckAccessibility checkAccessibility){
+        Log.warn("Insert Analysis Error");
+        AnalisisDatos.setAnalysisError(checkAccessibility);
+        return "Análisis fallido insertado con exito";
+    }
+    
     
 }
 
