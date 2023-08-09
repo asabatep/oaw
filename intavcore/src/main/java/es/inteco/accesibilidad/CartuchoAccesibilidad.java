@@ -15,11 +15,26 @@
 ******************************************************************************/
 package es.inteco.accesibilidad;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.sql.Connection;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.jfree.util.Log;
+import com.fasterxml.jackson.databind.ObjectMapper; 
+import com.fasterxml.jackson.databind.ObjectWriter; 
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import ca.utoronto.atrc.tile.accessibilitychecker.EvaluatorUtility;
 import es.inteco.common.CheckAccessibility;
@@ -34,11 +49,27 @@ import es.inteco.intav.utils.CacheUtils;
 import es.inteco.intav.utils.EvaluatorUtils;
 import es.inteco.plugin.Cartucho;
 import es.inteco.plugin.dao.DataBaseManager;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
+
 
 /**
  * Implementación de un cartucho que analiza las urls, así como el contenido de las páginas y clasificarlas como maliciosas o no.
  */
 public class CartuchoAccesibilidad extends Cartucho {
+
+	private static String encodeValue(String value) {
+        try {
+            return URLEncoder.encode(value, "UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+            throw new RuntimeException(ex.getCause());
+        }
+    }
 	/**
 	 * Analyzer.
 	 *
@@ -47,6 +78,7 @@ public class CartuchoAccesibilidad extends Cartucho {
 	@Override
 	public void analyzer(final Map<String, Object> datos) {
 		Logger.putLog("Iniciando evaluación de accesibilidad desde el rastreador de la url: " + datos.get("url"), CartuchoAccesibilidad.class, Logger.LOG_LEVEL_INFO);
+		
 		final PropertiesManager pmgr = new PropertiesManager();
 		final CheckAccessibility checkAccesibility = new CheckAccessibility();
 		checkAccesibility.setEntity((String) datos.get("entity"));
@@ -62,9 +94,23 @@ public class CartuchoAccesibilidad extends Cartucho {
 		boolean isLast = (Boolean) datos.get("isLast");
 		try {
 			if (checkAccesibility.getUrl() != null && !checkAccesibility.getUrl().contains(".pdf")) {
-				EvaluatorUtils.evaluateContent(checkAccesibility, pmgr.getValue("crawler.core.properties", "check.accessibility.default.language"));
+				RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity("http://host.docker.internal:8081/api/validation-request/status", String.class);
+
+        int statusCode = responseEntity.getStatusCodeValue();
+        String responseBody = responseEntity.getBody();
+
+        System.out.println("Status code: " + statusCode);
+        System.out.println("Response body: " + responseBody);
+   		
 			}
+				
+				
+				
+				//EvaluatorUtils.evaluateContent(checkAccesibility, pmgr.getValue("crawler.core.properties", "check.accessibility.default.language"));
+			
 		} catch (Exception e) {
+			Log.error("EXCEPTION: " + e.getMessage());
 			Logger.putLog("Excepcion: ", CartuchoAccesibilidad.class, Logger.LOG_LEVEL_ERROR, e);
 		}
 		if (isLast) {

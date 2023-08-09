@@ -336,6 +336,17 @@
     	<version>1.18.12</version>
     	<scope>provided</scope>
 	</dependency>
+	<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-web</artifactId>
+    <version>5.3.10</version> <!-- Use the appropriate version -->
+</dependency>
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-webmvc</artifactId>
+    <version>5.3.10</version> <!-- Use the appropriate version -->
+</dependency>
+
   
               
 	</dependencies>
