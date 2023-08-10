@@ -54,6 +54,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
@@ -94,14 +95,27 @@ public class CartuchoAccesibilidad extends Cartucho {
 		boolean isLast = (Boolean) datos.get("isLast");
 		try {
 			if (checkAccesibility.getUrl() != null && !checkAccesibility.getUrl().contains(".pdf")) {
-				RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> responseEntity = restTemplate.getForEntity("http://host.docker.internal:8081/api/validation-request/status", String.class);
-
-        int statusCode = responseEntity.getStatusCodeValue();
-        String responseBody = responseEntity.getBody();
-
-        System.out.println("Status code: " + statusCode);
-        System.out.println("Response body: " + responseBody);
+    			URL url = new URL("http://172.18.0.9:8081/api/validation-request/tracker");
+				HttpURLConnection con = (HttpURLConnection)url.openConnection();
+				con.setRequestMethod("POST");
+				con.setRequestProperty("Content-Type", "application/json");
+				con.setRequestProperty("Accept", "application/json");
+				con.setDoOutput(true);
+				Gson gson = new GsonBuilder().create();
+				String json = gson.toJson(checkAccesibility);
+				try(OutputStream os = con.getOutputStream()) {
+					byte[] input = json.getBytes("utf-8");
+					os.write(input, 0, input.length);			
+				}
+				try(BufferedReader br = new BufferedReader(
+  					new InputStreamReader(con.getInputStream(), "utf-8"))) {
+    				StringBuilder response = new StringBuilder();
+    				String responseLine = null;
+    				while ((responseLine = br.readLine()) != null) {
+        				response.append(responseLine.trim());
+    														}
+    				Log.warn(response.toString());
+}
    		
 			}
 				
