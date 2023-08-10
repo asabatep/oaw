@@ -13,9 +13,6 @@ import ca.utoronto.atrc.tile.accessibilitychecker.Evaluator;
 import es.gob.oaw.css.CSSImportedResource;
 import es.gob.oaw.css.CSSResource;
 import es.gob.oaw.webservice.dto.CSSResourceDTO;
-import es.gob.oaw.webservice.dto.IncrementChecksOkRequestDTO;
-import es.gob.oaw.webservice.dto.InsertTAnalysisRequestDTO;
-import es.gob.oaw.webservice.dto.SaveDocumentsRequestDTO;
 import es.gob.oaw.webservice.dto.SetAnalysisDBRequestDTO;
 import es.gob.oaw.webservice.dto.SetAnalysisSuccessRequestDTO;
 import es.gob.oaw.webservice.dto.SetIncidenceListRequestDTO;
@@ -69,6 +66,7 @@ public class ValidationDatabaseService {
         checkAccessibility.setIdRastreo(setAnalysisDBRequestDTO.getCheckAccessibilityDTO().getIdRastreo());
         checkAccessibility.setGuidelineFile(setAnalysisDBRequestDTO.getCheckAccessibilityDTO().getGuidelineFile());
         evaluation.setEntidad(setAnalysisDBRequestDTO.getEvaluationDTO().getEntity());
+        evaluation.setFilename(setAnalysisDBRequestDTO.getEvaluationDTO().getFilename());
         CSSResourceDTO[] resources = setAnalysisDBRequestDTO.getEvaluationDTO().getCssResourcesDTO();
         List<CSSResourceDTO> resourceDTOList = Arrays.asList(resources);
         List<CSSResource> resourceList = new ArrayList<>();

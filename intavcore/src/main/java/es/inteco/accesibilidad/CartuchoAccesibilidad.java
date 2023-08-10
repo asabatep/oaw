@@ -20,18 +20,15 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.Proxy;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.sql.Connection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.jfree.util.Log;
-import com.fasterxml.jackson.databind.ObjectMapper; 
-import com.fasterxml.jackson.databind.ObjectWriter; 
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -49,15 +46,6 @@ import es.inteco.intav.utils.CacheUtils;
 import es.inteco.intav.utils.EvaluatorUtils;
 import es.inteco.plugin.Cartucho;
 import es.inteco.plugin.dao.DataBaseManager;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
-
 
 /**
  * Implementación de un cartucho que analiza las urls, así como el contenido de las páginas y clasificarlas como maliciosas o no.
@@ -96,7 +84,8 @@ public class CartuchoAccesibilidad extends Cartucho {
 		try {
 			if (checkAccesibility.getUrl() != null && !checkAccesibility.getUrl().contains(".pdf")) {
     			URL url = new URL("http://172.18.0.9:8081/api/validation-request/tracker");
-				HttpURLConnection con = (HttpURLConnection)url.openConnection();
+				Proxy nProxy = Proxy.NO_PROXY;
+				HttpURLConnection con = (HttpURLConnection)url.openConnection(nProxy);
 				con.setRequestMethod("POST");
 				con.setRequestProperty("Content-Type", "application/json");
 				con.setRequestProperty("Accept", "application/json");
@@ -115,13 +104,15 @@ public class CartuchoAccesibilidad extends Cartucho {
         				response.append(responseLine.trim());
     														}
     				Log.warn(response.toString());
-}
+					}
+				
+					//EvaluatorUtils.evaluateContent(checkAccesibility, pmgr.getValue("crawler.core.properties", "check.accessibility.default.language"));
    		
 			}
 				
 				
 				
-				//EvaluatorUtils.evaluateContent(checkAccesibility, pmgr.getValue("crawler.core.properties", "check.accessibility.default.language"));
+				
 			
 		} catch (Exception e) {
 			Log.error("EXCEPTION: " + e.getMessage());
