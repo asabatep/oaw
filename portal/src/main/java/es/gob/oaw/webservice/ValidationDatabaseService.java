@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import es.inteco.common.logging.Logger;
 
 import org.jfree.util.Log;
 
@@ -13,6 +14,7 @@ import ca.utoronto.atrc.tile.accessibilitychecker.Evaluator;
 import es.gob.oaw.css.CSSImportedResource;
 import es.gob.oaw.css.CSSResource;
 import es.gob.oaw.webservice.dto.CSSResourceDTO;
+import es.gob.oaw.webservice.dto.InsertTAnalysisRequestDTO;
 import es.gob.oaw.webservice.dto.SetAnalysisDBRequestDTO;
 import es.gob.oaw.webservice.dto.SetAnalysisSuccessRequestDTO;
 import es.gob.oaw.webservice.dto.SetIncidenceListRequestDTO;
@@ -24,9 +26,9 @@ import es.inteco.plugin.dao.DataBaseManager;
 
 public class ValidationDatabaseService {
 
-    public String insertTAnalysisRequest(Long idAnalysis, List<String> elements){
+    public String insertTAnalysisRequest(InsertTAnalysisRequestDTO insertTAnalysisRequestDTO){
         try{
-            TAnalisisAccesibilidadDAO.insertUrls(DataBaseManager.getConnection(), idAnalysis, elements);
+            TAnalisisAccesibilidadDAO.insertUrls(DataBaseManager.getConnection(), insertTAnalysisRequestDTO.getIdAnalysis(),Arrays.asList(insertTAnalysisRequestDTO.getElements()));
             return "Se han insertado correctamente los enlaces de accesibilidad";
         }
         catch (Exception e){
@@ -34,9 +36,9 @@ public class ValidationDatabaseService {
         }
     }
 
-    public String saveDocumentsRequest(Long idAnalysis, Map<String, String> docments){
+    public String saveDocumentsRequest(Long idAnalysis, Map<String, String> documents){
         try{
-            for (Entry<String,String> document :docments.entrySet()) {
+            for (Entry<String,String> document :documents.entrySet()) {
                 TAnalisisAccesibilidadDAO.saveDocumentUrl(DataBaseManager.getConnection(), idAnalysis, document.getKey(), document.getValue());
             }
             return "Se han insertado correctamente los documentos de accesibilidad";
@@ -55,7 +57,8 @@ public class ValidationDatabaseService {
             
         }
         catch (Exception e){
-            return "Ha ocurrido un error al incrementar los checks";
+            Logger.putLog(e.getMessage(), ValidationDatabaseService.class, Logger.LOG_LEVEL_ERROR, e);
+            return "Ha ocurrido un error al incrementar los checks: " + e.getMessage();
         }
     }
     public int setAnalysisDbRequest(SetAnalysisDBRequestDTO setAnalysisDBRequestDTO){
