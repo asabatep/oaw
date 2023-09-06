@@ -2,10 +2,12 @@ package es.gob.oaw.webservice;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import es.inteco.common.logging.Logger;
+import es.inteco.common.utils.StringUtils;
 
 import org.jfree.util.Log;
 
@@ -65,14 +67,18 @@ public class ValidationDatabaseService {
         Log.warn("Insertar analisis en BBDD");
         Evaluation evaluation = new Evaluation();
         CheckAccessibility checkAccessibility = new CheckAccessibility();
-        checkAccessibility.setContent(setAnalysisDBRequestDTO.getCheckAccessibilityDTO().getContent());
+        if(StringUtils.isBase64(setAnalysisDBRequestDTO.getCheckAccessibilityDTO().getContent())){
+            checkAccessibility.setContent(new String(Base64.getDecoder().decode(setAnalysisDBRequestDTO.getCheckAccessibilityDTO().getContent())));
+        }
+        else checkAccessibility.setContent(setAnalysisDBRequestDTO.getCheckAccessibilityDTO().getContent());
         checkAccessibility.setIdRastreo(setAnalysisDBRequestDTO.getCheckAccessibilityDTO().getIdRastreo());
         checkAccessibility.setGuidelineFile(setAnalysisDBRequestDTO.getCheckAccessibilityDTO().getGuidelineFile());
         evaluation.setEntidad(setAnalysisDBRequestDTO.getEvaluationDTO().getEntity());
         evaluation.setFilename(setAnalysisDBRequestDTO.getEvaluationDTO().getFilename());
         CSSResourceDTO[] resources = setAnalysisDBRequestDTO.getEvaluationDTO().getCssResourcesDTO();
-        List<CSSResourceDTO> resourceDTOList = Arrays.asList(resources);
         List<CSSResource> resourceList = new ArrayList<>();
+        if(resources != null){
+            List<CSSResourceDTO> resourceDTOList = Arrays.asList(resources);
         for (CSSResourceDTO cssResourceDTO : resourceDTOList) {
             CSSImportedResource resource = new CSSImportedResource();
             resource.setContent(cssResourceDTO.getContent());
@@ -80,6 +86,9 @@ public class ValidationDatabaseService {
             resourceList.add(resource);
         }
         evaluation.setCssResources(resourceList);
+        
+    }
+        else evaluation.setCssResources(null);
         return Evaluator.setDbId(evaluation, checkAccessibility);
     }
 

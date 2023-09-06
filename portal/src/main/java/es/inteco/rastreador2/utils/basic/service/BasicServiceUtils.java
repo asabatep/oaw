@@ -17,14 +17,19 @@ package es.inteco.rastreador2.utils.basic.service;
 
 import static es.inteco.common.Constants.CRAWLER_PROPERTIES;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.IDN;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.text.Normalizer;
 import java.util.ArrayList;
@@ -48,6 +53,9 @@ import org.quartz.Trigger;
 import org.quartz.impl.JobDetailImpl;
 import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.impl.triggers.SimpleTriggerImpl;
+import org.apache.commons.io.IOUtils;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
 
 import com.tecnick.htmlutils.htmlentities.HTMLEntities;
 
@@ -240,8 +248,27 @@ public final class BasicServiceUtils {
 //						if (entry.getName().toLowerCase().endsWith(".html")) {
 							if (!entry.isDirectory()) {
 								try {
-									String content = org.apache.commons.io.IOUtils.toString(zipFile.getInputStream(entry), StandardCharsets.UTF_8.name());
 									BasicServiceFile file = new BasicServiceFile();
+									String content = "";
+									if(name.endsWith(".pdf")){
+										
+										InputStream inputStream = zipFile.getInputStream(entry);
+										ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    					byte[] buffer = new byte[1024];
+                    					int bytesRead;
+                    					while ((bytesRead = inputStream.read(buffer)) != -1) {
+                        					byteArrayOutputStream.write(buffer, 0, bytesRead);
+                    					}
+
+                    					byte[] pdfBytes = byteArrayOutputStream.toByteArray();
+
+                    					// Convert the byte array to Base64 encoded string
+                    					content = Base64.getEncoder().encodeToString(pdfBytes);
+										
+									}
+									else { 
+										content = org.apache.commons.io.IOUtils.toString(zipFile.getInputStream(entry), StandardCharsets.UTF_8.name());
+									}
 									file.setName(name);
 									file.setContent(content);
 									files.add(file);
@@ -277,13 +304,22 @@ public final class BasicServiceUtils {
 		} else {
 			try {
 				String content = "";
+				if (!org.apache.commons.lang3.StringUtils.isEmpty(parameterFileName) && parameterFileName.toLowerCase().endsWith(".pdf")) {
+						// Por alguna razón no se codifica correctamente si pasamos un pdf a pelo. 
+						content = contentParameter.replaceAll("_", "/").replaceAll("-", "+");
+
+				}
+				else{
+				
 				if (decode) {
+					Logger.putLog("DECODEEEE", BasicServiceUtils.class, Logger.LOG_LEVEL_WARNING);
 					File tmp = File.createTempFile("oaw_basic_service_", ".txt");
 					org.apache.commons.io.FileUtils.writeByteArrayToFile(tmp, Base64.getUrlDecoder().decode(contentParameter.getBytes(StandardCharsets.ISO_8859_1.name())));
 					content = org.apache.commons.io.FileUtils.readFileToString(tmp, StandardCharsets.ISO_8859_1.name());
 				} else {
 					content = new String(contentParameter.getBytes(StandardCharsets.ISO_8859_1.name()));
 				}
+			}
 				basicServiceForm.setContent(content);
 				if (basicServiceForm.getDomain() != null && StringUtils.isNotEmpty(basicServiceForm.getDomain())) {
 					basicServiceForm.setAnalysisType(BasicServiceAnalysisType.MIXTO);

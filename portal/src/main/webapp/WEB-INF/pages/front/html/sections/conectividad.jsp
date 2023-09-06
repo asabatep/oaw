@@ -1,5 +1,5 @@
 <!--
-Copyright (C) 2017 MINHAFP, Ministerio de Hacienda y Función Pública, 
+Copyright (C) 2017 MINHAFP, Ministerio de Hacienda y Funciï¿½n Pï¿½blica, 
 This program is licensed and may be used, modified and redistributed under the terms
 of the European Public License (EUPL), either version 1.2 or (at your option) any later 
 version as soon as they are approved by the European Commission.
@@ -182,6 +182,31 @@ you may find it at http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:3201
 
 	}
 
+	function modifyValidator() {
+
+var validatorUrl = $('#validatorUrl').val();
+var validatorStatus = $('#validatorStatus').is(':checked');
+
+if (validatorUrl == "") {
+	$('#proxy-url-error-message').removeClass('hidden');
+	return false;
+} else {
+
+	$
+			.ajax(
+					{
+						url : '/oaw/secure/conectividad.do?action=modifyValidator&validatorUrl='
+								+ decodeURI($('#validatorUrl').val())
+								+ "&validatorStatus=" + validatorStatus,
+						method : 'POST'
+					}).success(function(data) {
+				location.reload();
+			});
+
+}
+
+}
+
 	function validateEmail(email) {
 		var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 		return re.test(email);
@@ -261,7 +286,7 @@ you may find it at http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:3201
 							<p id="checksimresult-ok" class="hidden">
 								<span class="bold"><bean:message key="conectividad.url.comprobada.estado" />: </span> <img src="../img/up.png"
 									alt="Imagen flecha verde hacia arriba"
-									title="Comporbación del servicio correcta" />
+									title="Comporbaciï¿½n del servicio correcta" />
 							</p>
 
 
@@ -269,7 +294,7 @@ you may find it at http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:3201
 							<p id="checksimresult-ko" class="hidden">
 								<span class="bold"><bean:message key="conectividad.url.comprobada.estado" />: </span> <img src="../img/down.png"
 									alt="Imagen flecha roja hacia abajo"
-									title="Comporbación del servicio incorrecta" />
+									title="Comporbaciï¿½n del servicio incorrecta" />
 							</p>
 							<p id="checksimresult-error" class="hidden">
 								<span class="bold">Error: </span> <span
@@ -331,12 +356,12 @@ you may find it at http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:3201
 									<p id="checkurlresult-ok" class="hidden">
 										<span class="bold"><bean:message key="conectividad.url.oaw"/> :</span>&nbsp;<img
 											src="../img/up.png" alt="Imagen flecha verde hacia arriba"
-											title="Comporbación del servicio correcta" />
+											title="Comporbaciï¿½n del servicio correcta" />
 									</p>
 									<p id="checkurlresult-ko" class="hidden">
 										<span class="bold"><bean:message key="conectividad.url.oaw"/>:</span>&nbsp; <img
 											src="../img/down.png" alt="Imagen flecha roja hacia abajo"
-											title="Comporbación del servicio incorrecta" /> <span
+											title="Comporbaciï¿½n del servicio incorrecta" /> <span
 											id="checkurlresult-error" class="hidden">&nbsp;<span
 											class="bold">Error:</span>&nbsp; <span
 											id="checkurlresult-error-detalle"></span></span>
@@ -351,14 +376,14 @@ you may find it at http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:3201
 									<p id="checkurlresult-ok-proxy" class="hidden">
 										<span class="bold"><bean:message key="conectividad.url.js"/>:</span>&nbsp;<img
 											src="../img/up.png" alt="Imagen flecha verde hacia arriba"
-											title="Comporbación del servicio correcta" />
+											title="Comporbaciï¿½n del servicio correcta" />
 									</p>
 
 									<p id="checkurlresult-ko-proxy" class="hidden">
 										<span class="bold"><bean:message key="conectividad.url.js"/>:</span>&nbsp;
 										<img src="../img/down.png"
 											alt="Imagen flecha roja hacia abajo"
-											title="Comporbación del servicio incorrecta" /><span
+											title="Comporbaciï¿½n del servicio incorrecta" /><span
 											id="checkurlresult-error-proxy" class="hidden">&nbsp;<span
 											class="bold">Error:</span>&nbsp; <span
 											id="checkurlresult-error-detalle-proxy"></span></span>
@@ -462,6 +487,74 @@ you may find it at http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:3201
 				</div>
 
 			</div>
+
+			<div>
+
+				<div id="validatorform" class="formulario">
+
+					<fieldset>
+						<legend>
+							<bean:message key="conectividad.validator.title" />
+						</legend>
+
+						<div id="proxy-url-error-message"
+							class="alert alert-danger hidden"><bean:message key="conectividad.proxy.config.error.url"/> </div>
+
+
+
+						<div id="proxy-port-error-message"
+							class="alert alert-danger hidden"><bean:message key="conectividad.proxy.config.error.port"/></div>
+
+
+						<p><bean:message key="conectividad.validator.info"/> </p>
+
+
+						<div class="formItem">
+							<label for="url" class="labelCorto"><strong
+								class="labelVisu"><acronym
+									title="<bean:message key="campo.obligatorio" />"> * </acronym>
+									<bean:message key="conectividad.proxy.activo" />: </strong></label>
+
+
+							<logic:equal name="validatorconfig" property="status" value="1">
+								<input id="validatorStatus" type="checkbox" class="textoCorto"
+									name="validatorStatus" required="required" checked="checked"
+									style="width: auto !important;" />
+							</logic:equal>
+							<logic:equal name="validatorconfig" property="status" value="0">
+								<input id="validatorStatus" type="checkbox" class="textoCorto"
+									style="width: auto !important;" name="validatorStatus"
+									required="required" />
+							</logic:equal>
+
+
+
+
+						</div>
+						<div class="formItem">
+							<label for="url" class="labelCorto"><strong
+								class="labelVisu"><acronym
+									title="<bean:message key="campo.obligatorio" />"> * </acronym>
+									<bean:message key="conectividad.proxy.url" />: </strong></label> <input
+								id="validatorUrl" type="text" class="textoCorto" name="validatorUrl"
+								required="required"
+								value="<bean:write name="validatorconfig" property="url" />" />
+							<bean:message key="conectividad.proxy.config.url.tip"/>
+
+						</div>
+						<span id="modifyValidator" onclick="modifyValidator()"
+							class="btn btn-default btn-sm"><bean:message key="conectividad.proxy.config.update"/> </span> <span
+							id="checkingurl" class="btn btn-default btn-sm hidden"> <span
+							class="glyphicon glyphicon-refresh glyphicon-refresh-animate"></span>
+						</span>
+
+
+
+					</fieldset>
+				</div>
+
+			</div>
+
 
 			<p id="pCenter">
 				<html:link forward="observatoryMenu"

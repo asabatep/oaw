@@ -24,6 +24,7 @@ import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
+import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -293,4 +294,17 @@ public final class StringUtils {
 	    if (str.length() == 0) return str;
         return str.substring(0, str.length() - 1);
     }
+
+    public static boolean isBase64(String input) {
+    try {
+        // Try to decode the input string
+        byte[] decodedBytes = Base64.getDecoder().decode(input);
+        
+        // If decoding succeeds without throwing an exception, it's Base64
+        return true;
+    } catch (IllegalArgumentException e) {
+        // If decoding fails, it's not Base64
+        return false;
+    }
+}
 }
