@@ -39,8 +39,10 @@ import es.inteco.common.IntavConstants;
 import es.inteco.common.logging.Logger;
 import es.inteco.common.properties.PropertiesManager;
 import es.inteco.intav.comun.Incidencia;
+import es.inteco.intav.dao.ValidatorDAO;
 import es.inteco.intav.datos.AnalisisDatos;
 import es.inteco.intav.datos.IncidenciaDatos;
+import es.inteco.intav.form.ValidatorForm;
 import es.inteco.intav.persistence.Analysis;
 import es.inteco.intav.utils.CacheUtils;
 import es.inteco.intav.utils.EvaluatorUtils;
@@ -82,10 +84,13 @@ public class CartuchoAccesibilidad extends Cartucho {
 		checkAccesibility.setCharset((String) datos.get("charset"));
 		boolean isLast = (Boolean) datos.get("isLast");
 		try {
-			if (checkAccesibility.getUrl() != null && !checkAccesibility.getUrl().contains(".pdf")) {
-    			URL url = new URL("http://172.18.0.9:8081/api/validation-request/tracker");
-				Proxy nProxy = Proxy.NO_PROXY;
-				HttpURLConnection con = (HttpURLConnection)url.openConnection(nProxy);
+			    Connection c = DataBaseManager.getConnection();
+				ValidatorForm validator = ValidatorDAO.getValidator(c);
+				if(validator.getStatus() == 1){
+					URL url = new URL(validator.getUrl());
+					Proxy nProxy = Proxy.NO_PROXY;
+					HttpURLConnection con = (HttpURLConnection)url.openConnection(nProxy);
+					DataBaseManager.closeConnection(c);
 				con.setRequestMethod("POST");
 				con.setRequestProperty("Content-Type", "application/json");
 				con.setRequestProperty("Accept", "application/json");
@@ -105,10 +110,14 @@ public class CartuchoAccesibilidad extends Cartucho {
     														}
     				Log.warn(response.toString());
 					}
-				
-					//EvaluatorUtils.evaluateContent(checkAccesibility, pmgr.getValue("crawler.core.properties", "check.accessibility.default.language"));
-   		
-			}
+
+				}
+    			
+			
+				else {
+					DataBaseManager.closeConnection(c);
+					EvaluatorUtils.evaluateContent(checkAccesibility, pmgr.getValue("crawler.core.properties", "check.accessibility.default.language"));
+				}
 				
 				
 				

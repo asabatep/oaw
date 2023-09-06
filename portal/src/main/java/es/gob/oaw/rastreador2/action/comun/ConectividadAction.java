@@ -54,6 +54,8 @@ import es.gob.oaw.sim.Respuesta;
 import es.inteco.common.Constants;
 import es.inteco.common.logging.Logger;
 import es.inteco.common.properties.PropertiesManager;
+import es.inteco.intav.dao.ValidatorDAO;
+import es.inteco.intav.form.ValidatorForm;
 import es.inteco.intav.utils.EvaluatorUtils;
 import es.inteco.plugin.dao.DataBaseManager;
 import es.inteco.rastreador2.actionform.semillas.ProxyForm;
@@ -102,6 +104,13 @@ public class ConectividadAction extends Action {
 		} catch (Exception e) {
 			Logger.putLog("Error: ", ConectividadAction.class, Logger.LOG_LEVEL_ERROR, e);
 		}
+		try (Connection c = DataBaseManager.getConnection()) {
+			ValidatorForm validator = ValidatorDAO.getValidator(c);
+			request.setAttribute("validatorconfig", validator);
+			DataBaseManager.closeConnection(c);
+		} catch (Exception e) {
+			Logger.putLog("Error: ", ConectividadAction.class, Logger.LOG_LEVEL_ERROR, e);
+		}
 		String action = request.getParameter(Constants.ACTION);
 		if (action != null) {
 			if ("checkurl".equals(action)) {
@@ -137,6 +146,22 @@ public class ConectividadAction extends Action {
 				} catch (Exception e) {
 					Logger.putLog("Error: ", ConectividadAction.class, Logger.LOG_LEVEL_ERROR, e);
 				}
+			}
+			else if("modifyValidator".equals(action)) {
+				String validatorUrl = request.getParameter("validatorUrl");
+				String validatorStatus = request.getParameter("validatorStatus");
+				// Save validator config
+				try (Connection c = DataBaseManager.getConnection()) {
+					ValidatorForm validator = new ValidatorForm();
+					validator.setStatus("true".equals(validatorStatus) ? 1 : 0);
+					validator.setUrl(validatorUrl);
+					ValidatorDAO.update(c, validator);
+					DataBaseManager.closeConnection(c);
+				} catch (Exception e) {
+					Logger.putLog("Error: ", ConectividadAction.class, Logger.LOG_LEVEL_ERROR, e);
+				}
+
+
 			}
 		}
 		return mapping.findForward(Constants.EXITO);
