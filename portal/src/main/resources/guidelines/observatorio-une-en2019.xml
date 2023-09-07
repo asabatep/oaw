@@ -436,7 +436,7 @@
 				</checks>
 			</subgroup>
 
-			<subgroup aspect="observatory.aspect.general" type="goodpractice">
+			<subgroup aspect="observatory.aspect.general" type="reflowchecks">
 				<!-- Cambios de contexto -->
 				<name>minhap.observatory.5_0.subgroup.2.3</name>
 				<checks>
