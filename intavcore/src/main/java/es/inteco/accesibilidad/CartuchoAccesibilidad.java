@@ -53,14 +53,6 @@ import es.inteco.plugin.dao.DataBaseManager;
  * Implementación de un cartucho que analiza las urls, así como el contenido de las páginas y clasificarlas como maliciosas o no.
  */
 public class CartuchoAccesibilidad extends Cartucho {
-
-	private static String encodeValue(String value) {
-        try {
-            return URLEncoder.encode(value, "UTF-8");
-        } catch (UnsupportedEncodingException ex) {
-            throw new RuntimeException(ex.getCause());
-        }
-    }
 	/**
 	 * Analyzer.
 	 *
