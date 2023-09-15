@@ -312,7 +312,6 @@ public final class BasicServiceUtils {
 				else{
 				
 				if (decode) {
-					Logger.putLog("DECODEEEE", BasicServiceUtils.class, Logger.LOG_LEVEL_WARNING);
 					File tmp = File.createTempFile("oaw_basic_service_", ".txt");
 					org.apache.commons.io.FileUtils.writeByteArrayToFile(tmp, Base64.getUrlDecoder().decode(contentParameter.getBytes(StandardCharsets.ISO_8859_1.name())));
 					content = org.apache.commons.io.FileUtils.readFileToString(tmp, StandardCharsets.ISO_8859_1.name());
