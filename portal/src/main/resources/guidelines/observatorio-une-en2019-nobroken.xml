@@ -229,7 +229,6 @@
 					<check id="49" relatedWith="48" />
 					<!-- Comprobar que el idioma de la página coincide con el declarado -->
 					<check id="442" />
-
 					<check id="503" />
 				</checks>
 			</subgroup>
