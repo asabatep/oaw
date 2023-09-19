@@ -18,6 +18,7 @@ import org.apache.poi.xssf.usermodel.XSSFFormulaEvaluator;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import es.inteco.common.logging.Logger;
 import es.inteco.plugin.dao.DataBaseManager;
 import es.inteco.rastreador2.actionform.semillas.PlantillaForm;
 import es.inteco.rastreador2.dao.plantilla.PlantillaDAO;
@@ -99,8 +100,9 @@ public final class WcagXlsxUtils {
 		int initRow = 8; // Initial rowcount
 		final List<Webpage> webpageList = report.getGraph().get(0).getStructuredSample().getWebpage();
 		final List<NoWebpage> nowebpageList = report.getGraph().get(0).getStructuredSample().getNoWebpage();
-		final int totalPages = webpageList.size() + nowebpageList.size();
-		fillNotTell(workbook, totalPages < MAX_PAGES ? totalPages : MAX_PAGES);
+		final int totalNonPages = nowebpageList.size();
+		final int totalWebPages = webpageList.size();
+		fillNotTell(workbook, totalWebPages < MAX_PAGES ? totalWebPages : MAX_PAGES, totalNonPages < MAX_PAGES ? totalNonPages : MAX_PAGES);
 		for (Webpage webpage : webpageList) {
 			if (resultsProcessed < MAX_PAGES) {
 				resultsProcessed++;
@@ -315,12 +317,13 @@ public final class WcagXlsxUtils {
 		for (HasPart hasPart : auditResult.getHasPart()) {
 			if (resultsProcessed < MAX_PAGES) {
 				String doc = (String) hasPart.getAdditionalProperties().get("Document");
+				
 				if (!doc.contains("pdf")){
-				final Cell cell = sheet.getRow(initRow - 1).getCell(3);
-				cell.setCellFormula(null);
-				cell.setCellValue(odsOutcome(hasPart.getResult().getOutcome()));
-				resultsProcessed++;
-				initRow++;
+					final Cell cell = sheet.getRow(initRow - 1).getCell(3);
+					cell.setCellFormula(null);
+					cell.setCellValue(odsOutcome(hasPart.getResult().getOutcome()));
+					resultsProcessed++;
+					initRow++;
 				}
 			}
 		}
@@ -340,14 +343,14 @@ public final class WcagXlsxUtils {
 			if (resultsProcessed < MAX_PAGES) {
 				String doc = (String) hasPart.getAdditionalProperties().get("Document");
 				if (doc.contains("pdf")){
-				final Cell cell = sheet.getRow(initRow - 1).getCell(3);
-				cell.setCellFormula(null);
-				cell.setCellValue(odsOutcome(hasPart.getResult().getOutcome()));
-				resultsProcessed++;
-				initRow++;
+					final Cell cell = sheet.getRow(initRow - 1).getCell(3);
+					cell.setCellFormula(null);
+					cell.setCellValue(odsOutcome(hasPart.getResult().getOutcome()));
+					resultsProcessed++;
+					initRow++;
+				}
 			}
 		}
-	}
 	}
 
 
@@ -379,11 +382,11 @@ public final class WcagXlsxUtils {
 	 * @param workbook   the workbook
 	 * @param totalPages the total pages
 	 */
-	private static void fillNotTell(final Workbook workbook, final int totalPages) {
+	private static void fillNotTell(final Workbook workbook, final int totalWebPages, final int totalNonWebPages) {
 		final Sheet sheetR5 = workbook.getSheet("R5.Genéricos");
 		int tableRowIndex = 19;
 		while (tableRowIndex <= 129) {
-			for (int i = 0; i < totalPages; i++) {
+			for (int i = 0; i < totalWebPages; i++) {
 				final Cell cell = sheetR5.getRow(i + tableRowIndex - 1).getCell(3);
 //				cell.setCellFormula(null);
 				cell.setCellValue("N/T");
@@ -393,7 +396,7 @@ public final class WcagXlsxUtils {
 		final Sheet sheetR6 = workbook.getSheet("R6.Voz");
 		tableRowIndex = 19;
 		while (tableRowIndex <= 737) {
-			for (int i = 0; i < totalPages; i++) {
+			for (int i = 0; i < totalWebPages; i++) {
 				final Cell cell = sheetR6.getRow(i + tableRowIndex - 1).getCell(3);
 //				cell.setCellFormula(null);
 				cell.setCellValue("N/T");
@@ -403,7 +406,7 @@ public final class WcagXlsxUtils {
 		final Sheet sheetR9 = workbook.getSheet("R9.Web");
 		tableRowIndex = 19;
 		while (tableRowIndex <= 1915) {
-			for (int i = 0; i < totalPages; i++) {
+			for (int i = 0; i < totalWebPages; i++) {
 				final Cell cell = sheetR9.getRow(i + tableRowIndex - 1).getCell(3);
 //				cell.setCellFormula(null);
 				cell.setCellValue("N/T");
@@ -413,7 +416,7 @@ public final class WcagXlsxUtils {
 		final Sheet sheet10 = workbook.getSheet("R10.Documentos no web");
 		tableRowIndex = 19;
 		while (tableRowIndex <= 1725) {
-			for (int i = 0; i < totalPages; i++) {
+			for (int i = 0; i < totalNonWebPages; i++) {
 				final Cell cell = sheet10.getRow(i + tableRowIndex - 1).getCell(3);
 //				cell.setCellFormula(null);
 				cell.setCellValue("N/T");
@@ -423,7 +426,7 @@ public final class WcagXlsxUtils {
 		final Sheet sheetR11 = workbook.getSheet("R11.Software");
 		tableRowIndex = 19;
 		while (tableRowIndex <= 243) {
-			for (int i = 0; i < totalPages; i++) {
+			for (int i = 0; i < totalWebPages; i++) {
 				final Cell cell = sheetR11.getRow(i + tableRowIndex - 1).getCell(3);
 				cell.setCellFormula(null);
 //				cell.setCellType(CellType.STRING);
@@ -434,7 +437,7 @@ public final class WcagXlsxUtils {
 		final Sheet sheetR12 = workbook.getSheet("R12.ServiciosApoyo");
 		tableRowIndex = 19;
 		while (tableRowIndex <= 205) {
-			for (int i = 0; i < totalPages; i++) {
+			for (int i = 0; i < totalWebPages; i++) {
 				final Cell cell = sheetR12.getRow(i + tableRowIndex - 1).getCell(3);
 				cell.setCellFormula(null);
 //				cell.setCellType(CellType.STRING);

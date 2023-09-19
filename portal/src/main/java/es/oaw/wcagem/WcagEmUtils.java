@@ -17,7 +17,6 @@ import org.apache.struts.util.MessageResources;
 import es.gob.oaw.rastreador2.observatorio.ObservatoryManager;
 import es.gob.oaw.rastreador2.pdf.utils.CheckDescriptionsManager;
 import es.inteco.common.Constants;
-import es.inteco.common.logging.Logger;
 import es.inteco.intav.datos.AnalisisDatos;
 import es.inteco.intav.form.ObservatoryEvaluationForm;
 import es.inteco.intav.form.ObservatorySubgroupForm;
@@ -322,7 +321,6 @@ public final class WcagEmUtils {
 			int randCounterNoWeb = 0;
 			// Iterate currentEvaluationPageList to preserve order
 			for (ObservatoryEvaluationForm eval : currentEvaluationPageList) {
-				Logger.putLog("URL: " + eval.getUrl(), WcagEmUtils.class, Logger.LOG_LEVEL_WARNING);
 				if(!eval.getUrl().endsWith(".pdf")){
 				Webpage webpage = new Webpage();
 				webpage.setType(Arrays.asList(new String[] { "TestSubject", "WebPage" }));
@@ -335,7 +333,6 @@ public final class WcagEmUtils {
 				randCounter++;
 			}
 				else {
-				Logger.putLog("DOCUMENTO PDF", WcagEmUtils.class, Logger.LOG_LEVEL_WARNING);
 				NoWebpage noWebpage = new NoWebpage();
 				noWebpage.setType(Arrays.asList(new String[] { "TestSubject", "WebPage" }));
 				noWebpage.setId("_:struct_" + randCounterNoWeb);
@@ -608,7 +605,6 @@ public final class WcagEmUtils {
 				
 				if (checkWcagRelationMap.get(wcagEmId) != null && ((List<String>) checkWcagRelationMap.get(wcagEmId)).contains(problem.getCheck())) {
 					problemsrealtedThisWcagPoint.add(problem);
-					Logger.putLog("PROBLEMA: " + problem.getCheck() + "WCAGID: " + wcagEmId, WcagEmUtils.class, Logger.LOG_LEVEL_WARNING);
 				}
 			}
 		}
