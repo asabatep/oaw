@@ -7,7 +7,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.poi.ss.usermodel.Cell;
 import org.jopendocument.dom.ODValueType;
 import org.jopendocument.dom.spreadsheet.MutableCell;
 import org.jopendocument.dom.spreadsheet.Sheet;
@@ -81,8 +80,9 @@ public final class WcagOdsUtils {
 		int initRow = 8; // Initial rowcount
 		final List<Webpage> webpageList = report.getGraph().get(0).getStructuredSample().getWebpage();
 		final List<NoWebpage> nowebpageList = report.getGraph().get(0).getStructuredSample().getNoWebpage();
-		final int totalPages = webpageList.size() + nowebpageList.size();
-		fillNotTell(workbook, totalPages < MAX_PAGES ? totalPages : MAX_PAGES);
+		final int totalWebPages = webpageList.size();
+		final int totalNonWebPages = nowebpageList.size();
+		fillNotTell(workbook, totalWebPages < MAX_PAGES ? totalWebPages : MAX_PAGES, totalNonWebPages < MAX_PAGES ? totalNonWebPages : MAX_PAGES);
 		for (Webpage webpage : webpageList) {
 			if (resultsProcessed < MAX_PAGES) {
 				resultsProcessed++;
@@ -105,6 +105,7 @@ public final class WcagOdsUtils {
 		}
 		final Sheet sheetR9 = workbook.getSheet("R9.Web");
 		final Sheet sheetR10 = workbook.getSheet("R10.Documentos no web");
+		
 		resultsProcessed = 0;
 		for (AuditResult auditResult : report.getGraph().get(0).getAuditResult()) {
 			if (resultsProcessed < MAX_PAGES) {
@@ -113,101 +114,101 @@ public final class WcagOdsUtils {
 				// P1
 				case "WCAG2:non-text-content":
 					fillResult(sheetR9, auditResult, 19);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 19);
+					fillResultPdf(sheetR10, auditResult, 19);
 					break;
 				case "WCAG2:info-and-relationships":
 					fillResult(sheetR9, auditResult, 209);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 209);
+					fillResultPdf(sheetR10, auditResult, 209);
 					break;
 				case "WCAG2:orientation":
 					fillResult(sheetR9, auditResult, 323);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 323);
+					fillResultPdf(sheetR10, auditResult, 323);
 					break;
 				case "WCAG2:identify-input-purpose":
 					fillResult(sheetR9, auditResult, 361);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 361);
+					fillResultPdf(sheetR10, auditResult, 361);
 					break;
 				case "WCAG2:contrast-minimum":
 					fillResult(sheetR9, auditResult, 475);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 475);
+					fillResultPdf(sheetR10, auditResult, 475);
 					break;
 				case "WCAG2:reflow":
 					fillResult(sheetR9, auditResult, 589);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 589);
+					fillResultPdf(sheetR10, auditResult, 589);
 					break;
 				case "WCAG2:text-spacing":
 					fillResult(sheetR9, auditResult, 665);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 665);
+					fillResultPdf(sheetR10, auditResult, 665);
 					break;
 				// P2
 				case "WCAG2:keyboard":
 					fillResult(sheetR9, auditResult, 741);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 741);
+					fillResultPdf(sheetR10, auditResult, 741);
 					break;
 				case "WCAG2:timing-adjustable":
 					fillResult(sheetR9, auditResult, 855);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 855);
+					fillResultPdf(sheetR10, auditResult, 855);
 					break;
 				case "WCAG2:pause-stop-hide":
 					fillResult(sheetR9, auditResult, 893);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 893);
+					fillResultPdf(sheetR10, auditResult, 893);
 					break;
 				case "WCAG2:three-flashes-or-below-threshold":
 					fillResult(sheetR9, auditResult, 931);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 931);
+					fillResultPdf(sheetR10, auditResult, 931);
 					break;
 				case "WCAG2:bypass-blocks":
 					fillResult(sheetR9, auditResult, 969);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 969);
+					fillResultPdf(sheetR10, auditResult, 969);
 					break;
 				case "WCAG2:page-titled":
 					fillResult(sheetR9, auditResult, 1007);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 969);
+					fillResultPdf(sheetR10, auditResult, 969);
 					break;
 				case "WCAG2:focus-order":
 					fillResult(sheetR9, auditResult, 1045);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1045);
+					fillResultPdf(sheetR10, auditResult, 1045);
 					break;
 				case "WCAG2:link-purpose-in-context":
 					fillResult(sheetR9, auditResult, 1083);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1083);
+					fillResultPdf(sheetR10, auditResult, 1083);
 					break;
 				case "WCAG2:multiple-ways":
 					fillResult(sheetR9, auditResult, 1121);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1121);
+					fillResultPdf(sheetR10, auditResult, 1121);
 					break;
 				case "WCAG2:focus-visible":
 					fillResult(sheetR9, auditResult, 1197);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1197);
+					fillResultPdf(sheetR10, auditResult, 1197);
 					break;
 				case "WCAG2:label-in-name":
 					fillResult(sheetR9, auditResult, 1311);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1235);
+					fillResultPdf(sheetR10, auditResult, 1235);
 					break;
 				// P3
 				case "WCAG2:language-of-page":
 					fillResult(sheetR9, auditResult, 1387);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1311);
+					fillResultPdf(sheetR10, auditResult, 1311);
 					break;
 				case "WCAG2:language-of-parts":
 					fillResult(sheetR9, auditResult, 1425);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1425);
+					fillResultPdf(sheetR10, auditResult, 1425);
 					break;
 				case "WCAG2:on-focus":
 					fillResult(sheetR9, auditResult, 1463);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1463);
+					fillResultPdf(sheetR10, auditResult, 1463);
 					break;
 				case "WCAG2:on-input":
 					fillResult(sheetR9, auditResult, 1501);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1501);
+					fillResultPdf(sheetR10, auditResult, 1501);
 					break;
 				case "WCAG2:consistent-navigation":
 					fillResult(sheetR9, auditResult, 1539);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1539);
+					fillResultPdf(sheetR10, auditResult, 1539);
 					break;
 				case "WCAG2:labels-or-instructions":
 					fillResult(sheetR9, auditResult, 1653);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1653);
+					fillResultPdf(sheetR10, auditResult, 1653);
 					break;
 				// p4
 				case "WCAG2:parsing":
@@ -228,33 +229,19 @@ public final class WcagOdsUtils {
 	}
 
 	private static void setNoWebPages(Sheet sheetR10, int numElements, boolean pdfActive) {
-		if(!pdfActive){
 		// N/T
-		fillResultNoWeb(sheetR10, numElements, 19, DEFAULT_VALUE_NT); // "WCAG2:non-text-content"
-		fillResultNoWeb(sheetR10, numElements, 209, DEFAULT_VALUE_NT); // "WCAG2:info-and-relationships"
-		fillResultNoWeb(sheetR10, numElements, 323, DEFAULT_VALUE_NT); // "WCAG2:orientation"
-		fillResultNoWeb(sheetR10, numElements, 361, DEFAULT_VALUE_NT); // "WCAG2:identify-input-purpose":
-		fillResultNoWeb(sheetR10, numElements, 475, DEFAULT_VALUE_NT); // "WCAG2:contrast-minimum":
-		fillResultNoWeb(sheetR10, numElements, 589, DEFAULT_VALUE_NT); // "WCAG2:reflow":
-		fillResultNoWeb(sheetR10, numElements, 665, DEFAULT_VALUE_NT); // "WCAG2:text-spacing"
-		fillResultNoWeb(sheetR10, numElements, 741, DEFAULT_VALUE_NT); // "WCAG2:keyboard"
-		fillResultNoWeb(sheetR10, numElements, 855, DEFAULT_VALUE_NT); // "WCAG2:timing-adjustable"
-		fillResultNoWeb(sheetR10, numElements, 893, DEFAULT_VALUE_NT); // "WCAG2:pause-stop-hide"
-		fillResultNoWeb(sheetR10, numElements, 931, DEFAULT_VALUE_NT); // "WCAG2:three-flashes-or-below-threshold"
-		fillResultNoWeb(sheetR10, numElements, 969, DEFAULT_VALUE_NT); // "WCAG2:bypass-blocks"
-		fillResultNoWeb(sheetR10, numElements, 1007, DEFAULT_VALUE_NT); // "WCAG2:page-titled"
-		fillResultNoWeb(sheetR10, numElements, 1045, DEFAULT_VALUE_NT); // "WCAG2:focus-order"
-		fillResultNoWeb(sheetR10, numElements, 1083, DEFAULT_VALUE_NT); // "WCAG2:link-purpose-in-context"
-		fillResultNoWeb(sheetR10, numElements, 1121, DEFAULT_VALUE_NT); // "WCAG2:multiple-ways"
-		fillResultNoWeb(sheetR10, numElements, 1197, DEFAULT_VALUE_NT); // "WCAG2:focus-visible"
-		fillResultNoWeb(sheetR10, numElements, 1311, DEFAULT_VALUE_NT); // "WCAG2:label-in-name"
-		fillResultNoWeb(sheetR10, numElements, 1349, DEFAULT_VALUE_NT); // "WCAG2:language-of-page"
-		fillResultNoWeb(sheetR10, numElements, 1425, DEFAULT_VALUE_NT); // "WCAG2:language-of-parts"
-		fillResultNoWeb(sheetR10, numElements, 1463, DEFAULT_VALUE_NT); // "WCAG2:on-focus"
-		fillResultNoWeb(sheetR10, numElements, 1501, DEFAULT_VALUE_NT); // "WCAG2:on-input"
-		fillResultNoWeb(sheetR10, numElements, 1539, DEFAULT_VALUE_NT); // "WCAG2:consistent-navigation"
-		fillResultNoWeb(sheetR10, numElements, 1653, DEFAULT_VALUE_NT); // "WCAG2:labels-or-instructions"
-		}
+		fillResultNoWeb(sheetR10, numElements, 247, DEFAULT_VALUE_NT); 
+		fillResultNoWeb(sheetR10, numElements, 285, DEFAULT_VALUE_NT); 
+		fillResultNoWeb(sheetR10, numElements, 399, DEFAULT_VALUE_NT); 
+		fillResultNoWeb(sheetR10, numElements, 513, DEFAULT_VALUE_NT); 
+		fillResultNoWeb(sheetR10, numElements, 551, DEFAULT_VALUE_NT); 
+		fillResultNoWeb(sheetR10, numElements, 627, DEFAULT_VALUE_NT); 
+		fillResultNoWeb(sheetR10, numElements, 779, DEFAULT_VALUE_NT); 
+		fillResultNoWeb(sheetR10, numElements, 817, DEFAULT_VALUE_NT); 
+		fillResultNoWeb(sheetR10, numElements, 1007, DEFAULT_VALUE_NT); 
+		fillResultNoWeb(sheetR10, numElements, 1349, DEFAULT_VALUE_NT); 
+		fillResultNoWeb(sheetR10, numElements, 1615, DEFAULT_VALUE_NT);
+		
 		// N/A
 		fillResultNoWeb(sheetR10, numElements, 57, DEFAULT_VALUE_NA);
 		fillResultNoWeb(sheetR10, numElements, 95, DEFAULT_VALUE_NA);
@@ -351,11 +338,11 @@ public final class WcagOdsUtils {
 	 * @param workbook   the workbook
 	 * @param totalPages the total pages
 	 */
-	private static void fillNotTell(final SpreadSheet workbook, final int totalPages) {
+	private static void fillNotTell(final SpreadSheet workbook, final int totalWebPages, final int totalNonWebPages) {
 		final Sheet sheetR5 = workbook.getSheet("R5.Genéricos");
 		int tableRowIndex = 19;
 		while (tableRowIndex <= 129) {
-			for (int i = 0; i < totalPages; i++) {
+			for (int i = 0; i < totalWebPages; i++) {
 				sheetR5.getCellAt("D" + (i + tableRowIndex)).setValue("N/T");
 			}
 			tableRowIndex = tableRowIndex + 38;
@@ -363,7 +350,7 @@ public final class WcagOdsUtils {
 		final Sheet sheetR6 = workbook.getSheet("R6.Voz");
 		tableRowIndex = 19;
 		while (tableRowIndex <= 737) {
-			for (int i = 0; i < totalPages; i++) {
+			for (int i = 0; i < totalWebPages; i++) {
 				sheetR6.getCellAt("D" + (i + tableRowIndex)).setValue("N/T");
 			}
 			tableRowIndex = tableRowIndex + 38;
@@ -371,15 +358,25 @@ public final class WcagOdsUtils {
 		final Sheet sheetR9 = workbook.getSheet("R9.Web");
 		tableRowIndex = 19;
 		while (tableRowIndex <= 1915) {
-			for (int i = 0; i < totalPages; i++) {
+			for (int i = 0; i < totalWebPages; i++) {
 				sheetR9.getCellAt("D" + (i + tableRowIndex)).setValue("N/T");
 			}
 			tableRowIndex = tableRowIndex + 38;
 		}
+		
+		final Sheet sheetR10 = workbook.getSheet("R10.Documentos no web");
+		tableRowIndex = 19;
+		while (tableRowIndex <= 1725) {
+			for (int i = 0; i < totalWebPages; i++) {
+				sheetR10.getCellAt("D" + (i + tableRowIndex)).setValue("N/T");
+			}
+			tableRowIndex = tableRowIndex + 38;
+		}
+		
 		final Sheet sheetR11 = workbook.getSheet("R11.Software");
 		tableRowIndex = 19;
 		while (tableRowIndex <= 243) {
-			for (int i = 0; i < totalPages; i++) {
+			for (int i = 0; i < totalWebPages; i++) {
 				sheetR11.getCellAt("D" + (i + tableRowIndex)).setValue("N/T");
 			}
 			tableRowIndex = tableRowIndex + 38;
@@ -387,7 +384,7 @@ public final class WcagOdsUtils {
 		final Sheet sheetR12 = workbook.getSheet("R12.ServiciosApoyo");
 		tableRowIndex = 19;
 		while (tableRowIndex <= 205) {
-			for (int i = 0; i < totalPages; i++) {
+			for (int i = 0; i < totalWebPages; i++) {
 				sheetR12.getCellAt("D" + (i + tableRowIndex)).setValue("N/T");
 			}
 			tableRowIndex = tableRowIndex + 38;
