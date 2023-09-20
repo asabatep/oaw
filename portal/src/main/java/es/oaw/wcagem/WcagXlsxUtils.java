@@ -228,14 +228,15 @@ public final class WcagXlsxUtils {
 					break;
 				case "WCAG2:labels-or-instructions":
 					fillResult(sheetR9, auditResult, 1653);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1653);
 					break;
 				// p4
 				case "WCAG2:parsing":
 					fillResult(sheetR9, auditResult, 1767);
+					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1615);
 					break;
 				case "WCAG2:name-role-value":
 					fillResult(sheetR9, auditResult, 1805);
+					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1653);
 					break;
 				default:
 					break;
@@ -258,50 +259,51 @@ public final class WcagXlsxUtils {
 	}
 
 	private static void setNoWebPages(Sheet sheetR10, int numElements, boolean pdfActive) {
-		if(!pdfActive){
+		
 		// N/T
-		fillResultNoWeb(sheetR10, numElements, 19, DEFAULT_VALUE_NT); // "WCAG2:non-text-content"
-		fillResultNoWeb(sheetR10, numElements, 209, DEFAULT_VALUE_NT); // "WCAG2:info-and-relationships"
-		fillResultNoWeb(sheetR10, numElements, 323, DEFAULT_VALUE_NT); // "WCAG2:orientation"
-		fillResultNoWeb(sheetR10, numElements, 361, DEFAULT_VALUE_NT); // "WCAG2:identify-input-purpose":
-		fillResultNoWeb(sheetR10, numElements, 475, DEFAULT_VALUE_NT); // "WCAG2:contrast-minimum":
-		fillResultNoWeb(sheetR10, numElements, 589, DEFAULT_VALUE_NT); // "WCAG2:reflow":
-		fillResultNoWeb(sheetR10, numElements, 665, DEFAULT_VALUE_NT); // "WCAG2:text-spacing"
-		fillResultNoWeb(sheetR10, numElements, 741, DEFAULT_VALUE_NT); // "WCAG2:keyboard"
-		fillResultNoWeb(sheetR10, numElements, 855, DEFAULT_VALUE_NT); // "WCAG2:timing-adjustable"
-		fillResultNoWeb(sheetR10, numElements, 893, DEFAULT_VALUE_NT); // "WCAG2:pause-stop-hide"
-		fillResultNoWeb(sheetR10, numElements, 931, DEFAULT_VALUE_NT); // "WCAG2:three-flashes-or-below-threshold"
-		fillResultNoWeb(sheetR10, numElements, 969, DEFAULT_VALUE_NT); // "WCAG2:bypass-blocks"
-		fillResultNoWeb(sheetR10, numElements, 1007, DEFAULT_VALUE_NT); // "WCAG2:page-titled"
-		fillResultNoWeb(sheetR10, numElements, 1045, DEFAULT_VALUE_NT); // "WCAG2:focus-order"
-		fillResultNoWeb(sheetR10, numElements, 1083, DEFAULT_VALUE_NT); // "WCAG2:link-purpose-in-context"
-		fillResultNoWeb(sheetR10, numElements, 1121, DEFAULT_VALUE_NT); // "WCAG2:multiple-ways"
-		fillResultNoWeb(sheetR10, numElements, 1197, DEFAULT_VALUE_NT); // "WCAG2:focus-visible"
-		fillResultNoWeb(sheetR10, numElements, 1311, DEFAULT_VALUE_NT); // "WCAG2:label-in-name"
-		fillResultNoWeb(sheetR10, numElements, 1349, DEFAULT_VALUE_NT); // "WCAG2:language-of-page"
-		fillResultNoWeb(sheetR10, numElements, 1425, DEFAULT_VALUE_NT); // "WCAG2:language-of-parts"
-		fillResultNoWeb(sheetR10, numElements, 1463, DEFAULT_VALUE_NT); // "WCAG2:on-focus"
-		fillResultNoWeb(sheetR10, numElements, 1501, DEFAULT_VALUE_NT); // "WCAG2:on-input"
-		fillResultNoWeb(sheetR10, numElements, 1539, DEFAULT_VALUE_NT); // "WCAG2:consistent-navigation"
-		fillResultNoWeb(sheetR10, numElements, 1653, DEFAULT_VALUE_NT); // "WCAG2:labels-or-instructions"
-		}
-		// N/A
-		fillResultNoWeb(sheetR10, numElements, 57, DEFAULT_VALUE_NA);
-		fillResultNoWeb(sheetR10, numElements, 95, DEFAULT_VALUE_NA);
-		fillResultNoWeb(sheetR10, numElements, 133, DEFAULT_VALUE_NA);
-		fillResultNoWeb(sheetR10, numElements, 171, DEFAULT_VALUE_NA);
-		fillResultNoWeb(sheetR10, numElements, 437, DEFAULT_VALUE_NA);
-		fillResultNoWeb(sheetR10, numElements, 665, DEFAULT_VALUE_NA);
-		fillResultNoWeb(sheetR10, numElements, 703, DEFAULT_VALUE_NA);
-		fillResultNoWeb(sheetR10, numElements, 855, DEFAULT_VALUE_NA);
-		fillResultNoWeb(sheetR10, numElements, 893, DEFAULT_VALUE_NA);
-		fillResultNoWeb(sheetR10, numElements, 931, DEFAULT_VALUE_NA);
-		fillResultNoWeb(sheetR10, numElements, 1159, DEFAULT_VALUE_NA);
-		fillResultNoWeb(sheetR10, numElements, 1197, DEFAULT_VALUE_NA);
-		fillResultNoWeb(sheetR10, numElements, 1273, DEFAULT_VALUE_NA);
-		fillResultNoWeb(sheetR10, numElements, 1387, DEFAULT_VALUE_NA);
-		fillResultNoWeb(sheetR10, numElements, 1577, DEFAULT_VALUE_NA);
-		fillResultNoWeb(sheetR10, numElements, 1691, DEFAULT_VALUE_NA);
+		fillResultNoWeb(sheetR10, numElements, 57, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 95, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 133, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 171, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 247, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 285, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 323, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 361, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 399, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 437, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 475, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 513, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 551, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 589, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 627, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 665, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 703, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 741, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 779, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 817, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 855, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 893, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 931, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 1007, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 1045, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 1083, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 1121, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 1159, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 1197, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 1235, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 1273, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 1349, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 1387, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 1425, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 1463, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 1501, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 1539, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 1577, DEFAULT_VALUE_NT);
+		fillResultNoWeb(sheetR10, numElements, 1691, DEFAULT_VALUE_NT);
+
+
+
+		
 	}
 
 	/**
