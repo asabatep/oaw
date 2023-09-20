@@ -421,15 +421,11 @@ public final class WcagEmUtils {
 			/*
 			 * This OAW verification points only matchs with a single WCAG verfication
 			 */
-			// Check 1.1.1
-			//processSimpleVerification(tmpWcag, tmp.get(_1_1), WcagEmPointKey.WCAG_1_1_1.getWcagEmId(), false);
 			processSimpleVerification(tmpWcag, tmp.get(_2_3), WcagEmPointKey.WCAG_1_4_10.getWcagEmId(), false);
 			// Check 2.4.4
 			processSimpleVerification(tmpWcag, tmp.get(_1_12), WcagEmPointKey.WCAG_2_4_4.getWcagEmId(), false);
 			// Check 2.4.5
 			processSimpleVerification(tmpWcag, tmp.get(_2_4), WcagEmPointKey.WCAG_2_4_5.getWcagEmId(), false);
-			// Check 3.1.1
-			processSimpleVerification(tmpWcag, tmp.get(_1_7), WcagEmPointKey.WCAG_3_1_1.getWcagEmId(), false);
 			// Check 3.1.2
 			processSimpleVerification(tmpWcag, tmp.get(_2_1), WcagEmPointKey.WCAG_3_1_2.getWcagEmId(), false);
 			// Check 3.2.3
@@ -452,8 +448,6 @@ public final class WcagEmUtils {
 			processSimpleVerification(tmpWcag, tmp.get(_1_9), WcagEmPointKey.WCAG_2_5_3.getWcagEmId(), true);
 			// Check 2.4.1
 			processSimpleVerification(tmpWcag, tmp.get(_1_11), WcagEmPointKey.WCAG_2_4_1.getWcagEmId(), true);
-			// Check 2.4.2
-			processSimpleVerification(tmpWcag, tmp.get(_1_11), WcagEmPointKey.WCAG_2_4_2.getWcagEmId(), true);
 			// Check 3.2.1
 			processSimpleVerification(tmpWcag, tmp.get(_1_13), WcagEmPointKey.WCAG_3_2_1.getWcagEmId(), true);
 			// Check 3.2.2
@@ -490,13 +484,25 @@ public final class WcagEmUtils {
 			verifications.add(tmp.get(_1_6));
 			verifications.add(tmp.get(_1_9));
 			verifications.add(tmp.get(_1_10));
+			verifications.add(tmp.get(_1_14));
 			processMultipleVerification(tmpWcag, verifications, WcagEmPointKey.WCAG_1_3_1.getWcagEmId(), true);
+
+			verifications = new ArrayList<ObservatorySubgroupForm>();
+			verifications.add(tmp.get(_1_14));
+			verifications.add(tmp.get(_1_7));
+			processMultipleVerification(tmpWcag, verifications, WcagEmPointKey.WCAG_3_1_1.getWcagEmId(), true);
+
+			verifications = new ArrayList<ObservatorySubgroupForm>();
+			verifications.add(tmp.get(_1_14));
+			verifications.add(tmp.get(_1_11));
+			processMultipleVerification(tmpWcag, verifications, WcagEmPointKey.WCAG_2_4_2.getWcagEmId(), true);
 			// Check 4.1.2
 			verifications = new ArrayList<ObservatorySubgroupForm>();
 			verifications.add(tmp.get(_1_8));
 			verifications.add(tmp.get(_1_9));
 			verifications.add(tmp.get(_1_10));
 			verifications.add(tmp.get(_1_11));
+			verifications.add(tmp.get(_1_14));
 			processMultipleVerification(tmpWcag, verifications, WcagEmPointKey.WCAG_4_1_2.getWcagEmId(), true);
 			// Add to globall
 			wcagCompliance.put(url, tmpWcag);
@@ -865,7 +871,7 @@ public final class WcagEmUtils {
 		checks.add("406"); // 1.10
 		checks.add("417"); // 1.10
 		checks.add("407"); // 1.10
-		checks.add("503");
+		checks.add("502");
 		checks.add("506");
 		checks.add("507");
 		checks.add("509");
@@ -922,6 +928,7 @@ public final class WcagEmUtils {
 		checks.add("51");// 1.11
 		checks.add("53");// 1.11
 		checks.add("462");// 1.11
+		checks.add("502");
 		checks.add("504");
 		checkWcagRelationMap.put(WcagEmPointKey.WCAG_2_4_2.getWcagEmId(), checks);
 		// 2.4.3
@@ -942,6 +949,12 @@ public final class WcagEmUtils {
 		checks.add("452");// 1.13
 		checks.add("453");// 1.13
 		checkWcagRelationMap.put(WcagEmPointKey.WCAG_3_2_1.getWcagEmId(), checks);
+		
+		checks = new ArrayList<>();
+		checks.add("502");
+		checks.add("503");
+		checkWcagRelationMap.put(WcagEmPointKey.WCAG_3_1_1.getWcagEmId(), checks);
+
 		// 3.2.1
 		checks = new ArrayList<>();
 		checks.add("454");// 1.13
@@ -953,6 +966,7 @@ public final class WcagEmUtils {
 
 		checks = new ArrayList<>();
 		checks.add("501");
+		checks.add("502");
 		checks.add("505");
 		checkWcagRelationMap.put(WcagEmPointKey.WCAG_4_1_1.getWcagEmId(), checks);
 		// 4.1.2
@@ -967,6 +981,9 @@ public final class WcagEmUtils {
 		checks.add("31");// 1.11
 		checks.add("295");// 1.11
 		checks.add("158");// 1.11
+		checks.add("502");
+		checks.add("506");
+		checks.add("507");
 		checkWcagRelationMap.put(WcagEmPointKey.WCAG_4_1_2.getWcagEmId(), checks);
 		return checkWcagRelationMap;
 	}
