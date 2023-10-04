@@ -220,7 +220,7 @@ public class BasicServiceManager {
 					try {
 			    	Connection c = DataBaseManager.getConnection();
 					ValidatorForm validator = ValidatorDAO.getValidator(c);
-					if(validator.getStatus() == 1){
+					if(validator.getStatus() == 1 && validator.getPdfActive() == 1){
 						pdfActive = true;
 						DataBaseManager.closeConnection(c);
 					}

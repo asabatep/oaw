@@ -17,6 +17,9 @@ public class ValidatorForm {
 	
 	/** The url. */
 	private String url;
+
+	/** If the pdf validation is active */
+	private Integer pdfActive;
 	
     
 }

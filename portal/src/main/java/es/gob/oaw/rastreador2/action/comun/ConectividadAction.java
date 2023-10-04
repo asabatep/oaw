@@ -150,10 +150,12 @@ public class ConectividadAction extends Action {
 			else if("modifyValidator".equals(action)) {
 				String validatorUrl = request.getParameter("validatorUrl");
 				String validatorStatus = request.getParameter("validatorStatus");
+				String pdfActive = request.getParameter("pdfActive");
 				// Save validator config
 				try (Connection c = DataBaseManager.getConnection()) {
 					ValidatorForm validator = new ValidatorForm();
 					validator.setStatus("true".equals(validatorStatus) ? 1 : 0);
+					validator.setPdfActive("true".equals(pdfActive) ? 1 : 0);
 					validator.setUrl(validatorUrl);
 					ValidatorDAO.update(c, validator);
 					DataBaseManager.closeConnection(c);
@@ -165,18 +167,6 @@ public class ConectividadAction extends Action {
 			}
 		}
 		return mapping.findForward(Constants.EXITO);
-	}
-
-	/**
-	 * Change proxy status.
-	 *
-	 * @param request  the request
-	 * @param response the response
-	 * @param email    the email
-	 * @return the action forward
-	 */
-	private ActionForward changeProxyStatus(HttpServletRequest request, HttpServletResponse response, String email) {
-		return null;
 	}
 
 	/**
