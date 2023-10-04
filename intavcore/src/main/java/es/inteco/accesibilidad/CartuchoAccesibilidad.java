@@ -108,7 +108,9 @@ public class CartuchoAccesibilidad extends Cartucho {
 			
 				else {
 					DataBaseManager.closeConnection(c);
-					EvaluatorUtils.evaluateContent(checkAccesibility, pmgr.getValue("crawler.core.properties", "check.accessibility.default.language"));
+					if (checkAccesibility.getUrl() != null && !checkAccesibility.getUrl().contains(".pdf")) {
+						EvaluatorUtils.evaluateContent(checkAccesibility, pmgr.getValue("crawler.core.properties", "check.accessibility.default.language"));
+					}
 				}
 				
 				
