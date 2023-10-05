@@ -161,20 +161,6 @@ public final class BasicServiceUtils {
 			
 			
 			basicServiceForm.setDomain(url);
-			//Si la validacion de pdf no está activa no se inserta la url
-			if(url.endsWith(".pdf")){
-				try {
-			    Connection c = DataBaseManager.getConnection();
-				ValidatorForm validator = ValidatorDAO.getValidator(c);
-				if(validator.getStatus() == 0 || validator.getPdfActive() == 0){
-					basicServiceForm.setDomain(null);
-				}
-				DataBaseManager.closeConnection(c);
-				}
-				catch (Exception e){
-					e.printStackTrace();
-				}
-			}
 			if (StringUtils.isNotEmpty(basicServiceForm.getDomain())) {
 				basicServiceForm.setDomain(es.inteco.utils.CrawlerUtils.encodeUrl(basicServiceForm.getDomain()));
 			}
@@ -222,19 +208,6 @@ public final class BasicServiceUtils {
 				}
 			}
 			
-			//Si la validacion de pdf no está activa no se insertan la urls de pdf
-				
-				try {
-			    Connection c = DataBaseManager.getConnection();
-				ValidatorForm validator = ValidatorDAO.getValidator(c);
-				if(validator.getStatus() == 0 || validator.getPdfActive() == 0){
-					url = cleanPdfUrls(url);
-				}
-				DataBaseManager.closeConnection(c);
-				}
-				catch (Exception e){
-					e.printStackTrace();
-				}
 			basicServiceForm.setDomain(url);
 			
 			
@@ -292,9 +265,6 @@ public final class BasicServiceUtils {
 									BasicServiceFile file = new BasicServiceFile();
 									String content = "";
 									if(name.endsWith(".pdf")){
-										if(validator.getStatus() == 0 || validator.getPdfActive() == 0){
-											continue;
-										}
 										InputStream inputStream = zipFile.getInputStream(entry);
 										ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                     					byte[] buffer = new byte[1024];
@@ -348,10 +318,9 @@ public final class BasicServiceUtils {
 			try {
 				String content = "";
 				if (!org.apache.commons.lang3.StringUtils.isEmpty(parameterFileName) && parameterFileName.toLowerCase().endsWith(".pdf")) {
-						if (validator.getStatus() == 1 && validator.getPdfActive() == 1){
 							// Por alguna razón no se codifica correctamente si pasamos un pdf a pelo. 
 							content = contentParameter.replaceAll("_", "/").replaceAll("-", "+");
-						}
+							basicServiceForm.setName(parameterFileName);
 				}
 				else{
 				

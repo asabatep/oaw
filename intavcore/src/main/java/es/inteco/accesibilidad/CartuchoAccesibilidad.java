@@ -24,6 +24,7 @@ import java.net.Proxy;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.sql.Connection;
+import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -76,9 +77,13 @@ public class CartuchoAccesibilidad extends Cartucho {
 		checkAccesibility.setCharset((String) datos.get("charset"));
 		boolean isLast = (Boolean) datos.get("isLast");
 		try {
+				String decodedSource = new String (Base64.getDecoder().decode(checkAccesibility.getContent()));
 			    Connection c = DataBaseManager.getConnection();
 				ValidatorForm validator = ValidatorDAO.getValidator(c);
-				if(validator.getStatus() == 1){
+				if(validator.getPdfActive() == 0 && (checkAccesibility.getUrl().endsWith(".pdf") || decodedSource.contains("application/pdf") )){
+					
+				}
+				else if(validator.getStatus() == 1){
 					URL url = new URL(validator.getUrl());
 					Proxy nProxy = Proxy.NO_PROXY;
 					HttpURLConnection con = (HttpURLConnection)url.openConnection(nProxy);

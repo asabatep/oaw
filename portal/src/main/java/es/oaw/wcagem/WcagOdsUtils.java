@@ -272,6 +272,15 @@ public final class WcagOdsUtils {
 		fillResultNoWeb(sheetR10, numElements, 1577, DEFAULT_VALUE_NT);
 		fillResultNoWeb(sheetR10, numElements, 1691, DEFAULT_VALUE_NT);
 
+		if(!pdfActive){
+			fillResultNoWeb(sheetR10, numElements, 19, DEFAULT_VALUE_NT);
+			fillResultNoWeb(sheetR10, numElements, 209, DEFAULT_VALUE_NT);
+			fillResultNoWeb(sheetR10, numElements, 969, DEFAULT_VALUE_NT);
+			fillResultNoWeb(sheetR10, numElements, 1311, DEFAULT_VALUE_NT);
+			fillResultNoWeb(sheetR10, numElements, 1615, DEFAULT_VALUE_NT);
+			fillResultNoWeb(sheetR10, numElements, 1653, DEFAULT_VALUE_NT);
+		}
+
 
 
 		
