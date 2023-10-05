@@ -213,10 +213,6 @@ public class BasicServiceManager {
 				}
 				// JSON WCAG-EM and ODS
 				if ("true".equalsIgnoreCase(basicServiceForm.getDepthReport())) {
-					WcagEmReport report = WcagEmUtils.generateReport(messageResources, new AnonymousResultExportPdfUNEEN2019(basicServiceForm), basicServiceForm.getName(), idCrawling);
-					//report.getGraph().get(0).getStructuredSample().setNoWebpage(getNoWebPages(crawledLinks));
-					// END PDF FILES
-					// ODS REPORT
 					try {
 			    	Connection c = DataBaseManager.getConnection();
 					ValidatorForm validator = ValidatorDAO.getValidator(c);
@@ -228,6 +224,13 @@ public class BasicServiceManager {
 					catch (Exception e){
 						e.printStackTrace();
 					}
+					WcagEmReport report = WcagEmUtils.generateReport(messageResources, new AnonymousResultExportPdfUNEEN2019(basicServiceForm), basicServiceForm.getName(), idCrawling);
+					if(!pdfActive) {
+						report.getGraph().get(0).getStructuredSample().setNoWebpage(getNoWebPages(crawledLinks));
+					}
+					// END PDF FILES
+					// ODS REPORT
+					
 					
 					SpreadSheet ods = WcagOdsUtils.generateOds(report, pdfActive);
 					File outputFile = new File(new File(pdfPath).getParentFile().getPath() + "/Informe Revision Accesibilidad - Sitios web.ods");

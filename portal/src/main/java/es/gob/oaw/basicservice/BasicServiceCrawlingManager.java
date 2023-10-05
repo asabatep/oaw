@@ -20,6 +20,7 @@ import java.util.List;
 import org.apache.commons.beanutils.BeanUtils;
 
 import es.inteco.common.Constants;
+import es.inteco.common.logging.Logger;
 import es.inteco.common.properties.PropertiesManager;
 import es.inteco.common.utils.StringUtils;
 import es.inteco.crawler.job.CrawledLink;
