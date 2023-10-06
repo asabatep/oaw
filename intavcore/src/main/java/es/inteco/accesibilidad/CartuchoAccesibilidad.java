@@ -18,13 +18,10 @@ package es.inteco.accesibilidad;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.Proxy;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.sql.Connection;
-import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +29,7 @@ import java.util.Set;
 import org.jfree.util.Log;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.GsonBuilder; 
 
 import ca.utoronto.atrc.tile.accessibilitychecker.EvaluatorUtility;
 import es.inteco.common.CheckAccessibility;
@@ -49,6 +46,7 @@ import es.inteco.intav.utils.CacheUtils;
 import es.inteco.intav.utils.EvaluatorUtils;
 import es.inteco.plugin.Cartucho;
 import es.inteco.plugin.dao.DataBaseManager;
+import org.apache.commons.codec.binary.Base64;
 
 /**
  * Implementación de un cartucho que analiza las urls, así como el contenido de las páginas y clasificarlas como maliciosas o no.
@@ -77,13 +75,14 @@ public class CartuchoAccesibilidad extends Cartucho {
 		checkAccesibility.setCharset((String) datos.get("charset"));
 		boolean isLast = (Boolean) datos.get("isLast");
 		try {
-				String decodedSource = new String (Base64.getDecoder().decode(checkAccesibility.getContent()));
+				
 			    Connection c = DataBaseManager.getConnection();
 				ValidatorForm validator = ValidatorDAO.getValidator(c);
-				if(validator.getPdfActive() == 0 && (checkAccesibility.getUrl().endsWith(".pdf") || decodedSource.contains("application/pdf") )){
-					
-				}
-				else if(validator.getStatus() == 1){
+				if(validator.getStatus() == 1){
+					if(validator.getPdfActive() == 0 && (checkAccesibility.getUrl().endsWith(".pdf") || new String(Base64.decodeBase64(checkAccesibility.getContent())).contains("%PDF"))){
+						DataBaseManager.closeConnection(c);
+					}
+					else{
 					URL url = new URL(validator.getUrl());
 					Proxy nProxy = Proxy.NO_PROXY;
 					HttpURLConnection con = (HttpURLConnection)url.openConnection(nProxy);
@@ -107,7 +106,7 @@ public class CartuchoAccesibilidad extends Cartucho {
     														}
     				Log.warn(response.toString());
 					}
-
+				}
 				}
     			
 			
