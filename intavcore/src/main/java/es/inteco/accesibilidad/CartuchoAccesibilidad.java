@@ -79,7 +79,7 @@ public class CartuchoAccesibilidad extends Cartucho {
 			    Connection c = DataBaseManager.getConnection();
 				ValidatorForm validator = ValidatorDAO.getValidator(c);
 				if(validator.getStatus() == 1){
-					if(validator.getPdfActive() == 0 && (checkAccesibility.getUrl().endsWith(".pdf") || new String(Base64.decodeBase64(checkAccesibility.getContent())).contains("%PDF"))){
+					if(validator.getPdfActive() == 0 && (checkAccesibility.getUrl().contains(".pdf") || new String(Base64.decodeBase64(checkAccesibility.getContent())).contains("%PDF"))){
 						DataBaseManager.closeConnection(c);
 					}
 					else{
@@ -112,7 +112,8 @@ public class CartuchoAccesibilidad extends Cartucho {
 			
 				else {
 					DataBaseManager.closeConnection(c);
-					if (checkAccesibility.getUrl() != null && !checkAccesibility.getUrl().contains(".pdf")) {
+					Logger.putLog("CONTENT: " + new String(Base64.decodeBase64(checkAccesibility.getContent())), CartuchoAccesibilidad.class, Logger.LOG_LEVEL_WARNING);
+					if ((checkAccesibility.getUrl() != null && !checkAccesibility.getUrl().contains(".pdf")) && !(new String(Base64.decodeBase64(checkAccesibility.getContent())).contains("%PDF"))) {
 						EvaluatorUtils.evaluateContent(checkAccesibility, pmgr.getValue("crawler.core.properties", "check.accessibility.default.language"));
 					}
 				}

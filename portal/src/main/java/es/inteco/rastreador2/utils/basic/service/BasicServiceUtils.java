@@ -571,7 +571,6 @@ public final class BasicServiceUtils {
 				out.add(url);
 			}
 		}
-		// return Arrays.asList(out).stream().map(Object::toString).collect(Collectors.joining("\n"));
 		return String.join("\n", out);
 	}
 }

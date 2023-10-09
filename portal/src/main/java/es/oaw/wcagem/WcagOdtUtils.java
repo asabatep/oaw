@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -18,6 +20,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.struts.util.MessageResources;
 import org.odftoolkit.odfdom.OdfElement;
@@ -28,11 +31,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 import com.sun.org.apache.xml.internal.dtm.ref.DTMNodeList;
 
 import es.gob.oaw.rastreador2.pdf.utils.CheckDescriptionsManager;
 import es.inteco.common.Constants;
+import es.inteco.common.logging.Logger;
 import es.inteco.intav.form.ObservatoryEvaluationForm;
 import es.inteco.intav.form.ObservatoryLevelForm;
 import es.inteco.intav.form.ObservatorySubgroupForm;
@@ -93,8 +98,13 @@ public class WcagOdtUtils {
 		List<AnalysisResult> errors = null;
 		for (String site : sites.keySet()) {
 			errors = sites.get(site);
-			createHeader(odtDocument, odfFileContent, reportCode, site);
+			if (checkSpecialCharacters(site)) {
+				createHeader(odtDocument, odfFileContent, reportCode, StringEscapeUtils.escapeHtml(site));
+			} else {
+				createHeader(odtDocument, odfFileContent, reportCode, site);
+			}
 			for (AnalysisResult error : errors) {
+
 				createError(odtDocument, odfFileContent, reportCode, error);
 			}
 		}
@@ -107,6 +117,7 @@ public class WcagOdtUtils {
 
 	private static void createHeader(OdfTextDocument odtDocument, OdfFileDom odfFileContent, String reportCode, String site) throws Exception {
 		String header = "<text:p text:style-name=\"P87\" text:outline-level=\"1\">" + site + "</text:p>";
+		Logger.putLog("SITE: " + site, WcagOdtUtils.class, Logger.LOG_LEVEL_WARNING);
 		Element newNode1 = createNewElement(header);
 		appendNodeAtMarkerPosition(odtDocument, odfFileContent, newNode1, searchCodeFormat(reportCode));
 	};
@@ -193,7 +204,7 @@ public class WcagOdtUtils {
 		return null;
 	}
 
-	private static Element createNewElement(String newElement) throws SAXException, IOException, ParserConfigurationException {
+	private static Element createNewElement(String newElement) throws SAXException, SAXParseException, IOException, ParserConfigurationException {
 		return DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new ByteArrayInputStream(newElement.getBytes())).getDocumentElement();
 	}
 
@@ -392,6 +403,13 @@ public class WcagOdtUtils {
 		result.setDescription(title);
 		result.setSolution(solution);
 		return result;
+	}
+
+	private static boolean checkSpecialCharacters(String text) {
+		String specialCharactersRegex = "[!@#$%^&*(),.?\":{}|<>]";
+		Pattern pattern = Pattern.compile(specialCharactersRegex);
+		Matcher matcher = pattern.matcher(text);
+		return matcher.find();
 	}
 
 	private static String cleanHtmlLabels(String message) {
