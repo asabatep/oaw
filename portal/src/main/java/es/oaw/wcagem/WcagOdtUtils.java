@@ -419,4 +419,11 @@ public class WcagOdtUtils {
 			return "-";
 		}
 	}
+
+	private static boolean checkSpecialCharacters(String text) {
+		String specialCharactersRegex = "[!@#$%^&*(),.?\":{}|<>]";
+		Pattern pattern = Pattern.compile(specialCharactersRegex);
+		Matcher matcher = pattern.matcher(text);
+		return matcher.find();
+	}
 }
