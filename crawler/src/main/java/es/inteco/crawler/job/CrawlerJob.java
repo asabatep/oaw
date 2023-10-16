@@ -846,13 +846,15 @@ public class CrawlerJob implements InterruptableJob {
 		try {
 			Connection c = DataBaseManager.getConnection();
 			ValidatorForm validator = ValidatorDAO.getValidator(c);
+			final PropertiesManager pmgr = new PropertiesManager(); 
+			
 			if(validator.getStatus() == 0 || validator.getPdfActive() == 0){
 				DataBaseManager.closeConnection(c);
 				return false;
 			}
 			DataBaseManager.closeConnection(c);
-			
-			if ((float) (pdfCount + 1) / complexity > 0.1){
+			float pdfPercentage = Float.parseFloat(pmgr.getValue(es.inteco.common.Constants.CRAWLER_PROPERTIES, "pdf.max.value"));
+			if ((float) (pdfCount + 1) / complexity > pdfPercentage){
 			Logger.putLog("Superado el maximo numero de pdfs:",CrawlerJob.class, Logger.LOG_LEVEL_WARNING);
 			return false;
 			}
