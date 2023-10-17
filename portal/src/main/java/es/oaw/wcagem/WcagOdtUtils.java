@@ -52,7 +52,7 @@ public class WcagOdtUtils {
 	private static final String[] reportCodes = { "9.1.1.1", "9.1.2.1", "9.1.2.2", "9.1.2.3", "9.1.2.5", "9.1.3.1", "9.1.3.2", "9.1.3.3", "9.1.3.4", "9.1.3.5", "9.1.4.1", "9.1.4.2", "9.1.4.3",
 			"9.1.4.4", "9.1.4.5", "9.1.4.10", "9.1.4.11", "9.1.4.12", "9.1.4.13", "9.2.1.1", "9.2.1.2", "9.2.1.4", "9.2.2.1", "9.2.2.2", "9.2.3.1", "9.2.4.1", "9.2.4.2", "9.2.4.3", "9.2.4.4",
 			"9.2.4.5", "9.2.4.6", "9.2.4.7", "9.2.5.1", "9.2.5.2", "9.2.5.3", "9.2.5.4", "9.3.1.1", "9.3.1.2", "9.3.2.1", "9.3.2.2", "9.3.2.4", "9.3.3.1", "9.3.3.2", "9.3.2.3", "9.3.3.2", "9.3.3.3",
-			"9.3.3.4", "9.4.1.1", "9.4.1.2", "9.4.1.3" };
+			"9.3.3.4", "9.4.1.1", "9.4.1.2", "9.4.1.3" , "10.1.1.1" , "10.1.3.1" , "10.2.4.2" , "10.3.1.1" , "10.4.1.1" , "10.4.1.2"};
 	private static final MessageResources messageResources = MessageResources.getMessageResources(Constants.MESSAGE_RESOURCES_UNE_EN2019);
 	private static final CheckDescriptionsManager checkDescriptionsManager = new CheckDescriptionsManager();
 	private static final String templateName = "hallazgos";
@@ -117,12 +117,12 @@ public class WcagOdtUtils {
 
 	private static void createHeader(OdfTextDocument odtDocument, OdfFileDom odfFileContent, String reportCode, String site) throws Exception {
 		String header = "<text:p text:style-name=\"P87\" text:outline-level=\"1\">" + site + "</text:p>";
-		Logger.putLog("SITE: " + site, WcagOdtUtils.class, Logger.LOG_LEVEL_WARNING);
 		Element newNode1 = createNewElement(header);
 		appendNodeAtMarkerPosition(odtDocument, odfFileContent, newNode1, searchCodeFormat(reportCode));
 	};
 
 	private static void createError(OdfTextDocument odtDocument, OdfFileDom odfFileContent, String reportCode, AnalysisResult error) throws Exception {
+		Logger.putLog("REPORT_CODE_ERROR: " + reportCode, WcagOdtUtils.class, Logger.LOG_LEVEL_WARNING);
 		if (error.getSolution() == null || StringUtils.isBlank(error.getSolution()) || StringUtils.isEmpty(error.getSolution())) {
 			error.setSolution("-");
 		}
@@ -158,8 +158,15 @@ public class WcagOdtUtils {
 			final String name = subGroup.getDescription().substring(subGroup.getDescription().indexOf("minhap.observatory.5_0.subgroup.") + "minhap.observatory.5_0.subgroup.".length());
 			List<String> codes = getWCAGCodes(name);
 			for (String code : codes) {
+				String codeReport = "";
 				if (code != null) {
-					String codeReport = getWCAG2CodeReport(code);
+					if (problem.getCheck().length() == 3 && problem.getCheck().startsWith("5")){
+						codeReport = getWCAG2CodeReportPdf(code);
+						
+					}
+					else {
+						codeReport = getWCAG2CodeReport(code); 
+					}
 					String title = messageResources.getMessage(subGroup.getDescription());
 					String errorMessage = checkDescriptionsManager.getString(problem.getError());
 					String solution = cleanHtmlLabels(checkDescriptionsManager.getString(problem.getRationale()));
@@ -221,6 +228,8 @@ public class WcagOdtUtils {
 		XPath xpath = odt.getXPath();
 		NodeList nodeList = (NodeList) xpath.evaluate(String.format("//%s[contains(text(),'%s')]", "text:p", markername), odfFileContent, XPathConstants.NODESET);
 		OdfElement node;
+		Logger.putLog("NODELIST SIZE: " + nodeList.getLength(), WcagOdtUtils.class, Logger.LOG_LEVEL_WARNING);
+		Logger.putLog("MARKER: " + markername, WcagOdtUtils.class, Logger.LOG_LEVEL_WARNING);
 		for (int i = 0; i < nodeList.getLength(); i++) {
 			node = (OdfElement) nodeList.item(i);
 			if (node.getParentNode() != null) {
@@ -235,6 +244,8 @@ public class WcagOdtUtils {
 	}
 
 	private static void replaceText(final OdfTextDocument odt, final OdfFileDom odfFileContent, final String oldText, final String newText) throws XPathExpressionException {
+		Logger.putLog("OLD_TEXT: " + oldText, WcagOdtUtils.class, Logger.LOG_LEVEL_WARNING);
+		Logger.putLog("NEW_TEXT: " + newText, WcagOdtUtils.class, Logger.LOG_LEVEL_WARNING);
 		if (oldText != null && newText != null) {
 			replaceText(odt, odfFileContent, oldText, newText, "text:p");
 		}
@@ -380,6 +391,36 @@ public class WcagOdtUtils {
 		}
 		return code;
 	}
+
+
+	private static String getWCAG2CodeReportPdf(String value) {
+		String code = "";
+		switch (value) {
+		case "WCAG2:non-text-content":
+			code = "10.1.1.1";
+			break;
+		case "WCAG2:info-and-relationships":
+			code = "10.1.3.1";
+			break;
+		case "WCAG2:page-titled":
+			code = "10.2.4.2";
+			break;
+		case "WCAG2:language-of-page":
+			code = "10.3.1.1";
+			break;
+		case "WCAG2:parsing":
+			code = "10.4.1.1";
+			break;
+		case "WCAG2:name-role-value":
+			code = "10.4.1.2";
+			break;
+		default:
+			code = "-";
+			break;
+		}
+		return code;
+	}
+
 
 	private static String searchCodeFormat(String code) {
 		return "--" + code + "--";
