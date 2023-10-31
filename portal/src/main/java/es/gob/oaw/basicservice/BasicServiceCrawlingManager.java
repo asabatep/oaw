@@ -20,6 +20,7 @@ import java.util.List;
 import org.apache.commons.beanutils.BeanUtils;
 
 import es.inteco.common.Constants;
+import es.inteco.common.logging.Logger;
 import es.inteco.common.properties.PropertiesManager;
 import es.inteco.common.utils.StringUtils;
 import es.inteco.crawler.job.CrawledLink;
@@ -114,7 +115,7 @@ public class BasicServiceCrawlingManager {
 		crawlerData.setContent(basicServiceForm.getContent());
 		final long idGuideline = BasicServiceUtils.getGuideline(basicServiceForm.getReport());
 		crawlerData.setFicheroNorma(includeBrokenLinksCheck(CrawlerUtils.getFicheroNorma(idGuideline), basicServiceForm.getReport()));
-		crawlerData.setDomains(es.inteco.utils.CrawlerUtils.addDomainsToList(basicServiceForm.getDomain(), true, Constants.ID_LISTA_SEMILLA));
+		crawlerData.setDomains(es.inteco.utils.CrawlerUtils.addDomainsToList(basicServiceForm.getDomain(), false, Constants.ID_LISTA_SEMILLA));
 		crawlerData.setInDirectory(basicServiceForm.isInDirectory());
 		if (BasicServiceAnalysisType.CODIGO_FUENTE_MULTIPLE.equals(basicServiceForm.getAnalysisType()) || BasicServiceAnalysisType.MIXTO.equals(basicServiceForm.getAnalysisType())) {
 			if (basicServiceForm.getContents() != null && !basicServiceForm.getContents().isEmpty()) {

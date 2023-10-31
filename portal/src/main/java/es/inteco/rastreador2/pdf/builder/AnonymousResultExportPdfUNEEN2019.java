@@ -2322,8 +2322,15 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 					sumL2 = sumL2.add(entry.getValue());
 				}
 			}
+			// If there were no applicable level 2 checks we set the score to 0 to avoid dividing by 0
+			if(resultL2.size() - countNA == 0){
+				scoreForm.setScoreLevel2(new BigDecimal(0));
+				scoreForm.setScoreLevelAA(new BigDecimal(0));
+			}
+			else{
 			scoreForm.setScoreLevel2(sumL2.divide(new BigDecimal(resultL2.size() - countNA), 2, BigDecimal.ROUND_HALF_UP));
 			scoreForm.setScoreLevelAA(sumL2.divide(new BigDecimal(resultL2.size() - countNA), 2, BigDecimal.ROUND_HALF_UP));
+			}
 			scoreForm.setSuitabilityScore(scoreForm.getSuitabilityScore().divide(new BigDecimal(evaList.size()), 2, BigDecimal.ROUND_HALF_UP));
 			// REVIEW Calculated compliance
 			scoreForm.setCompliance(calculatedCompliance.get(evaList.get(0).getCrawlerExecutionId()));

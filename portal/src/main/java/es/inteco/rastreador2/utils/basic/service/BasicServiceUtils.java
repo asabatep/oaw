@@ -17,14 +17,19 @@ package es.inteco.rastreador2.utils.basic.service;
 
 import static es.inteco.common.Constants.CRAWLER_PROPERTIES;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.IDN;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.text.Normalizer;
 import java.util.ArrayList;
@@ -48,6 +53,9 @@ import org.quartz.Trigger;
 import org.quartz.impl.JobDetailImpl;
 import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.impl.triggers.SimpleTriggerImpl;
+import org.apache.commons.io.IOUtils;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.text.PDFTextStripper;
 
 import com.tecnick.htmlutils.htmlentities.HTMLEntities;
 
@@ -56,6 +64,8 @@ import es.inteco.common.Constants;
 import es.inteco.common.logging.Logger;
 import es.inteco.common.properties.PropertiesManager;
 import es.inteco.common.utils.StringUtils;
+import es.inteco.intav.dao.ValidatorDAO;
+import es.inteco.intav.form.ValidatorForm;
 import es.inteco.plugin.dao.DataBaseManager;
 import es.inteco.rastreador2.actionform.basic.service.BasicServiceAnalysisType;
 import es.inteco.rastreador2.actionform.basic.service.BasicServiceFile;
@@ -148,6 +158,8 @@ public final class BasicServiceUtils {
 					Logger.putLog("No se puede decodificar la url como UTF-8", CheckHistoricoAction.class, Logger.LOG_LEVEL_WARNING, e);
 				}
 			}
+			
+			
 			basicServiceForm.setDomain(url);
 			if (StringUtils.isNotEmpty(basicServiceForm.getDomain())) {
 				basicServiceForm.setDomain(es.inteco.utils.CrawlerUtils.encodeUrl(basicServiceForm.getDomain()));
@@ -195,7 +207,10 @@ public final class BasicServiceUtils {
 					Logger.putLog("No se puede decodificar la url como UTF-8", CheckHistoricoAction.class, Logger.LOG_LEVEL_WARNING, e);
 				}
 			}
+			
 			basicServiceForm.setDomain(url);
+			
+			
 			if (StringUtils.isNotEmpty(basicServiceForm.getDomain())) {
 				basicServiceForm.setDomain(es.inteco.utils.CrawlerUtils.encodeUrl(basicServiceForm.getDomain()));
 			}
@@ -224,6 +239,12 @@ public final class BasicServiceUtils {
 	 * @return the content
 	 */
 	public static void getContent(final BasicServiceForm basicServiceForm, String parameterFileName, final String contentParameter, final boolean decode) {
+		Connection c;
+		try {
+			c = DataBaseManager.getConnection();
+			ValidatorForm validator = ValidatorDAO.getValidator(c);
+			DataBaseManager.closeConnection(c);
+		
 		if (!org.apache.commons.lang3.StringUtils.isEmpty(parameterFileName) && parameterFileName.toLowerCase().endsWith(".zip")) {
 			try {
 				File tmp = File.createTempFile("oaw_basic_service_", ".zip");
@@ -233,6 +254,7 @@ public final class BasicServiceUtils {
 					zipFile = new ZipFile(tmp, Charset.forName("ISO-8859-1"));
 					Enumeration<? extends ZipEntry> entries = zipFile.entries();
 					List<BasicServiceFile> files = new ArrayList<>();
+					
 					while (entries.hasMoreElements()) {
 						try {
 							ZipEntry entry = entries.nextElement();
@@ -240,8 +262,26 @@ public final class BasicServiceUtils {
 //						if (entry.getName().toLowerCase().endsWith(".html")) {
 							if (!entry.isDirectory()) {
 								try {
-									String content = org.apache.commons.io.IOUtils.toString(zipFile.getInputStream(entry), StandardCharsets.UTF_8.name());
 									BasicServiceFile file = new BasicServiceFile();
+									String content = "";
+									if(name.endsWith(".pdf")){
+										InputStream inputStream = zipFile.getInputStream(entry);
+										ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                    					byte[] buffer = new byte[1024];
+                    					int bytesRead;
+                    					while ((bytesRead = inputStream.read(buffer)) != -1) {
+                        					byteArrayOutputStream.write(buffer, 0, bytesRead);
+                    					}
+
+                    					byte[] pdfBytes = byteArrayOutputStream.toByteArray();
+
+                    					// Convert the byte array to Base64 encoded string
+                    					content = Base64.getEncoder().encodeToString(pdfBytes);
+										
+									}
+									else { 
+										content = org.apache.commons.io.IOUtils.toString(zipFile.getInputStream(entry), StandardCharsets.UTF_8.name());
+									}
 									file.setName(name);
 									file.setContent(content);
 									files.add(file);
@@ -277,6 +317,13 @@ public final class BasicServiceUtils {
 		} else {
 			try {
 				String content = "";
+				if (!org.apache.commons.lang3.StringUtils.isEmpty(parameterFileName) && parameterFileName.toLowerCase().endsWith(".pdf")) {
+							// Por alguna razón no se codifica correctamente si pasamos un pdf a pelo. 
+							content = contentParameter.replaceAll("_", "/").replaceAll("-", "+");
+							basicServiceForm.setName(parameterFileName);
+				}
+				else{
+				
 				if (decode) {
 					File tmp = File.createTempFile("oaw_basic_service_", ".txt");
 					org.apache.commons.io.FileUtils.writeByteArrayToFile(tmp, Base64.getUrlDecoder().decode(contentParameter.getBytes(StandardCharsets.ISO_8859_1.name())));
@@ -284,6 +331,7 @@ public final class BasicServiceUtils {
 				} else {
 					content = new String(contentParameter.getBytes(StandardCharsets.ISO_8859_1.name()));
 				}
+			}
 				basicServiceForm.setContent(content);
 				if (basicServiceForm.getDomain() != null && StringUtils.isNotEmpty(basicServiceForm.getDomain())) {
 					basicServiceForm.setAnalysisType(BasicServiceAnalysisType.MIXTO);
@@ -294,6 +342,11 @@ public final class BasicServiceUtils {
 				Logger.putLog("No se puede procesar la entrada del fichero", BasicServiceUtils.class, Logger.LOG_LEVEL_WARNING, e);
 			}
 		}
+	}
+	catch(Exception e){
+		e.printStackTrace();
+	}
+	
 	}
 
 	/**
@@ -506,5 +559,18 @@ public final class BasicServiceUtils {
 			formattedTitle = title;
 		}
 		return formattedTitle;
+	}
+
+	private static String cleanPdfUrls(String domain) {
+		String[] urls = domain.trim().split("\n");
+		List<String> out = new ArrayList<String>();
+		for (String url : urls) {
+			Logger.putLog("URL: " + url, BasicServiceUtils.class, Logger.LOG_LEVEL_WARNING);
+			if (url.contains("http:") || url.contains("https:")) {
+				if(!url.contains(".pdf"))
+				out.add(url);
+			}
+		}
+		return String.join("\n", out);
 	}
 }

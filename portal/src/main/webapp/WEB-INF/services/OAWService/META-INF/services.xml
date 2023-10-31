@@ -16,4 +16,33 @@
 			<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver"/>
 		</operation>
 	</service>
+	<service name="ValidationDatabaseService" targetNamespace="http://ws.apache.org/axis2/oaw/">
+		<Description>
+			Validation Database Service
+		</Description>
+		<schema schemaNamespace="http://ws.apache.org/axis2/oaw/"/>
+		<parameter name="ServiceClass" locked="false">es.gob.oaw.webservice.ValidationDatabaseService</parameter>
+		<parameter name="disableSOAP12">true</parameter>
+		<operation name="insertTAnalysisRequest"> 
+			<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver"/>
+		</operation>
+		<operation name="saveDocumentsRequest"> 
+			<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver"/>
+		</operation>
+		<operation name="incrementChecksOkRequest"> 
+			<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver"/>
+		</operation>
+		<operation name="setAnalysisDbRequest"> 
+			<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver"/>
+		</operation>
+		<operation name="setIncidenceListRequest"> 
+			<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver"/>
+		</operation>
+		<operation name="setAnalysisSuccessRequest"> 
+			<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver"/>
+		</operation>
+		<operation name="setAnalysisErrorRequest"> 
+			<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver"/>
+		</operation>
+	</service>
 </serviceGroup>
