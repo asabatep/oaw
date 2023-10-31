@@ -17,6 +17,7 @@ import static es.inteco.common.Constants.CRAWLER_PROPERTIES;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.sql.Connection;
 import java.text.DateFormat;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
@@ -44,8 +45,10 @@ import es.inteco.common.properties.PropertiesManager;
 import es.inteco.common.utils.StringUtils;
 import es.inteco.crawler.job.CrawledLink;
 import es.inteco.intav.dao.TAnalisisAccesibilidadDAO;
+import es.inteco.intav.dao.ValidatorDAO;
 import es.inteco.intav.datos.AnalisisDatos;
 import es.inteco.intav.form.ObservatoryEvaluationForm;
+import es.inteco.intav.form.ValidatorForm;
 import es.inteco.plugin.dao.DataBaseManager;
 import es.inteco.rastreador2.actionform.basic.service.BasicServiceForm;
 import es.inteco.rastreador2.pdf.BasicServiceExport;
@@ -77,6 +80,8 @@ public class BasicServiceManager {
 	private final PropertiesManager pmgr = new PropertiesManager();
 	/** The mail service. */
 	private final BasicServiceMailService mailService = new BasicServiceMailService();
+
+	private boolean pdfActive = false;
 
 	/**
 	 * Enqueue crawling.
@@ -131,7 +136,7 @@ public class BasicServiceManager {
 	 * @param messageResources the message resources
 	 */
 	public void executeCrawling(final BasicServiceForm basicServiceForm, final MessageResources messageResources) {
-		Logger.putLog("executeCrawling", BasicServiceManager.class, Logger.LOG_LEVEL_DEBUG);
+		Logger.putLog("executeCrawling", BasicServiceManager.class, Logger.LOG_LEVEL_WARNING);
 		String pdfPath = null;
 		try {
 			// Lanzamos el rastreo de INTAV
@@ -208,15 +213,30 @@ public class BasicServiceManager {
 				}
 				// JSON WCAG-EM and ODS
 				if ("true".equalsIgnoreCase(basicServiceForm.getDepthReport())) {
+					try {
+			    	Connection c = DataBaseManager.getConnection();
+					ValidatorForm validator = ValidatorDAO.getValidator(c);
+					if(validator.getStatus() == 1 && validator.getPdfActive() == 1){
+						pdfActive = true;
+						DataBaseManager.closeConnection(c);
+					}
+				}
+					catch (Exception e){
+						e.printStackTrace();
+					}
 					WcagEmReport report = WcagEmUtils.generateReport(messageResources, new AnonymousResultExportPdfUNEEN2019(basicServiceForm), basicServiceForm.getName(), idCrawling);
-					report.getGraph().get(0).getStructuredSample().setNoWebpage(getNoWebPages(crawledLinks));
+					if(!pdfActive) {
+						report.getGraph().get(0).getStructuredSample().setNoWebpage(getNoWebPages(crawledLinks));
+					}
 					// END PDF FILES
 					// ODS REPORT
-					SpreadSheet ods = WcagOdsUtils.generateOds(report);
+					
+					
+					SpreadSheet ods = WcagOdsUtils.generateOds(report, pdfActive);
 					File outputFile = new File(new File(pdfPath).getParentFile().getPath() + "/Informe Revision Accesibilidad - Sitios web.ods");
 					ods.saveAs(outputFile);
 					// XLSX REPORT
-					Workbook wb = WcagXlsxUtils.generateXlsx(report);
+					Workbook wb = WcagXlsxUtils.generateXlsx(report, pdfActive);
 					File outputFilexlsx = new File(new File(pdfPath).getParentFile().getPath() + "/Informe Revision Accesibilidad - Sitios web.xlsx");
 					wb.write(new FileOutputStream(outputFilexlsx));
 				}
