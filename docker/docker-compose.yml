@@ -1,5 +1,10 @@
 version: '2.2'
 
+networks:
+  oaw-dev:
+    driver: bridge
+    name: oaw-dev
+
 services:
 
   renderer-1:
@@ -10,6 +15,8 @@ services:
     restart: always
     command: node /opt/prerender/server.js
     container_name: docker_oaw_renderer_1
+    networks:
+      - oaw-dev
 
   renderer-2:
     privileged: true
@@ -19,6 +26,8 @@ services:
     restart: always
     command: node /opt/prerender/server.js
     container_name: docker_oaw_renderer_2
+    networks:
+      - oaw-dev
 
   renderer-3:
     privileged: true
@@ -28,6 +37,8 @@ services:
     restart: always
     command: node /opt/prerender/server.js
     container_name: docker_oaw_renderer_3
+    networks:
+      - oaw-dev
 
   proxy:
     build: ../motor-js/proxy
@@ -38,6 +49,8 @@ services:
     container_name: oaw-dev-proxy
     ports:
       - 7013:7013
+    networks:
+      - oaw-dev
 
   nginx:
     image: nginx:1.13.8-alpine
@@ -51,6 +64,8 @@ services:
       - renderer-3
     restart: always
     shm_size: 1gb
+    networks:
+      - oaw-dev
 
   mysql:
     image: mysql:5.7.21
@@ -63,6 +78,8 @@ services:
       - ./mysql/01_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
       - ./mysql/02_data.sql:/docker-entrypoint-initdb.d/02_data.sql
       - ./volumes/mysql/:/var/lib/mysql/
+    networks:
+      - oaw-dev
 
   tomcat:
     build: ./tomcat
@@ -79,3 +96,5 @@ services:
     links:
       - mysql
     restart: always
+    networks:
+      - oaw-dev
