@@ -72,6 +72,7 @@ services:
     volumes:
       - ../portal/target/oaw.war:/usr/local/tomcat/webapps/oaw.war
       - ./tmp:/tmp
+    container_name: oaw-dev-tomcat
     dns:
       - 192.168.4.9
       - 192.168.4.10
