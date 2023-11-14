@@ -1546,6 +1546,10 @@ public interface Constants {
 	String REPORT_OBSERVATORY_4 = "observatorio-4";
 	/** The report observatory 4 nobroken. */
 	String REPORT_OBSERVATORY_4_NOBROKEN = "observatorio-4-nobroken";
+	/** The report observatory 4. */
+	String REPORT_OBSERVATORY_4_PDF = "observatorio-4_pdf";
+	/** The report observatory 4 nobroken. */
+	String REPORT_OBSERVATORY_4_NOBROKEN_PDF = "observatorio-4_pdf-nobroken";
 	/** The report observatory 5. */
 	String REPORT_OBSERVATORY_5 = "observatorio-5";
 	/** The report observatory 5 nobroken. */
@@ -1867,6 +1871,8 @@ public interface Constants {
 	String NORMATIVA_UNE_2012_B = "UNE-2012-B";
 	/** The normativa une en2019. */
 	String NORMATIVA_UNE_EN2019 = "UNE-EN301549:2019";
+	/** The normativa une en2019-pdf */
+	String NORMATIVA_UNE_EN2019_PDF = "UNE-EN-2019-PDF";
 	/** The normativa accesibilidad. */
 	String NORMATIVA_ACCESIBILIDAD = "Accesibilidad";
 	/** The message resources 2012 b. */
@@ -1913,6 +1919,9 @@ public interface Constants {
 	String OBSERVATORIO_UNE_EN2019 = "Seguimiento Simplificado UNE-EN 301549:2022";
 	/** The Constant OBSERVATORIO_UNE_UNE_EN2019_SIN_ENLACES_ROTOS. */
 	String OBSERVATORIO_UNE_UNE_EN2019_SIN_ENLACES_ROTOS = "Seguimiento Simplificado UNE-EN301549:2019(sin comprobar enlaces rotos)";
+	String OBSERVATORIO_UNE_EN2019_PDF = "Seguimiento Simplificado UNE-EN 301549:2022 (con analisis de pdf)";
+	/** The Constant OBSERVATORIO_UNE_UNE_EN2019_SIN_ENLACES_ROTOS. */
+	String OBSERVATORIO_UNE_UNE_EN2019_SIN_ENLACES_ROTOS_PDF = "Seguimiento Simplificado UNE-EN301549:2019(con analisis de pdf sin comprobar enlaces rotos)";
 	/** The Constant OBSERVATORIO_UNE_2012_VERSION_2. */
 	String OBSERVATORIO_UNE_2012_VERSION_2 = "Observatorio UNE 2012 (versión 2)";
 	/** The Constant OBSERVATORIO_UNE_2012_ANTIGUA. */

@@ -122,7 +122,6 @@ public class WcagOdtUtils {
 	};
 
 	private static void createError(OdfTextDocument odtDocument, OdfFileDom odfFileContent, String reportCode, AnalysisResult error) throws Exception {
-		Logger.putLog("REPORT_CODE_ERROR: " + reportCode, WcagOdtUtils.class, Logger.LOG_LEVEL_WARNING);
 		if (error.getSolution() == null || StringUtils.isBlank(error.getSolution()) || StringUtils.isEmpty(error.getSolution())) {
 			error.setSolution("-");
 		}
@@ -228,8 +227,6 @@ public class WcagOdtUtils {
 		XPath xpath = odt.getXPath();
 		NodeList nodeList = (NodeList) xpath.evaluate(String.format("//%s[contains(text(),'%s')]", "text:p", markername), odfFileContent, XPathConstants.NODESET);
 		OdfElement node;
-		Logger.putLog("NODELIST SIZE: " + nodeList.getLength(), WcagOdtUtils.class, Logger.LOG_LEVEL_WARNING);
-		Logger.putLog("MARKER: " + markername, WcagOdtUtils.class, Logger.LOG_LEVEL_WARNING);
 		for (int i = 0; i < nodeList.getLength(); i++) {
 			node = (OdfElement) nodeList.item(i);
 			if (node.getParentNode() != null) {
@@ -244,8 +241,6 @@ public class WcagOdtUtils {
 	}
 
 	private static void replaceText(final OdfTextDocument odt, final OdfFileDom odfFileContent, final String oldText, final String newText) throws XPathExpressionException {
-		Logger.putLog("OLD_TEXT: " + oldText, WcagOdtUtils.class, Logger.LOG_LEVEL_WARNING);
-		Logger.putLog("NEW_TEXT: " + newText, WcagOdtUtils.class, Logger.LOG_LEVEL_WARNING);
 		if (oldText != null && newText != null) {
 			replaceText(odt, odfFileContent, oldText, newText, "text:p");
 		}

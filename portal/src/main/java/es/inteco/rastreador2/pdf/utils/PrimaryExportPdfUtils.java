@@ -131,7 +131,7 @@ public final class PrimaryExportPdfUtils {
 				builder = new AnonymousResultExportPdfUNE2004();
 			} else if (Constants.NORMATIVA_UNE_2012_B.equalsIgnoreCase(application)) {
 				builder = new AnonymousResultExportPdfUNE2012b();
-			} else if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(application)) {
+			} else if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(application) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(application)) {
 				builder = new AnonymousResultExportPdfUNEEN2019();
 			} else if (Constants.NORMATIVA_ACCESIBILIDAD.equalsIgnoreCase(application)) {
 				builder = new AnonymousResultExportPdfAccesibilidad();

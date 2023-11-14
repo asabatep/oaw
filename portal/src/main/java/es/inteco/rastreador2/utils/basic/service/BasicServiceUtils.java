@@ -53,9 +53,6 @@ import org.quartz.Trigger;
 import org.quartz.impl.JobDetailImpl;
 import org.quartz.impl.StdSchedulerFactory;
 import org.quartz.impl.triggers.SimpleTriggerImpl;
-import org.apache.commons.io.IOUtils;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.text.PDFTextStripper;
 
 import com.tecnick.htmlutils.htmlentities.HTMLEntities;
 
@@ -170,9 +167,28 @@ public final class BasicServiceUtils {
 		basicServiceForm.setAmplitud(request.getParameter(Constants.PARAM_WIDTH));
 		basicServiceForm.setLanguage("es");
 		basicServiceForm.setReport(request.getParameter(Constants.PARAM_REPORT));
+			try{
+			Connection c = DataBaseManager.getConnection();
+			ValidatorForm validator = ValidatorDAO.getValidator(c);
+			if(!basicServiceForm.getReport().contains("_pdf")){
+				validator.setPdfActive(0);
+				ValidatorDAO.update(c, validator);
+				
+			}
+			else{
+				validator.setPdfActive(1);
+				validator.setStatus(1);
+				ValidatorDAO.update(c, validator);
+			}
+			DataBaseManager.closeConnection(c);
+		}
+			catch (Exception e){
+				e.printStackTrace();
+			}
 		if (request.getParameter("informe-nobroken") != null && Boolean.parseBoolean(request.getParameter("informe-nobroken"))) {
 			basicServiceForm.setReport(basicServiceForm.getReport() + "-nobroken");
 		}
+		
 		// Prevent full paths
 		String parameterFileName = request.getParameter("filename");
 		if (!org.apache.commons.lang3.StringUtils.isEmpty(parameterFileName)) {
@@ -362,6 +378,7 @@ public final class BasicServiceUtils {
 				&& !report.equalsIgnoreCase(Constants.REPORT_OBSERVATORY_2) && !report.equalsIgnoreCase(Constants.REPORT_OBSERVATORY_2_NOBROKEN)
 				&& !report.equalsIgnoreCase(Constants.REPORT_OBSERVATORY_3) && !report.equalsIgnoreCase(Constants.REPORT_OBSERVATORY_3_NOBROKEN)
 				&& !report.equalsIgnoreCase(Constants.REPORT_OBSERVATORY_4) && !report.equalsIgnoreCase(Constants.REPORT_OBSERVATORY_4_NOBROKEN)
+				&& !report.equalsIgnoreCase(Constants.REPORT_OBSERVATORY_4_PDF) && !report.equalsIgnoreCase(Constants.REPORT_OBSERVATORY_4_NOBROKEN_PDF)
 				&& !report.equalsIgnoreCase(Constants.REPORT_OBSERVATORY_5) && !report.equalsIgnoreCase(Constants.REPORT_OBSERVATORY_5_NOBROKEN)) {
 			errors.add(Globals.ERROR_KEY, new ActionMessage("basic.service.report.not.valid", Constants.REPORT_OBSERVATORY, Constants.REPORT_UNE));
 		}
@@ -442,6 +459,8 @@ public final class BasicServiceUtils {
 			return 9L;
 		} else if (report.equals(Constants.REPORT_OBSERVATORY_5) || report.equals(Constants.REPORT_OBSERVATORY_5_NOBROKEN)) {
 			return 10L;
+		} else if (report.equals(Constants.REPORT_OBSERVATORY_4_PDF) || report.equals(Constants.REPORT_OBSERVATORY_4_NOBROKEN_PDF)) {
+			return 11L;
 		} else {
 			return -1;
 		}

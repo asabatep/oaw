@@ -170,7 +170,7 @@ public class PdfGeneratorThread2 extends Thread {
 									PrimaryExportPdfUtils.exportToPdf(new AnonymousResultExportPdfAccesibilidad(), idRastreoRealizado, evaluationIds, previousEvaluationIds,
 											PropertyMessageResources.getMessageResources(Constants.MESSAGE_RESOURCES_ACCESIBILIDAD), pdfFile.getPath(), seed.getNombre(), "", idObservatoryExecution,
 											observatoryType);
-								} else if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(aplicacion)) {
+								} else if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(aplicacion) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(aplicacion)) {
 									PrimaryExportPdfUtils.exportToPdf(new AnonymousResultExportPdfUNEEN2019(), idRastreoRealizado, evaluationIds, previousEvaluationIds,
 											PropertyMessageResources.getMessageResources(Constants.MESSAGE_RESOURCES_UNE_EN2019), pdfFile.getPath(), seed.getNombre(), "", idObservatoryExecution,
 											observatoryType);

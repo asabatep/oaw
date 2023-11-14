@@ -192,7 +192,8 @@ public class BasicServiceManager {
 					basicServicePdfReport.exportToPdf(currentEvaluationPageList, previousEvaluationsPageList, pdfPath);
 					// Odt report: Hallazgos
 					generateOdtReport(currentEvaluationPageList, pdfPath);
-				} else if (Constants.REPORT_OBSERVATORY_4.equals(basicServiceForm.getReport()) || Constants.REPORT_OBSERVATORY_4_NOBROKEN.equals(basicServiceForm.getReport())) {
+				} else if (Constants.REPORT_OBSERVATORY_4.equals(basicServiceForm.getReport()) || Constants.REPORT_OBSERVATORY_4_NOBROKEN.equals(basicServiceForm.getReport())
+				  || Constants.REPORT_OBSERVATORY_4_PDF.equals(basicServiceForm.getReport()) || Constants.REPORT_OBSERVATORY_4_NOBROKEN_PDF.equals(basicServiceForm.getReport())) {
 					Logger.putLog("Exportando desde BasicService a BasicServicePdfReport(new AnonymousResultExportPdfUNEEN2019())", BasicServiceManager.class, Logger.LOG_LEVEL_DEBUG);
 					final List<Long> analysisIdsByTracking = AnalisisDatos.getAnalysisIdsByTracking(DataBaseManager.getConnection(), idCrawling);
 					final List<ObservatoryEvaluationForm> currentEvaluationPageList = observatoryManager.getObservatoryEvaluationsFromObservatoryExecution(0, analysisIdsByTracking);

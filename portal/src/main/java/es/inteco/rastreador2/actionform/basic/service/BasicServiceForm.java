@@ -417,6 +417,10 @@ public class BasicServiceForm extends ValidatorForm {
 			return Constants.OBSERVATORIO_UNE_EN2019;
 		} else if (Constants.REPORT_OBSERVATORY_4_NOBROKEN.equals(report)) {
 			return Constants.OBSERVATORIO_UNE_UNE_EN2019_SIN_ENLACES_ROTOS;
+		} else if (Constants.REPORT_OBSERVATORY_4_PDF.equals(report)) {
+			return Constants.OBSERVATORIO_UNE_EN2019_PDF;
+		} else if (Constants.REPORT_OBSERVATORY_4_NOBROKEN.equals(report)) {
+			return Constants.OBSERVATORIO_UNE_UNE_EN2019_SIN_ENLACES_ROTOS_PDF;
 		} else if (Constants.REPORT_OBSERVATORY_5.equals(report)) {
 			return Constants.OBSERVATORIO_ACCESIBILIDAD;
 		} else if (Constants.REPORT_OBSERVATORY_5_NOBROKEN.equals(report)) {

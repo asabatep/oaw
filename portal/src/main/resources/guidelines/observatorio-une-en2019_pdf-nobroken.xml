@@ -11,7 +11,7 @@
 	if not, you may find it at http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32017D0863 -->
 <guideline>
 	<type>observatory</type>
-	<title abbr="observatorio-une-en2019"
+	<title abbr="observatorio-une-en2019_pdf"
 		long-name="Pautas de verificación del Observatorio v5.0">Observatorio
 		MINHAP 3.0
 	</title>
@@ -56,6 +56,7 @@
 					<!-- Textos alternativos menosres de 150 -->
 					<check id="475" />
 
+					<check id="508" />
 
 				</checks>
 			</subgroup>
@@ -87,6 +88,7 @@
 					<check id="471" />
 					<!-- Más de un encabezad WAI si hay más de 15 párrafos -->
 					<check id="472" />
+					<check id="519" />
 
 
 				</checks>
@@ -140,6 +142,8 @@
 						celdas no superen los X caracteres (Heurístico X=150) -->
 					<check id="431" />
 
+					<check id="517" />
+					<check id="518" />
 				</checks>
 			</subgroup>
 
@@ -173,6 +177,14 @@
 					<!-- Tablas con más del 70% de td vacíos -->
 					<check id="492" />
 
+					<check id="509" />
+					<check id="510" />
+					<check id="511" />
+					<check id="512" />
+					<check id="513" />
+					<check id="514" />
+					<check id="515" />
+					<check id="516" />
 				</checks>
 			</subgroup>
 
@@ -217,6 +229,7 @@
 					<check id="49" relatedWith="48" />
 					<!-- Comprobar que el idioma de la página coincide con el declarado -->
 					<check id="442" />
+					<check id="503" />
 				</checks>
 			</subgroup>
 
@@ -279,6 +292,10 @@
 					<!-- /MOVIDAS DE 2.1.3 -->
 					
 					<check id="476" />
+
+					<check id="506" />
+
+					<check id="507" />
 
 				</checks>
 			</subgroup>
@@ -346,6 +363,8 @@
 					<check id="295" />
 					<!-- Comprobar titulos distintos entre la muestra -->
 					<check id="462" />
+
+					<check id="504" />
 				</checks>
 			</subgroup>
 
@@ -411,6 +430,11 @@
 						de sintaxis) -->
 					<check id="450" />
 
+					<check id="501" />
+
+					<check id="502" />
+
+					<check id="505" />
 				</checks>
 			</subgroup>
 		</suitability>
