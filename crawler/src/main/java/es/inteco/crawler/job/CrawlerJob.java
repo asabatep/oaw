@@ -815,7 +815,7 @@ public class CrawlerJob implements InterruptableJob {
 						if (!rejectedDomains.contains(urlLink)) {
 							if (crawlerData.getExceptions() == null || !CrawlerUtils.domainMatchs(crawlerData.getExceptions(), urlLink)) {
 								if (crawlerData.getCrawlingList() == null || CrawlerUtils.domainMatchs(crawlerData.getCrawlingList(), urlLink)) {
-									return addPdf(urlLink);
+									return addPdf(urlLink, crawlerData.getFicheroNorma());
 								} else {
 									Logger.putLog(String.format("La URL %s ha sido rechazada por no estar incluida en la lista de dominio rastreable", urlLink), CrawlerJob.class,
 											Logger.LOG_LEVEL_INFO);
@@ -841,14 +841,13 @@ public class CrawlerJob implements InterruptableJob {
 		return false;
 	}
 
-	private boolean addPdf(String url){
+	private boolean addPdf(String url, String guideline){
 		if(url.contains(".pdf")){
 		try {
 			Connection c = DataBaseManager.getConnection();
 			ValidatorForm validator = ValidatorDAO.getValidator(c);
-			final PropertiesManager pmgr = new PropertiesManager(); 
 			
-			if(validator.getStatus() == 0 || validator.getPdfActive() == 0){
+			if(validator.getStatus() == 0 || validator.getPdfActive() == 0 || !guideline.contains("_pdf")){
 				DataBaseManager.closeConnection(c);
 				return false;
 			}
