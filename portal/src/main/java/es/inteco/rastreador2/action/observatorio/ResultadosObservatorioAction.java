@@ -395,7 +395,7 @@ public class ResultadosObservatorioAction extends Action {
 			final Long idOperation = System.currentTimeMillis();
 			MessageResources resources = CrawlerUtils.getResources(request);
 			final String application = CartuchoDAO.getApplication(DataBaseManager.getConnection(), idCartucho);
-			if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(application)) {
+			if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(application) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(application)) {
 				resources = MessageResources.getMessageResources(Constants.MESSAGE_RESOURCES_UNE_EN2019);
 			}
 			AnnexUtils.createAnnexPaginas(resources, idObsExecution, idOperation, null, null);

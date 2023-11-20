@@ -130,7 +130,7 @@ public class ResultsAction extends Action {
 					if (Constants.NORMATIVA_UNE_2012_B.equalsIgnoreCase(aplicacion)) {
 						request.setAttribute("aplicacion", Constants.NORMATIVA_UNE_2012_B);
 						messageReources = MessageResources.getMessageResources(Constants.MESSAGE_RESOURCES_2012_B);
-					} else if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(aplicacion)) {
+					} else if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(aplicacion) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(aplicacion)) {
 						request.setAttribute("aplicacion", Constants.NORMATIVA_UNE_EN2019);
 						messageReources = MessageResources.getMessageResources(Constants.MESSAGE_RESOURCES_UNE_EN2019);
 					} else if (Constants.NORMATIVA_ACCESIBILIDAD.equalsIgnoreCase(aplicacion)) {

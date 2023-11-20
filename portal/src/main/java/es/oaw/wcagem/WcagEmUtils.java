@@ -984,6 +984,8 @@ public final class WcagEmUtils {
 		checks.add("502");
 		checks.add("506");
 		checks.add("507");
+		checks.add("501");
+		checks.add("505");
 		checkWcagRelationMap.put(WcagEmPointKey.WCAG_4_1_2.getWcagEmId(), checks);
 		return checkWcagRelationMap;
 	}
