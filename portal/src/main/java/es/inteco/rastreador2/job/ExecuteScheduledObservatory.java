@@ -23,6 +23,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.math3.analysis.function.Log;
 import org.quartz.InterruptableJob;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
@@ -97,8 +98,8 @@ public class ExecuteScheduledObservatory implements StatefulJob, InterruptableJo
 			long guidelineLong = guidelineId;
 			String guideline = RastreoDAO.getNombreNorma(c, guidelineLong);
 			ValidatorForm validatorForm = ValidatorDAO.getValidator(c);
+			Logger.putLog("GUIDELINE: " + guideline, ExecuteScheduledObservatory.class, Logger.LOG_LEVEL_WARNING);
 			if (guideline.contains("_pdf")){
-				
 				validatorForm.setStatus(1);
 				validatorForm.setPdfActive(1);
 			}

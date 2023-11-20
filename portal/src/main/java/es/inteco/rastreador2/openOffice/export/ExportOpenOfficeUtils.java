@@ -160,7 +160,7 @@ public final class ExportOpenOfficeUtils {
 	private static OpenOfficeDocumentBuilder getDocumentBuilder(final String executionId, final String observatoryId, final Long tipoObservatorio, final String version) {
 		if (Constants.NORMATIVA_ACCESIBILIDAD.equals(version)) {
 			return new OpenOfficeAccesibilidadBuilder(executionId, observatoryId, tipoObservatorio);
-		} else if (Constants.NORMATIVA_UNE_EN2019.equals(version)) {
+		} else if (Constants.NORMATIVA_UNE_EN2019.equals(version) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(version)) {
 			return new OpenOfficeUNEEN2019DocumentBuilder(executionId, observatoryId, tipoObservatorio);
 		} else if (Constants.NORMATIVA_UNE_2012.equals(version)) {
 			return new OpenOfficeUNE2012DocumentBuilder(executionId, observatoryId, tipoObservatorio);
