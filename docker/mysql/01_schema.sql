@@ -875,6 +875,16 @@ CREATE TABLE `apiKey`(
   KEY `id` (`id`)
 )ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
+CREATE TABLE `tanalisis_accesibilidad` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_analisis` int(11) NOT NULL,
+  `url` varchar(256) DEFAULT NULL,
+  `checks_ok` int(11) DEFAULT '0',
+  `COD_FUENTE` mediumtext,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `id_analisis_UNIQUE` (`id_analisis`,`url`(255))
+) ENGINE=InnoDB AUTO_INCREMENT=43911 DEFAULT CHARSET=utf8;
+
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50001 DROP VIEW IF EXISTS `oaw_dashboard`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
