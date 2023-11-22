@@ -96,7 +96,7 @@ public final class W3CValidatorProxy {
 			}
 			p = Pattern.compile(REGEX_DUPLICATE_ATTRIBUTE);
 			if (p.matcher(errorMessage).lookingAt()) {
-				return "11";
+				return "112";
 			}
 		}
 		return "";

@@ -378,7 +378,7 @@ public final class DatabaseExportUtils {
 		// Compliance to export
 		if (Constants.NORMATIVA_ACCESIBILIDAD.equalsIgnoreCase(application)) {
 			site.setCompliance(IntavUtils.getValidationLevelAccesibility(observatorySiteEvaluationForm.getPages(), messagesResources));
-		} else if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(application)) {
+		} else if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(application) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(application)) {
 			Map<Long, Map<String, BigDecimal>> results = ResultadosAnonimosObservatorioUNEEN2019Utils.getVerificationResultsByPointAndCrawl(observatorySiteEvaluationForm.getPages(),
 					Constants.OBS_PRIORITY_NONE);
 			Map<Long, String> calculatedCompliance = null;
