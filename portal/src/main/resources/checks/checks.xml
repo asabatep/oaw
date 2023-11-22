@@ -6254,4 +6254,118 @@
 		</machine>
 	</check>
 
+		<check id ="501" key="pdf" confidence="high">
+		<name> [PDF] Se verifica que el documento PDF no está protegido o, en dicho caso, que la configuración de seguridad es compatible con los productos de apoyo </name>
+		<error>check.501.error</error>
+		<rationale>check.501.rationale</rationale>
+	</check>
+
+	<check id ="502" key="pdf" confidence="high">
+		<name> [PDF] Se verifica que el documento es un PDF etiquetado </name>
+		<error>check.502.error</error>
+		<rationale>check.502.rationale</rationale>
+	</check>
+
+	<check id ="503" key="pdf" confidence="high">
+		<name> [PDF] Se verifica que el documento PDF especifica el idioma del texto </name>
+		<error>check.503.error</error>
+		<rationale>check.503.rationale</rationale>
+	</check>
+
+	<check id ="504" key="pdf" confidence="high">
+		<name> [PDF] Se verifica que el documento PDF tiene un título </name>
+		<error>check.504.error</error>
+		<rationale>check.504.rationale</rationale>
+	</check>
+
+	<check id ="505" key="pdf" confidence="high">
+		<name> [PDF] Se verifica que todo el contenido del documento PDF está etiquetado </name>
+		<error>check.505.error</error>
+		<rationale>check.505.rationale</rationale>
+	</check>
+
+	<check id ="506" key="pdf" confidence="high">
+		<name> [PDF] Se verifica que los campos de formulario presentes en el documento PDF están dentro de una etiqueta FORM o bien no existen campos de formulario en el documento</name>
+		<error>check.506.error</error>
+		<rationale>check.506.rationale</rationale>
+	</check>
+
+	<check id ="507" key="pdf" confidence="high">
+		<name> [PDF] Se verifica que los campos de formulario presentes en el documento PDF tienen una descripción o bien no existen campos de formulario en el documento </name>
+		<error>check.507.error</error>
+		<rationale>check.507.rationale</rationale>
+	</check>
+
+	<check id ="508" key="pdf" confidence="high">
+		<name> [PDF] Se verifica que las imágenes presentes en el documento PDF tienen un texto alternativo o bien no existen imágenes en el documento </name>
+		<error>check.508.error</error>
+		<rationale>check.508.rationale</rationale>
+	</check>
+
+	<check id ="509" key="pdf" confidence="high">
+		<name> [PDF] Se verifica que las filas de las tablas de datos del documento PDF están estructuradas correctamente dentro de la tabla o bien no existen tablas de datos en el documento </name>
+		<error>check.509.error</error>
+		<rationale>check.509.rationale</rationale>
+	</check>
+
+	<check id ="510" key="pdf" confidence="high">
+		<name> [PDF] Se verifica que las celdas de encabezado de las tablas del documento PDF están ubicadas dentro de elementos TR o bien no existen tablas de datos en el documento </name>
+		<error>check.510.error</error>
+		<rationale>check.510.rationale</rationale>
+	</check>
+
+	<check id ="511" key="pdf" confidence="high">
+		<name> [PDF] Se verifica que las celdas de datos de las tablas del documento PDF están ubicadas dentro de elementos TR o bien no existen tablas de datos en el documento </name>
+		<error>check.511.error</error>
+		<rationale>check.511.rationale</rationale>
+	</check>
+
+	<check id ="512" key="pdf" confidence="high">
+		<name> [PDF] Se verifica que en las tablas de datos del documento PDF se puede determinar la asociación entre las celdas de datos y sus encabezados (o bien no existen tablas de datos en el documento) </name>
+		<error>check.512.error</error>
+		<rationale>check.512.rationale</rationale>
+	</check>
+
+	<check id ="513" key="pdf" confidence="high">
+		<name> [PDF] Se verifica que si las celdas de datos de las tablas del documento PDF hacen referencia en el atributo Header(s) a encabezados inexistentes entonces los encabezados se asocian con los datos mediante el atributo Scope (o bien no existen tablas de datos en el documento) </name>
+		<error>check.513.error</error>
+		<rationale>check.513.rationale</rationale>
+	</check>
+
+	<check id ="514" key="pdf" confidence="high">
+		<name> [PDF] Se verifica que las tablas de datos del documento PDF sólo contiene elementos propios de las tablas de datos (o bien no existen tablas de datos en el documento)   </name>
+		<error>check.514.error</error>
+		<rationale>check.515.rationale</rationale>
+	</check>
+
+	<check id ="515" key="pdf" confidence="high">
+		<name> [PDF] Se verifica que las tablas del documento PDF contienen el mismo número de filas en cada columna (o bien no existen tablas de datos en el documento)   </name>
+		<error>check.515.error</error>
+		<rationale>check.515.rationale</rationale>
+	</check>
+
+	<check id ="516" key="pdf" confidence="high">
+		<name> [PDF] Se verifica que las tablas del documento PDF contienen el mismo número de columnas en cada fila (o bien no existen tablas de datos en el documento)   </name>
+		<error>check.516.error</error>
+		<rationale>check.516.rationale</rationale>
+	</check>
+
+	<check id ="517" key="pdf" confidence="high">
+		<name> [PDF] Se verifica que en las listas del documento PDF los elementos LI están dentro de elementos L (o bien no existen listas en el documento)</name>
+		<error>check.517.error</error>
+		<rationale>check.517.rationale</rationale>
+	</check>
+
+	<check id ="518" key="pdf" confidence="high">
+		<name> [PDF] Se verifica que en las listas del documento PDF los elementos LBody están dentro de elementos LI (o bien no existen listas en el documento) </name>
+		<error>check.518.error</error>
+		<rationale>check.518.rationale</rationale>
+	</check>
+
+	<check id ="519" key="pdf" confidence="high">
+		<name> [PDF] Se verifica que la estructura de encabezados del documento PDF empieza en H1 y no se saltan niveles intermedios </name>
+		<error>check.519.error</error>
+		<rationale>check.519.rationale</rationale>
+	</check>
+
 </checks>

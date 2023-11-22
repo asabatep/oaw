@@ -537,6 +537,9 @@ public interface IntavConstants {
 	
 	/** The Constant GOOD_PRACTICE. */
 	public static final String GOOD_PRACTICE = "goodpractice";
+
+	/** The Constante REFLOW_CHECKS */
+	public static final String REFLOW_CHECKS = "reflowchecks";
 	
 	/** The Constant OBS_VALUE_NOT_SCORE. */
 	public static final int OBS_VALUE_NOT_SCORE = 0;

@@ -67,8 +67,10 @@ import es.inteco.common.Constants;
 import es.inteco.common.ConstantsFont;
 import es.inteco.common.logging.Logger;
 import es.inteco.common.properties.PropertiesManager;
+import es.inteco.intav.dao.ValidatorDAO;
 import es.inteco.intav.datos.AnalisisDatos;
 import es.inteco.intav.form.ObservatoryEvaluationForm;
+import es.inteco.intav.form.ValidatorForm;
 import es.inteco.plugin.dao.DataBaseManager;
 import es.inteco.rastreador2.actionform.rastreo.FulfilledCrawlingForm;
 import es.inteco.rastreador2.dao.cartucho.CartuchoDAO;
@@ -129,7 +131,7 @@ public final class PrimaryExportPdfUtils {
 				builder = new AnonymousResultExportPdfUNE2004();
 			} else if (Constants.NORMATIVA_UNE_2012_B.equalsIgnoreCase(application)) {
 				builder = new AnonymousResultExportPdfUNE2012b();
-			} else if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(application)) {
+			} else if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(application) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(application)) {
 				builder = new AnonymousResultExportPdfUNEEN2019();
 			} else if (Constants.NORMATIVA_ACCESIBILIDAD.equalsIgnoreCase(application)) {
 				builder = new AnonymousResultExportPdfAccesibilidad();
@@ -397,9 +399,21 @@ public final class PrimaryExportPdfUtils {
 					ObjectMapper mapper = new ObjectMapper();
 					String jsonInString2 = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(report);
 					org.apache.commons.io.FileUtils.writeStringToFile(new File(new File(file.getPath()).getParentFile().getPath() + "/wcagem-report.json"), jsonInString2);
+					Boolean pdfActive = false;
+					try {
+			    	Connection c = DataBaseManager.getConnection();
+					ValidatorForm validator = ValidatorDAO.getValidator(c);
+					if(validator.getStatus() == 1 && validator.getPdfActive() == 1){
+						pdfActive = true;
+						DataBaseManager.closeConnection(c);
+					}
+				}
+					catch (Exception e){
+						e.printStackTrace();
+					}
 					// ODS REPORT
-					SpreadSheet ods = WcagOdsUtils.generateOds(report);
-					Workbook wb = WcagXlsxUtils.generateXlsx(report);
+					SpreadSheet ods = WcagOdsUtils.generateOds(report, pdfActive);
+					Workbook wb = WcagXlsxUtils.generateXlsx(report,pdfActive);
 					File outputFile = new File(new File(file.getPath()).getParentFile().getPath() + "/Informe Revision Accesibilidad - Sitios web.ods");
 					ods.saveAs(outputFile);
 					File outputFilexlsx = new File(new File(file.getPath()).getParentFile().getPath() + "/Informe Revision Accesibilidad - Sitios web.xlsx");

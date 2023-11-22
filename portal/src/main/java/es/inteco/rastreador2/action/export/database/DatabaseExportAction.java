@@ -348,7 +348,7 @@ public class DatabaseExportAction extends Action {
 			final Connection connection = DataBaseManager.getConnection();
 			final String application = CartuchoDAO.getApplication(connection, idCartucho);
 			DataBaseManager.closeConnection(connection);
-			if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(application)) {
+			if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(application) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(application)) {
 				resources = MessageResources.getMessageResources(Constants.MESSAGE_RESOURCES_UNE_EN2019);
 			} else if (Constants.NORMATIVA_ACCESIBILIDAD.equalsIgnoreCase(application)) {
 				resources = MessageResources.getMessageResources(Constants.MESSAGE_RESOURCES_ACCESIBILIDAD);
@@ -375,7 +375,7 @@ public class DatabaseExportAction extends Action {
 							final Connection connection = DataBaseManager.getConnection();
 							final String application = CartuchoDAO.getApplication(connection, idCartucho);
 							DataBaseManager.closeConnection(connection);
-							if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(application)) {
+							if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(application) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(application)) {
 								resources = MessageResources.getMessageResources(Constants.MESSAGE_RESOURCES_UNE_EN2019);
 							} else if (Constants.NORMATIVA_ACCESIBILIDAD.equalsIgnoreCase(application)) {
 								resources = MessageResources.getMessageResources(Constants.MESSAGE_RESOURCES_ACCESIBILIDAD);

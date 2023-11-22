@@ -549,9 +549,9 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 		final com.itextpdf.text.List listaConfiguracionRastreo = new com.itextpdf.text.List();
 		listaConfiguracionRastreo.setIndentationLeft(LINE_SPACE);
 		PDFUtils.addListItem(messageResources.getMessage("pdf.accessibility.sample.config.type.source"), listaConfiguracionRastreo, ConstantsFont.PARAGRAPH, false, true);
-		if (Constants.REPORT_OBSERVATORY_4.equals(getBasicServiceForm().getReport())) {
+		if (Constants.REPORT_OBSERVATORY_4.equals(getBasicServiceForm().getReport()) || Constants.REPORT_OBSERVATORY_4_PDF.equals(getBasicServiceForm().getReport())) {
 			PDFUtils.addListItem(messageResources.getMessage("pdf.accessibility.sample.p1.brokenlinks.yes"), listaConfiguracionRastreo, ConstantsFont.PARAGRAPH, false, true);
-		} else if (Constants.REPORT_OBSERVATORY_4_NOBROKEN.equals(getBasicServiceForm().getReport())) {
+		} else if (Constants.REPORT_OBSERVATORY_4_NOBROKEN.equals(getBasicServiceForm().getReport())|| Constants.REPORT_OBSERVATORY_4_NOBROKEN_PDF.equals(getBasicServiceForm().getReport())) {
 			PDFUtils.addListItem(messageResources.getMessage("pdf.accessibility.sample.p1.brokenlinks.no"), listaConfiguracionRastreo, ConstantsFont.PARAGRAPH, false, true);
 		}
 		PDFUtils.addListItem(messageResources.getMessage("pdf.accessibility.sample.methodology") + " " + Constants.OBSERVATORIO_UNE_EN2019, listaConfiguracionRastreo, ConstantsFont.PARAGRAPH, false,
@@ -570,9 +570,9 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 		final com.itextpdf.text.List listaConfiguracionRastreo = new com.itextpdf.text.List();
 		listaConfiguracionRastreo.setIndentationLeft(LINE_SPACE);
 		PDFUtils.addListItem(messageResources.getMessage("pdf.accessibility.sample.config.type.source"), listaConfiguracionRastreo, ConstantsFont.PARAGRAPH, false, true);
-		if (Constants.REPORT_OBSERVATORY_4.equals(getBasicServiceForm().getReport())) {
+		if (Constants.REPORT_OBSERVATORY_4.equals(getBasicServiceForm().getReport())|| Constants.REPORT_OBSERVATORY_4_PDF.equals(getBasicServiceForm().getReport())) {
 			PDFUtils.addListItem(messageResources.getMessage("pdf.accessibility.sample.p1.brokenlinks.yes"), listaConfiguracionRastreo, ConstantsFont.PARAGRAPH, false, true);
-		} else if (Constants.REPORT_OBSERVATORY_4_NOBROKEN.equals(getBasicServiceForm().getReport())) {
+		} else if (Constants.REPORT_OBSERVATORY_4_NOBROKEN.equals(getBasicServiceForm().getReport())|| Constants.REPORT_OBSERVATORY_4_NOBROKEN_PDF.equals(getBasicServiceForm().getReport())) {
 			PDFUtils.addListItem(messageResources.getMessage("pdf.accessibility.sample.p1.brokenlinks.no"), listaConfiguracionRastreo, ConstantsFont.PARAGRAPH, false, true);
 		}
 		PDFUtils.addListItem(messageResources.getMessage("pdf.accessibility.sample.methodology") + " " + Constants.OBSERVATORIO_UNE_EN2019, listaConfiguracionRastreo, ConstantsFont.PARAGRAPH, false,
@@ -634,9 +634,9 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 								+ (getBasicServiceForm().isInDirectory() ? messageResources.getMessage("select.yes") : messageResources.getMessage("select.no")),
 						listaConfiguracionRastreo, ConstantsFont.PARAGRAPH, false, true);
 			}
-			if (Constants.REPORT_OBSERVATORY_4.equals(getBasicServiceForm().getReport())) {
+			if (Constants.REPORT_OBSERVATORY_4.equals(getBasicServiceForm().getReport())|| Constants.REPORT_OBSERVATORY_4_PDF.equals(getBasicServiceForm().getReport())) {
 				PDFUtils.addListItem(messageResources.getMessage("pdf.accessibility.sample.p1.brokenlinks.yes"), listaConfiguracionRastreo, ConstantsFont.PARAGRAPH, false, true);
-			} else if (Constants.REPORT_OBSERVATORY_4_NOBROKEN.equals(getBasicServiceForm().getReport())) {
+			} else if (Constants.REPORT_OBSERVATORY_4_NOBROKEN.equals(getBasicServiceForm().getReport()) || Constants.REPORT_OBSERVATORY_4_NOBROKEN_PDF.equals(getBasicServiceForm().getReport())) {
 				PDFUtils.addListItem(messageResources.getMessage("pdf.accessibility.sample.p1.brokenlinks.no"), listaConfiguracionRastreo, ConstantsFont.PARAGRAPH, false, true);
 			}
 			PDFUtils.addListItem(messageResources.getMessage("pdf.accessibility.sample.methodology") + " " + Constants.OBSERVATORIO_UNE_EN2019, listaConfiguracionRastreo, ConstantsFont.PARAGRAPH,
@@ -672,9 +672,9 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 			final List listaConfiguracionRastreo = new List();
 			listaConfiguracionRastreo.setIndentationLeft(LINE_SPACE);
 			listaConfiguracionRastreo.add(createOrigen(getOriginSources(evaList)));
-			if (Constants.REPORT_OBSERVATORY_4.equals(getBasicServiceForm().getReport())) {
+			if (Constants.REPORT_OBSERVATORY_4.equals(getBasicServiceForm().getReport())|| Constants.REPORT_OBSERVATORY_4_PDF.equals(getBasicServiceForm().getReport())) {
 				PDFUtils.addListItem(messageResources.getMessage("pdf.accessibility.sample.p1.brokenlinks.yes"), listaConfiguracionRastreo, ConstantsFont.PARAGRAPH, false, true);
-			} else if (Constants.REPORT_OBSERVATORY_4_NOBROKEN.equals(getBasicServiceForm().getReport())) {
+			} else if (Constants.REPORT_OBSERVATORY_4_NOBROKEN.equals(getBasicServiceForm().getReport())|| Constants.REPORT_OBSERVATORY_4_NOBROKEN_PDF.equals(getBasicServiceForm().getReport())) {
 				PDFUtils.addListItem(messageResources.getMessage("pdf.accessibility.sample.p1.brokenlinks.no"), listaConfiguracionRastreo, ConstantsFont.PARAGRAPH, false, true);
 			}
 			PDFUtils.addListItem(messageResources.getMessage("pdf.accessibility.sample.methodology") + " " + Constants.OBSERVATORIO_UNE_EN2019, listaConfiguracionRastreo, ConstantsFont.PARAGRAPH,
@@ -2322,8 +2322,15 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 					sumL2 = sumL2.add(entry.getValue());
 				}
 			}
+			// If there were no applicable level 2 checks we set the score to 0 to avoid dividing by 0
+			if(resultL2.size() - countNA == 0){
+				scoreForm.setScoreLevel2(new BigDecimal(0));
+				scoreForm.setScoreLevelAA(new BigDecimal(0));
+			}
+			else{
 			scoreForm.setScoreLevel2(sumL2.divide(new BigDecimal(resultL2.size() - countNA), 2, BigDecimal.ROUND_HALF_UP));
 			scoreForm.setScoreLevelAA(sumL2.divide(new BigDecimal(resultL2.size() - countNA), 2, BigDecimal.ROUND_HALF_UP));
+			}
 			scoreForm.setSuitabilityScore(scoreForm.getSuitabilityScore().divide(new BigDecimal(evaList.size()), 2, BigDecimal.ROUND_HALF_UP));
 			// REVIEW Calculated compliance
 			scoreForm.setCompliance(calculatedCompliance.get(evaList.get(0).getCrawlerExecutionId()));
