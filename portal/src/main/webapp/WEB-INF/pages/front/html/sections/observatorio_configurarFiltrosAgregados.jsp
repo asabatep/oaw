@@ -1,5 +1,5 @@
 <!--
-Copyright (C) 2017 MINHAFP, Ministerio de Hacienda y Función Pública, 
+Copyright (C) 2017 MINHAFP, Ministerio de Hacienda y Funciï¿½n Pï¿½blica, 
 This program is licensed and may be used, modified and redistributed under the terms
 of the European Public License (EUPL), either version 1.2 or (at your option) any later 
 version as soon as they are approved by the European Commission.
@@ -118,17 +118,22 @@ you may find it at http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:3201
 									<bean:message key="report.config.title.label" />
 								</strong>
 							</label>
-							<logic:equal name="<%=Constants.APPLICATION%>" value="<%=Constants.NORMATIVA_UNE_EN2019%>">
+							<c:choose>
+							<c:when test="${Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019 || Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019_PDF}">
 								<input style="width: 50%;" name="reportTitle" id="reportTitle" type="text"
 									value="<bean:message key="report.config.title.default" /> <c:out value="${ambito}" />" />
-							</logic:equal>
-							<logic:notEqual name="<%=Constants.APPLICATION%>" value="<%=Constants.NORMATIVA_UNE_EN2019%>">
+							</c:when>
+							</c:choose>
+							<c:choose>
+							<c:when test="${Constants.APPLICATION != Constants.NORMATIVA_UNE_EN2019 && Constants.APPLICATION != Constants.NORMATIVA_UNE_EN2019_PDF}">
 								<input style="width: 50%;" name="reportTitle" id="reportTitle" type="text"
 									value="<bean:message key="report.config.title.default.acc" />" />
-							</logic:notEqual>
+							</c:when>
+							</c:choose>
 						</div>
 					</fieldset>
-					<logic:equal name="<%=Constants.APPLICATION%>" value="<%=Constants.NORMATIVA_UNE_EN2019%>">
+					<c:choose>
+					<c:when test="${Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019 || Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019_PDF}">
 						<fieldset>
 							<legend>
 								<bean:message key="report.config.etiquetas.filter.title" />
@@ -193,8 +198,10 @@ you may find it at http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:3201
 								</logic:iterate>
 							</div>
 						</fieldset>
-					</logic:equal>
-					<logic:equal name="<%=Constants.APPLICATION%>" value="<%=Constants.NORMATIVA_UNE_EN2019%>">
+					</c:when>
+					</c:choose>
+					<c:choose>
+					<c:when test="${Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019 || Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019_PDF}">
 						<fieldset>
 							<legend>
 								<bean:message key="report.config.graficas.filter.title" />
@@ -250,7 +257,8 @@ you may find it at http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:3201
 								<br>
 							</div>
 						</fieldset>
-					</logic:equal>
+					</c:when>
+					</c:choose>
 					<fieldset>
 						<legend>
 							<bean:message key="report.config.plantillas.filter.title" />
@@ -270,7 +278,8 @@ you may find it at http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:3201
 								</logic:iterate>
 							</select>
 						</div>
-						<logic:equal name="<%=Constants.APPLICATION%>" value="<%=Constants.NORMATIVA_UNE_EN2019%>">
+						<c:choose>
+						<c:when test="${Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019 || Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019_PDF}">
 							<div class="formItem">
 								<label for="url" class="control-label">
 									<strong class="labelVisu">
@@ -294,8 +303,10 @@ you may find it at http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:3201
 									<bean:message key="report.config.plantillas.filter.segmentos.info" />
 								</p>
 							</div>
-						</logic:equal>
-						<logic:equal name="<%=Constants.APPLICATION%>" value="<%=Constants.NORMATIVA_UNE_EN2019%>">
+						</c:when>
+						</c:choose>
+						<c:choose>
+						<c:when test="${Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019 || Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019_PDF}">
 							<div class="formItem">
 								<label for="url" class="control-label">
 									<strong class="labelVisu">
@@ -319,8 +330,10 @@ you may find it at http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:3201
 									<bean:message key="report.config.plantillas.filter.complejidades.info" />
 								</p>
 							</div>
-						</logic:equal>
-						<logic:equal name="<%=Constants.APPLICATION%>" value="<%=Constants.NORMATIVA_UNE_EN2019%>">
+						</c:when>
+						</c:choose>
+						<c:choose>
+						<c:when test="${Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019 || Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019_PDF}">
 							<div class="formItem">
 								<label for="url" class="control-label">
 									<strong class="labelVisu">
@@ -344,7 +357,8 @@ you may find it at http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:3201
 									<bean:message key="report.config.plantillas.filter.evol.segmentos.info" />
 								</p>
 							</div>
-						</logic:equal>
+						</c:when>
+						</c:choose>
 					</fieldset>
 					<input type="hidden" name="application" value="<c:out value="${application}"/>" />
 					<input type="hidden" name="esPrimera" value="true" />

@@ -297,7 +297,7 @@ public class ResultadosAnonimosObservatorioAction extends Action {
 					for (Map.Entry<String, Object> graphicEntry : graphics.entrySet()) {
 						request.setAttribute(graphicEntry.getKey(), graphicEntry.getValue());
 					}
-				} else if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(application)) {
+				} else if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(application) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(application)) {
 					final Map<String, Object> graphics = ResultadosAnonimosObservatorioUNEEN2019Utils.generateGlobalGraphics(
 							MessageResources.getMessageResources(Constants.MESSAGE_RESOURCES_UNE_EN2019), request.getParameter(Constants.ID), graphicsPath, categories,
 							pmgr.getValue(CRAWLER_PROPERTIES, "chart.evolution.inteco.red.colors"), false, null);
@@ -372,7 +372,7 @@ public class ResultadosAnonimosObservatorioAction extends Action {
 					for (Map.Entry<String, Object> graphicEntry : graphics.entrySet()) {
 						request.setAttribute(graphicEntry.getKey(), graphicEntry.getValue());
 					}
-				} else if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(application)) {
+				} else if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(application) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(application)) {
 					final Map<String, Object> graphics = ResultadosAnonimosObservatorioUNEEN2019Utils.generateCategoryGraphics(
 							MessageResources.getMessageResources(Constants.MESSAGE_RESOURCES_UNE_EN2019), request.getParameter(Constants.ID), ObservatorioDAO.getCategoryById(c, idCategory),
 							graphicsPath, pmgr.getValue(CRAWLER_PROPERTIES, "chart.evolution.inteco.red.colors"), false, null);
@@ -449,7 +449,7 @@ public class ResultadosAnonimosObservatorioAction extends Action {
 						request.setAttribute(graphicEntry.getKey(), graphicEntry.getValue());
 					}
 					forward = "getEvolutionGraphicsUNEEN2019";
-				} else if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(application)) {
+				} else if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(application) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(application)) {
 					final Map<String, Object> graphics = ResultadosAnonimosObservatorioUNEEN2019Utils.generateEvolutionGraphics(
 							MessageResources.getMessageResources(Constants.MESSAGE_RESOURCES_UNE_EN2019), request.getParameter(Constants.ID_OBSERVATORIO), request.getParameter(Constants.ID),
 							fileEvolutionPath, pmgr.getValue(CRAWLER_PROPERTIES, "chart.evolution.mp.green.color"), false, null, null);

@@ -49,6 +49,9 @@ public class BasicServiceMailService {
 	/** The Constant OBSERVATORIO_UNE_UNE_EN2019_SIN_ENLACES_ROTOS. */
 //	private static final String OBSERVATORIO_UNE_UNE_EN2019_SIN_ENLACES_ROTOS = "Observatorio UNE EN2019 (sin comprobar enlaces rotos)";
 	private static final String OBSERVATORIO_UNE_UNE_EN2019_SIN_ENLACES_ROTOS = "Seguimiento simplificado Directiva (sin comprobar enlaces rotos)";
+
+	private static final String OBSERVATORIO_UNE_EN2019_PDF = "Seguimiento simplificado Directiva (Con análisis de PDF)";
+	private static final String OBSERVATORIO_UNE_EN2019_SIN_ENLACES_ROTOS_PDF = "Seguimiento simplificado Directiva (Con análisis de PDF sin comprobar enlaces rotos)";
 	/** The Constant OBSERVATORIO_UNE_2012_VERSION_2. */
 	private static final String OBSERVATORIO_UNE_2012_VERSION_2 = "Observatorio UNE 2012 (versión 2)";
 	/** The Constant OBSERVATORIO_UNE_2012_ANTIGUA. */
@@ -112,7 +115,8 @@ public class BasicServiceMailService {
 			return MessageFormat.format(message, OBSERVATORIO_UNE_2012_ANTIGUA);
 		} else if (Constants.REPORT_OBSERVATORY_3.equals(reportType) || Constants.REPORT_OBSERVATORY_3_NOBROKEN.equals(reportType)) {
 			return MessageFormat.format(message, OBSERVATORIO_UNE_2012_VERSION_2);
-		} else if (Constants.REPORT_OBSERVATORY_4.equals(reportType) || Constants.REPORT_OBSERVATORY_4_NOBROKEN.equals(reportType)) {
+		} else if (Constants.REPORT_OBSERVATORY_4.equals(reportType) || Constants.REPORT_OBSERVATORY_4_NOBROKEN.equals(reportType) 
+		|| Constants.REPORT_OBSERVATORY_4_PDF.equals(reportType) || Constants.REPORT_OBSERVATORY_4_NOBROKEN_PDF.equals(reportType)) {
 			return MessageFormat.format(message, OBSERVATORIO_UNE_EN2019);
 		} else if (Constants.REPORT_OBSERVATORY_5.equals(reportType) || Constants.REPORT_OBSERVATORY_5_NOBROKEN.equals(reportType)) {
 			return MessageFormat.format(message, OBSERVATORIO_ACCESIBILIDAD);
@@ -198,6 +202,10 @@ public class BasicServiceMailService {
 			return OBSERVATORIO_UNE_EN2019;
 		} else if (Constants.REPORT_OBSERVATORY_4_NOBROKEN.equals(reportType)) {
 			return OBSERVATORIO_UNE_UNE_EN2019_SIN_ENLACES_ROTOS;
+		} else if (Constants.REPORT_OBSERVATORY_4_PDF.equals(reportType)) {
+			return OBSERVATORIO_UNE_EN2019_PDF;
+		} else if (Constants.REPORT_OBSERVATORY_4_NOBROKEN_PDF.equals(reportType)) {
+			return OBSERVATORIO_UNE_EN2019_SIN_ENLACES_ROTOS_PDF;
 		} else if (Constants.REPORT_OBSERVATORY_5.equals(reportType)) {
 			return OBSERVATORIO_ACCESIBILIDAD;
 		} else if (Constants.REPORT_OBSERVATORY_5_NOBROKEN.equals(reportType)) {

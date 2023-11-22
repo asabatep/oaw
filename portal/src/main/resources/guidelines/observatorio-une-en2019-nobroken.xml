@@ -56,6 +56,7 @@
 					<!-- Textos alternativos menosres de 150 -->
 					<check id="475" />
 
+
 				</checks>
 			</subgroup>
 			<subgroup aspect="observatory.aspect.structure">
@@ -138,6 +139,7 @@
 					<!-- Tablas formadas por una única columna y 3 o más filas y que las 
 						celdas no superen los X caracteres (Heurístico X=150) -->
 					<check id="431" />
+
 				</checks>
 			</subgroup>
 
@@ -170,6 +172,7 @@
 					<check id="464" />
 					<!-- Tablas con más del 70% de td vacíos -->
 					<check id="492" />
+
 				</checks>
 			</subgroup>
 
@@ -407,6 +410,7 @@
 					<!-- Se verifica que el código CSS es parseable (bien formado, sin errores 
 						de sintaxis) -->
 					<check id="450" />
+
 				</checks>
 			</subgroup>
 		</suitability>
@@ -445,7 +449,7 @@
 			</subgroup>
 
 			<subgroup aspect="observatory.aspect.general"
-				type="goodpractice">
+				type="reflowchecks">
 				<!-- Cambios de contexto -->
 				<name>minhap.observatory.5_0.subgroup.2.3</name>
 				<checks>

@@ -168,7 +168,7 @@ public class GraficasObservatorioAction extends Action {
 			}
 			final Connection connection = DataBaseManager.getConnection();
 			String aplicacion = CartuchoDAO.getApplication(connection, Long.parseLong(request.getParameter(Constants.TYPE_OBSERVATORY)));
-			if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(aplicacion)) {
+			if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(aplicacion) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(aplicacion)) {
 				if (title != null && title.length() > 0 && (title.charAt(title.length() - 1) == '1' || title.charAt(title.length() - 1) == '2')) {
 					title = title.substring(0, title.length() - 1);
 				}

@@ -1346,7 +1346,7 @@ public final class EvaluatorUtils {
 				Logger.putLog("Error al crear el proxy: " + proxyHttpHost + ":" + proxyHttpPort, EvaluatorUtils.class, Logger.LOG_LEVEL_ERROR);
 			}
 		} else {
-			Logger.putLog("Conectando con la URL: " + url, EvaluatorUtils.class, Logger.LOG_LEVEL_ERROR);
+			Logger.putLog("Conectando con la URL sin proxy: " + url, EvaluatorUtils.class, Logger.LOG_LEVEL_ERROR);
 			connection = (HttpURLConnection) new URL(url).openConnection();
 		}
 		connection.setInstanceFollowRedirects(false);

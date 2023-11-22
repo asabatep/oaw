@@ -11,13 +11,19 @@ import ca.utoronto.atrc.tile.accessibilitychecker.EvaluatorUtility;
 import es.inteco.common.logging.Logger;
 import es.inteco.common.utils.StringUtils;
 import es.inteco.intav.utils.EvaluatorUtils;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * Clase para representar un recurso CSS que se ha incluido mediante @import.
  */
+@NoArgsConstructor
+@Getter
+@Setter
 public class CSSImportedResource implements CSSResource {
 	/** The content. */
-	private final String content;
+	private String content;
 	/** The source. */
 	private String source;
 

@@ -990,7 +990,7 @@ public class Evaluator {
 	 * @return the int
 	 */
 	// the id of the analysis
-	private int setAnalisisDB(final Evaluation evaluation, final CheckAccessibility checkAccessibility) {
+	private static int setAnalisisDB(final Evaluation evaluation, final CheckAccessibility checkAccessibility) {
 		try (Connection conn = DataBaseManager.getConnection()) {
 			final Analysis analysis = new Analysis();
 			analysis.setDate(new Date());
@@ -1006,6 +1006,11 @@ public class Evaluator {
 			Logger.putLog("Error al guardar el análisis en base de datos", Evaluator.class, Logger.LOG_LEVEL_ERROR, e);
 			return -1;
 		}
+	}
+
+	public static int setDbId(final Evaluation evaluation, final CheckAccessibility checkAccessibility) {
+		return setAnalisisDB(evaluation, checkAccessibility);
+
 	}
 
 	// Gets the global information about the analysis from DataBase and returns
