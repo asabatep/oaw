@@ -23,6 +23,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.math3.analysis.function.Log;
 import org.quartz.InterruptableJob;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
@@ -39,6 +40,8 @@ import es.inteco.crawler.common.Constants;
 import es.inteco.crawler.dao.EstadoObservatorioDAO;
 import es.inteco.crawler.job.CrawlerData;
 import es.inteco.crawler.job.CrawlerJob;
+import es.inteco.intav.dao.ValidatorDAO;
+import es.inteco.intav.form.ValidatorForm;
 import es.inteco.intav.utils.CacheUtils;
 import es.inteco.intav.utils.EvaluatorUtils;
 import es.inteco.plugin.dao.DataBaseManager;
@@ -50,6 +53,7 @@ import es.inteco.rastreador2.actionform.observatorio.ResultadoSemillaFullForm;
 import es.inteco.rastreador2.actionform.semillas.SemillaForm;
 import es.inteco.rastreador2.dao.cartucho.CartuchoDAO;
 import es.inteco.rastreador2.dao.cuentausuario.CuentaUsuarioDAO;
+import es.inteco.rastreador2.dao.login.CartuchoForm;
 import es.inteco.rastreador2.dao.login.DatosForm;
 import es.inteco.rastreador2.dao.login.LoginDAO;
 import es.inteco.rastreador2.dao.observatorio.ObservatorioDAO;
@@ -83,12 +87,24 @@ public class ExecuteScheduledObservatory implements StatefulJob, InterruptableJo
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		final JobDataMap jobDataMap = context.getJobDetail().getJobDataMap();
 		final Long cartridgeId = (Long) jobDataMap.get(Constants.CARTRIDGE_ID);
+		
 		observatoryId = (Long) jobDataMap.get(Constants.OBSERVATORY_ID);
 		Logger.putLog("Lanzando la ejecución del observatorio con id " + observatoryId, ExecuteScheduledObservatory.class, Logger.LOG_LEVEL_INFO);
 		final PropertiesManager pmgr = new PropertiesManager();
 		String url = "";
 		try {
 			Connection c = DataBaseManager.getConnection();
+			int guidelineId = CartuchoDAO.getGuideline(c, cartridgeId);
+			long guidelineLong = guidelineId;
+			String guideline = RastreoDAO.getNombreNorma(c, guidelineLong);
+			ValidatorForm validatorForm = ValidatorDAO.getValidator(c);
+			Logger.putLog("GUIDELINE: " + guideline, ExecuteScheduledObservatory.class, Logger.LOG_LEVEL_WARNING);
+			if (guideline.contains("_pdf")){
+				validatorForm.setStatus(1);
+				validatorForm.setPdfActive(1);
+			}
+			else validatorForm.setPdfActive(0);
+			
 			// Si se ha editado la categoría de semillas para añadir más, se
 			// añaden ahora.
 			createNewCrawlings(c, observatoryId);

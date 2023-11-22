@@ -24,6 +24,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -222,6 +224,7 @@ public final class BasicServiceExport {
 		final byte[] buffer = new byte[1024];
 		try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(reportCompressFile)); BufferedInputStream in = new BufferedInputStream(new FileInputStream(reportFile))) {
 			final ZipEntry ze = new ZipEntry(new File(reportFile).getName());
+			zos.setLevel(9);
 			zos.putNextEntry(ze);
 			int len;
 			while ((len = in.read(buffer)) > 0) {
@@ -252,7 +255,12 @@ public final class BasicServiceExport {
 		} catch (Exception e) {
 			Logger.putLog("Exception: ", BasicServiceExport.class, Logger.LOG_LEVEL_ERROR, e);
 		}
-		Logger.putLog("PDF comprimido a ZIP correctamente", BasicServiceExport.class, Logger.LOG_LEVEL_INFO);
+		try {
+			Logger.putLog("PDF comprimido a ZIP correctamente. Tamaño: " + Files.size(Paths.get(reportCompressFile)), BasicServiceExport.class, Logger.LOG_LEVEL_WARNING);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return reportCompressFile;
 	}
 
@@ -285,6 +293,8 @@ public final class BasicServiceExport {
 			}
 			FileInputStream fis = new FileInputStream(fileToZip);
 			ZipEntry zipEntry = new ZipEntry(fileName);
+			zipOut.setMethod(ZipEntry.DEFLATED);
+			zipOut.setLevel(9);
 			zipOut.putNextEntry(zipEntry);
 			byte[] bytes = new byte[1024];
 			int length;
