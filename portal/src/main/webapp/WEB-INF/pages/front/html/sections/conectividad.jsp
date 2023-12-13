@@ -503,21 +503,16 @@ if (validatorUrl == "") {
 							class="alert alert-danger hidden"><bean:message key="conectividad.proxy.config.error.url"/> </div>
 
 
-
 						<div id="proxy-port-error-message"
 							class="alert alert-danger hidden"><bean:message key="conectividad.proxy.config.error.port"/></div>
 
-
 						<p><bean:message key="conectividad.validator.info"/> </p>
-
 
 						<div class="formItem">
 							<label for="url" class="labelCorto"><strong
 								class="labelVisu"><acronym
 									title="<bean:message key="campo.obligatorio" />"> * </acronym>
 									<bean:message key="conectividad.proxy.activo" />: </strong></label>
-
-
 							<logic:equal name="validatorconfig" property="status" value="1">
 								<input id="validatorStatus" type="checkbox" class="textoCorto"
 									name="validatorStatus" required="required" checked="checked"
@@ -528,10 +523,6 @@ if (validatorUrl == "") {
 									style="width: auto !important;" name="validatorStatus"
 									required="required" />
 							</logic:equal>
-
-
-
-
 						</div>
 
 						<div class="formItem">
@@ -539,8 +530,6 @@ if (validatorUrl == "") {
 								class="labelVisu"><acronym
 									title="<bean:message key="campo.obligatorio" />"> * </acronym>
 									<bean:message key="conectividad.proxy.pdf.activo" />: </strong></label>
-
-
 							<logic:equal name="validatorconfig" property="pdfActive" value="1">
 								<input id="pdfActive" type="checkbox" class="textoCorto"
 									name="pdfActive" required="required" checked="checked"
@@ -551,10 +540,6 @@ if (validatorUrl == "") {
 									style="width: auto !important;" name="pdfActive"
 									required="required" />
 							</logic:equal>
-
-
-
-
 						</div>
 
 						<div class="formItem">

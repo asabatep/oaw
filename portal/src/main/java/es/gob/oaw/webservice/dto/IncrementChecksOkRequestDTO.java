@@ -6,7 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class IncrementChecksOkRequestDTO {
-    protected Long idAnalysis;
-    protected String[] elements;
-    
+	protected Long idAnalysis;
+	protected String[] elements;
 }

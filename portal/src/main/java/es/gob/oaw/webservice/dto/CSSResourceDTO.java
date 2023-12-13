@@ -10,7 +10,6 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @NoArgsConstructor
 public class CSSResourceDTO {
-    protected String source;
-    protected String content;
-    
+	protected String source;
+	protected String content;
 }
