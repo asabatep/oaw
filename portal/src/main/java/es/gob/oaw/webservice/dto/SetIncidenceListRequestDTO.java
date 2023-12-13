@@ -11,8 +11,6 @@ import lombok.experimental.SuperBuilder;
 @Getter
 @Setter
 public class SetIncidenceListRequestDTO {
-
-  public int idAnalysis;
-  public Incidencia[] incidences;
-    
+	public int idAnalysis;
+	public Incidencia[] incidences;
 }
