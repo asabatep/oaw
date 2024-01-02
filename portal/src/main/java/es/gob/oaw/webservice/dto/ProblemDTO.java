@@ -1,54 +1,39 @@
 package es.gob.oaw.webservice.dto;
 
+import java.util.ArrayList;
 import java.util.List;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
+@SuperBuilder
+@Getter
+@Setter
+@NoArgsConstructor
+@XmlAccessorType(XmlAccessType.FIELD)
 public class ProblemDTO {
-	private String title;
-	private String description;
-	private String help;
-	private String type;
-	private SpecificProblemDTO[] specificProblems;
 
-	public ProblemDTO() {
-	}
+  @XmlElement(name = "description", namespace = "http://dto.webservice.oaw.gob.es/xsd")
+  protected String description;
 
-	public String getTitle() {
-		return title;
-	}
+  @XmlElement(name = "help", namespace = "http://dto.webservice.oaw.gob.es/xsd")
+  protected String help;
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+  @XmlElement(name = "specificProblems", namespace = "http://dto.webservice.oaw.gob.es/xsd")
+  @Builder.Default
+  protected List<SpecificProblemDTO> specificProblems = new ArrayList<>();
 
-	public String getDescription() {
-		return description;
-	}
+  @XmlElement(name = "type", namespace = "http://dto.webservice.oaw.gob.es/xsd")
+  protected String type;
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+  @XmlElement(name = "title", namespace = "http://dto.webservice.oaw.gob.es/xsd")
+  protected String title;
 
-	public String getHelp() {
-		return help;
-	}
-
-	public void setHelp(String help) {
-		this.help = help;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public SpecificProblemDTO[] getSpecificProblems() {
-		return specificProblems;
-	}
-
-	public void setSpecificProblems(List<SpecificProblemDTO> specificProblems) {
-		this.specificProblems = specificProblems.toArray(new SpecificProblemDTO[specificProblems.size()]);
-	}
+  @XmlElement(name = "problemNumber", namespace = "http://dto.webservice.oaw.gob.es/xsd")
+  protected int problemNumber;
 }
