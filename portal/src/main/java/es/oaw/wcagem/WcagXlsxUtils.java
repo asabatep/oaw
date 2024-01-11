@@ -179,7 +179,6 @@ public final class WcagXlsxUtils {
 					break;
 				case "WCAG2:bypass-blocks":
 					fillResult(sheetR9, auditResult, 969);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 969);
 					break;
 				case "WCAG2:page-titled":
 					fillResult(sheetR9, auditResult, 1007);
@@ -187,19 +186,18 @@ public final class WcagXlsxUtils {
 					break;
 				case "WCAG2:focus-order":
 					fillResult(sheetR9, auditResult, 1045);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1045);
+					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1007);
 					break;
 				case "WCAG2:link-purpose-in-context":
 					fillResult(sheetR9, auditResult, 1083);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1083);
+					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1045);
 					break;
 				case "WCAG2:multiple-ways":
 					fillResult(sheetR9, auditResult, 1121);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1121);
 					break;
 				case "WCAG2:focus-visible":
 					fillResult(sheetR9, auditResult, 1197);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1197);
+					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1121);
 					break;
 				case "WCAG2:label-in-name":
 					fillResult(sheetR9, auditResult, 1311);
@@ -212,22 +210,22 @@ public final class WcagXlsxUtils {
 					break;
 				case "WCAG2:language-of-parts":
 					fillResult(sheetR9, auditResult, 1425);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1425);
+					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1349);
 					break;
 				case "WCAG2:on-focus":
 					fillResult(sheetR9, auditResult, 1463);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1463);
+					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1387);
 					break;
 				case "WCAG2:on-input":
 					fillResult(sheetR9, auditResult, 1501);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1501);
+					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1425);
 					break;
 				case "WCAG2:consistent-navigation":
 					fillResult(sheetR9, auditResult, 1539);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1539);
 					break;
 				case "WCAG2:labels-or-instructions":
 					fillResult(sheetR9, auditResult, 1653);
+					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1501);
 					break;
 				// p4
 				case "WCAG2:parsing":
