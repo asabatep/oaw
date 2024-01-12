@@ -392,7 +392,7 @@ public final class WcagOdsUtils {
 		final Sheet sheetR10 = workbook.getSheet("R10.Documentos no web");
 		tableRowIndex = 19;
 		while (tableRowIndex <= 1725) {
-			for (int i = 0; i < totalWebPages; i++) {
+			for (int i = 0; i < totalNonWebPages; i++) {
 				sheetR10.getCellAt("D" + (i + tableRowIndex)).setValue("N/T");
 			}
 			tableRowIndex = tableRowIndex + 38;

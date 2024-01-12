@@ -252,6 +252,15 @@ public class WcagOdtUtils {
 		case WcagEmUtils._1_1:
 			codes = Arrays.asList(WcagEmPointKey.WCAG_1_1_1.getWcagEmId());
 			break;
+		case WcagEmUtils._1_3:
+			codes = Arrays.asList(WcagEmPointKey.WCAG_1_3_1.getWcagEmId());
+			break;
+		case WcagEmUtils._1_2:
+			codes = Arrays.asList(WcagEmPointKey.WCAG_1_3_1.getWcagEmId());
+			break;
+		case WcagEmUtils._1_4:
+			codes = Arrays.asList(WcagEmPointKey.WCAG_1_3_1.getWcagEmId());
+			break;
 		case WcagEmUtils._2_3:
 			codes = Arrays.asList(WcagEmPointKey.WCAG_1_4_10.getWcagEmId());
 			break;
