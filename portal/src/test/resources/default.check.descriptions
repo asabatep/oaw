@@ -1,5 +1,8 @@
 check.2.error = default error
 check.2.rationale = default rationale
+check.492.error = Tabla de datos cuyas celdas de datos están mayoritariamente vacías, sin contenido.
+check.492.rationale = En las tablas de datos evite que las celdas de datos (TD) estén vacías, sin contenido en su interior, o al menos que estas no superen el 70% de las celdas de datos de la tabla. Una tabla de datos eminentemente vacía puede suponer un problema de lectura y comprensión para los usuarios de lectores de pantalla.
+
 
 #PDF
 check.501.error     = El documento PDF tiene una configuración de seguridad que no permite el acceso a los productos de apoyo
