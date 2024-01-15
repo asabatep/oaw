@@ -111,115 +111,113 @@ public final class WcagOdsUtils {
 			if (resultsProcessed < MAX_PAGES) {
 				resultsProcessed++;
 				switch (auditResult.getTest()) {
-				// P1
-				case "WCAG2:non-text-content":
-					fillResult(sheetR9, auditResult, 19);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 19);
-					break;
-				case "WCAG2:info-and-relationships":
-					fillResult(sheetR9, auditResult, 209);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 209);
-					break;
-				case "WCAG2:orientation":
-					fillResult(sheetR9, auditResult, 323);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 323);
-					break;
-				case "WCAG2:identify-input-purpose":
-					fillResult(sheetR9, auditResult, 361);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 361);
-					break;
-				case "WCAG2:contrast-minimum":
-					fillResult(sheetR9, auditResult, 475);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 475);
-					break;
-				case "WCAG2:reflow":
-					fillResult(sheetR9, auditResult, 589);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 589);
-					break;
-				case "WCAG2:text-spacing":
-					fillResult(sheetR9, auditResult, 665);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 665);
-					break;
-				// P2
-				case "WCAG2:keyboard":
-					fillResult(sheetR9, auditResult, 741);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 741);
-					break;
-				case "WCAG2:timing-adjustable":
-					fillResult(sheetR9, auditResult, 855);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 855);
-					break;
-				case "WCAG2:pause-stop-hide":
-					fillResult(sheetR9, auditResult, 893);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 893);
-					break;
-				case "WCAG2:three-flashes-or-below-threshold":
-					fillResult(sheetR9, auditResult, 931);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 931);
-					break;
-				case "WCAG2:bypass-blocks":
-					fillResult(sheetR9, auditResult, 969);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 969);
-					break;
-				case "WCAG2:page-titled":
-					fillResult(sheetR9, auditResult, 1007);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 969);
-					break;
-				case "WCAG2:focus-order":
-					fillResult(sheetR9, auditResult, 1045);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1045);
-					break;
-				case "WCAG2:link-purpose-in-context":
-					fillResult(sheetR9, auditResult, 1083);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1083);
-					break;
-				case "WCAG2:multiple-ways":
-					fillResult(sheetR9, auditResult, 1121);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1121);
-					break;
-				case "WCAG2:focus-visible":
-					fillResult(sheetR9, auditResult, 1197);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1197);
-					break;
-				case "WCAG2:label-in-name":
-					fillResult(sheetR9, auditResult, 1311);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1235);
-					break;
-				// P3
-				case "WCAG2:language-of-page":
-					fillResult(sheetR9, auditResult, 1387);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1311);
-					break;
-				case "WCAG2:language-of-parts":
-					fillResult(sheetR9, auditResult, 1425);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1425);
-					break;
-				case "WCAG2:on-focus":
-					fillResult(sheetR9, auditResult, 1463);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1463);
-					break;
-				case "WCAG2:on-input":
-					fillResult(sheetR9, auditResult, 1501);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1501);
-					break;
-				case "WCAG2:consistent-navigation":
-					fillResult(sheetR9, auditResult, 1539);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1539);
-					break;
-				case "WCAG2:labels-or-instructions":
-					fillResult(sheetR9, auditResult, 1653);
-					break;
-				// p4
-				case "WCAG2:parsing":
-					fillResult(sheetR9, auditResult, 1767);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1615);
-					break;
-				case "WCAG2:name-role-value":
-					fillResult(sheetR9, auditResult, 1805);
-					if(pdfActive) fillResultPdf(sheetR10, auditResult, 1653);
-					break;
-				default:
-					break;
+					// P1
+					case "WCAG2:non-text-content":
+						fillResult(sheetR9, auditResult, 19);
+						if(pdfActive) fillResultPdf(sheetR10, auditResult, 19);
+						break;
+					case "WCAG2:info-and-relationships":
+						fillResult(sheetR9, auditResult, 209);
+						if(pdfActive) fillResultPdf(sheetR10, auditResult, 209);
+						break;
+					case "WCAG2:orientation":
+						fillResult(sheetR9, auditResult, 323);
+						if(pdfActive) fillResultPdf(sheetR10, auditResult, 323);
+						break;
+					case "WCAG2:identify-input-purpose":
+						fillResult(sheetR9, auditResult, 361);
+						if(pdfActive) fillResultPdf(sheetR10, auditResult, 361);
+						break;
+					case "WCAG2:contrast-minimum":
+						fillResult(sheetR9, auditResult, 475);
+						if(pdfActive) fillResultPdf(sheetR10, auditResult, 475);
+						break;
+					case "WCAG2:reflow":
+						fillResult(sheetR9, auditResult, 589);
+						if(pdfActive) fillResultPdf(sheetR10, auditResult, 589);
+						break;
+					case "WCAG2:text-spacing":
+						fillResult(sheetR9, auditResult, 665);
+						if(pdfActive) fillResultPdf(sheetR10, auditResult, 665);
+						break;
+					// P2
+					case "WCAG2:keyboard":
+						fillResult(sheetR9, auditResult, 741);
+						if(pdfActive) fillResultPdf(sheetR10, auditResult, 741);
+						break;
+					case "WCAG2:timing-adjustable":
+						fillResult(sheetR9, auditResult, 855);
+						if(pdfActive) fillResultPdf(sheetR10, auditResult, 855);
+						break;
+					case "WCAG2:pause-stop-hide":
+						fillResult(sheetR9, auditResult, 893);
+						if(pdfActive) fillResultPdf(sheetR10, auditResult, 893);
+						break;
+					case "WCAG2:three-flashes-or-below-threshold":
+						fillResult(sheetR9, auditResult, 931);
+						if(pdfActive) fillResultPdf(sheetR10, auditResult, 931);
+						break;
+					case "WCAG2:bypass-blocks":
+						fillResult(sheetR9, auditResult, 969);
+						break;
+					case "WCAG2:page-titled":
+						fillResult(sheetR9, auditResult, 1007);
+						if(pdfActive) fillResultPdf(sheetR10, auditResult, 969);
+						break;
+					case "WCAG2:focus-order":
+						fillResult(sheetR9, auditResult, 1045);
+						if(pdfActive) fillResultPdf(sheetR10, auditResult, 1007);
+						break;
+					case "WCAG2:link-purpose-in-context":
+						fillResult(sheetR9, auditResult, 1083);
+						if(pdfActive) fillResultPdf(sheetR10, auditResult, 1045);
+						break;
+					case "WCAG2:multiple-ways":
+						fillResult(sheetR9, auditResult, 1121);
+						break;
+					case "WCAG2:focus-visible":
+						fillResult(sheetR9, auditResult, 1197);
+						if(pdfActive) fillResultPdf(sheetR10, auditResult, 1121);
+						break;
+					case "WCAG2:label-in-name":
+						fillResult(sheetR9, auditResult, 1311);
+						if(pdfActive) fillResultPdf(sheetR10, auditResult, 1235);
+						break;
+					// P3
+					case "WCAG2:language-of-page":
+						fillResult(sheetR9, auditResult, 1387);
+						if(pdfActive) fillResultPdf(sheetR10, auditResult, 1311);
+						break;
+					case "WCAG2:language-of-parts":
+						fillResult(sheetR9, auditResult, 1425);
+						if(pdfActive) fillResultPdf(sheetR10, auditResult, 1349);
+						break;
+					case "WCAG2:on-focus":
+						fillResult(sheetR9, auditResult, 1463);
+						if(pdfActive) fillResultPdf(sheetR10, auditResult, 1387);
+						break;
+					case "WCAG2:on-input":
+						fillResult(sheetR9, auditResult, 1501);
+						if(pdfActive) fillResultPdf(sheetR10, auditResult, 1425);
+						break;
+					case "WCAG2:consistent-navigation":
+						fillResult(sheetR9, auditResult, 1539);
+						break;
+					case "WCAG2:labels-or-instructions":
+						fillResult(sheetR9, auditResult, 1653);
+						if(pdfActive) fillResultPdf(sheetR10, auditResult, 1501);
+						break;
+					// p4
+					case "WCAG2:parsing":
+						fillResult(sheetR9, auditResult, 1767);
+						if(pdfActive) fillResultPdf(sheetR10, auditResult, 1615);
+						break;
+					case "WCAG2:name-role-value":
+						fillResult(sheetR9, auditResult, 1805);
+						if(pdfActive) fillResultPdf(sheetR10, auditResult, 1653);
+						break;
+					default:
+						break;
 				}
 			}
 		}
@@ -271,15 +269,6 @@ public final class WcagOdsUtils {
 		fillResultNoWeb(sheetR10, numElements, 1539, DEFAULT_VALUE_NT);
 		fillResultNoWeb(sheetR10, numElements, 1577, DEFAULT_VALUE_NT);
 		fillResultNoWeb(sheetR10, numElements, 1691, DEFAULT_VALUE_NT);
-
-		if(!pdfActive){
-			fillResultNoWeb(sheetR10, numElements, 19, DEFAULT_VALUE_NT);
-			fillResultNoWeb(sheetR10, numElements, 209, DEFAULT_VALUE_NT);
-			fillResultNoWeb(sheetR10, numElements, 969, DEFAULT_VALUE_NT);
-			fillResultNoWeb(sheetR10, numElements, 1311, DEFAULT_VALUE_NT);
-			fillResultNoWeb(sheetR10, numElements, 1615, DEFAULT_VALUE_NT);
-			fillResultNoWeb(sheetR10, numElements, 1653, DEFAULT_VALUE_NT);
-		}
 
 
 
