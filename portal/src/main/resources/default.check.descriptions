@@ -674,7 +674,8 @@ check.465.error = Ausencia de agrupaciones de campos de formulario.
 check.465.rationale = <p>Cuando en un formulario existen diferentes grupos de campos de formulario relacionados entre s\u00ED se deben marcar dichos grupos con el elemento <code>FIELDSET</code> y se debe identificar cada grupo con una etiqueta proporcionada en el elemento <code>LEGEND</code> correspondiente. Esto es especialmente importante en los formularios con un n\u00FAmero significativo de campos para establecer las diferentes agrupaciones que faciliten su comprensi\u00F3n a los usuarios.</p>
 check.466.error = Uso de encabezados dentro de formularios para agrupar los grupos de campos de formulario.
 check.466.rationale = <p>Para agrupar los campos de formulario relacionados entre s\u00ED se ha de emplear el elemento <code>FIELDSET</code> y se debe identificar el grupo con una etiqueta indicada en el elemento <code>LEGEND</code> correspondiente, en lugar de emplear encabezados dentro del formulario para simular dichas divisiones o agrupaciones de campos.</p>
-
+check.492.error = Tabla de datos cuyas celdas de datos están mayoritariamente vacías, sin contenido.
+check.492.rationale = En las tablas de datos evite que las celdas de datos (TD) estén vacías, sin contenido en su interior, o al menos que estas no superen el 70% de las celdas de datos de la tabla. Una tabla de datos eminentemente vacía puede suponer un problema de lectura y comprensión para los usuarios de lectores de pantalla.
 
 #PDF
 check.501.error     = El documento PDF tiene una configuración de seguridad que no permite el acceso a los productos de apoyo
