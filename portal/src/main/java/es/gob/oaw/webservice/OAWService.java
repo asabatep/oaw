@@ -164,6 +164,7 @@ public class OAWService {
 							}
 							problemDTO.setType(getType(problem));
 							problemDTO.setSpecificProblems(getSpecificProblems(problem));
+							problemDTO.setProblemNumber(problem.getSpecificProblems().size());
 							problemsDTO.add(problemDTO);
 						}
 					}
@@ -190,11 +191,11 @@ public class OAWService {
 	private List<SpecificProblemDTO> getSpecificProblems(ProblemForm problem) {
 		List<SpecificProblemDTO> specificProblemsDTO = new ArrayList<>();
 		List<SpecificProblemForm> specificProblems = problem.getSpecificProblems();
-		for (SpecificProblemForm specificProblem : specificProblems) {
+		for (int i=0; (i < specificProblems.size() && i < 20); i++) {
 			SpecificProblemDTO specificProblemDTO = new SpecificProblemDTO();
-			specificProblemDTO.setLine(specificProblem.getLine());
-			specificProblemDTO.setColumn(specificProblem.getColumn());
-			specificProblemDTO.setCode(specificProblem.getCode());
+			specificProblemDTO.setCode(specificProblems.get(i).getCode());
+      		specificProblemDTO.setColumn(specificProblems.get(i).getColumn());
+      		specificProblemDTO.setLine(specificProblems.get(i).getLine());
 			specificProblemsDTO.add(specificProblemDTO);
 		}
 		return specificProblemsDTO;
