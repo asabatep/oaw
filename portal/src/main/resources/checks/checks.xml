@@ -6367,5 +6367,34 @@
 		<error>check.519.error</error>
 		<rationale>check.519.rationale</rationale>
 	</check>
+	<check id ="520" key="pdf" confidence="high">
+		<name> [PDF] Se verifica que una lista sólo contenga elementos LI, LI y Caption </name>
+		<error>check.520.error</error>
+		<rationale>check.520.rationale</rationale>
+	</check>
+
+	<check id ="521" key="pdf" confidence="high">
+		<name> Se verifica que un item o LI de una lista solo contenga elementos Lbl y LBody </name>
+		<error>check.521.error</error>
+		<rationale>check.521.rationale</rationale>
+	</check>
+
+	<check id ="522" key="pdf" confidence="high">
+		<name> [PDF] Se verifica que si en las tablas de datos se emplean los elementos THead, TBody y TFoot se haga de forma estructuralmente correcta y respetando la especificación </name>
+		<error>check.522.error</error>
+		<rationale>check.522.rationale</rationale>
+	</check>
+
+	<check id ="523" key="pdf" confidence="high">
+		<name> [PDF] Se verifica que una fila TR pueda contener sólo elementos TH y TD </name>
+		<error>check.523.error</error>
+		<rationale>check.523.rationale</rationale>
+	</check>
+
+	<check id ="524" key="pdf" confidence="high">
+		<name> [PDF] Se verifica que una tabla de datos contenga sólo un título o elemento Caption y, si lo tiene, que está situado al principio o final de la tabla </name>
+		<error>check.524.error</error>
+		<rationale>check.524.rationale</rationale>
+	</check>
 
 </checks>

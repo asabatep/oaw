@@ -608,7 +608,6 @@ public final class WcagEmUtils {
 		List<ProblemForm> problemsrealtedThisWcagPoint = new ArrayList<>();
 		if (problems != null) {
 			for (ProblemForm problem : problems) {
-				
 				if (checkWcagRelationMap.get(wcagEmId) != null && ((List<String>) checkWcagRelationMap.get(wcagEmId)).contains(problem.getCheck())) {
 					problemsrealtedThisWcagPoint.add(problem);
 				}
@@ -736,9 +735,9 @@ public final class WcagEmUtils {
 		}
 		boolean allEqual = new HashSet<Integer>(integerList).size() <= 1;
 		ValidationDetails validationDetailes = new ValidationDetails();
-		if (allEqual) {
+		/*if (allEqual) {
 			processSimpleVerification(tmpWcag, observatorySubgroupForms.get(0), wcagEmId, checkChecks);
-		} else if (integerList.contains(Constants.OBS_VALUE_RED_ZERO)) {
+		} else*/ if (integerList.contains(Constants.OBS_VALUE_RED_ZERO)) {
 			Map<String, List<String>> checkWcagRelationMap = checkWcagRelationMap();
 			validationDetailes.setResult(EARL_CANNOT_TELL);
 			// Detail errors
@@ -885,6 +884,12 @@ public final class WcagEmUtils {
 		checks.add("517");
 		checks.add("518");
 		checks.add("519");
+		checks.add("520");
+		checks.add("521");
+		checks.add("522");
+		checks.add("523");
+		checks.add("524");
+		
 		checkWcagRelationMap.put(WcagEmPointKey.WCAG_1_3_1.getWcagEmId(), checks);
 		// 1.3.4
 		checks = new ArrayList<>();

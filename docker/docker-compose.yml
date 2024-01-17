@@ -1,5 +1,10 @@
 version: '2.2'
 
+networks:
+  oaw-dev:
+    driver: bridge
+    name: oaw-dev
+
 services:
 
   renderer-1:
@@ -9,7 +14,9 @@ services:
     cpus: 2
     restart: always
     command: node /opt/prerender/server.js
-    container_name: docker_renderer_1
+    container_name: docker_oaw_renderer_1
+    networks:
+      - oaw-dev
 
   renderer-2:
     privileged: true
@@ -18,7 +25,9 @@ services:
     cpus: 2
     restart: always
     command: node /opt/prerender/server.js
-    container_name: docker_renderer_2
+    container_name: docker_oaw_renderer_2
+    networks:
+      - oaw-dev
 
   renderer-3:
     privileged: true
@@ -27,16 +36,21 @@ services:
     cpus: 2
     restart: always
     command: node /opt/prerender/server.js
-    container_name: docker_renderer_3
+    container_name: docker_oaw_renderer_3
+    networks:
+      - oaw-dev
 
   proxy:
     build: ../motor-js/proxy
-    image: oawjs_proxy
     command: node /opt/proxy/index.js
     restart: always
+    volumes:
+      - ../motor-js/proxy/index.js:/opt/proxy/index.js
+    container_name: oaw-dev-proxy
     ports:
-      - "18088:18088"
-    container_name: oaw_proxy
+      - 7013:7013
+    networks:
+      - oaw-dev
 
   nginx:
     image: nginx:1.13.8-alpine
@@ -49,34 +63,38 @@ services:
       - renderer-2
       - renderer-3
     restart: always
-    shm_size: '1gb'
-    container_name: oaw_nginx
+    shm_size: 1gb
+    networks:
+      - oaw-dev
 
   mysql:
     image: mysql:5.7.21
     command: --max_allowed_packet=32505856
     ports:
-      - "55306:3306"
+      - 7012:3306
     environment:
       MYSQL_ROOT_PASSWORD: root
     volumes:
-      - "./mysql/01_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql"
-      - "./mysql/02_data.sql:/docker-entrypoint-initdb.d/02_data.sql"
-      - "./volumes/mysql/:/var/lib/mysql/"
-    container_name: oaw_mysql
+      - ./mysql/01_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+      - ./mysql/02_data.sql:/docker-entrypoint-initdb.d/02_data.sql
+      - ./volumes/mysql/:/var/lib/mysql/
+    networks:
+      - oaw-dev
 
   tomcat:
     build: ./tomcat
     ports:
-      - "18081:8080"
-      - "18444:8443"
+      - 7010:8080
+      - 7011:8443
     volumes:
-      - "../portal/target/oaw.war:/usr/local/tomcat/webapps/oaw.war"
-      - "./tmp:/tmp"
+      - ../portal/target/oaw.war:/usr/local/tomcat/webapps/oaw.war
+      - ./tmp:/tmp
+    container_name: oaw-dev-tomcat
     dns:
       - 192.168.4.9
       - 192.168.4.10
     links:
       - mysql
     restart: always
-    container_name: oaw_tomcat
+    networks:
+      - oaw-dev
