@@ -1,8 +1,0 @@
-version: '1.0'
-
-services:
-  maven:
-    image: maven:3.6.3-jdk-8
-    volumes:
-      - ../../:/oaw
-    command: bash -c "cd oaw && mvn  -f ./oaw/pom.xml clean install -P docker -Dmaven.test.skip=true"
