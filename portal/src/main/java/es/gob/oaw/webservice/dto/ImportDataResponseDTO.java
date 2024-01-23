@@ -1,22 +1,15 @@
 package es.gob.oaw.webservice.dto;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.SuperBuilder;
+
+@SuperBuilder
+@Getter
+@Setter
+@NoArgsConstructor
 public class ImportDataResponseDTO {
 	private boolean validImport;
 	private String observations;
-
-	public boolean isValidImport() {
-		return validImport;
-	}
-
-	public void setValidImport(boolean validImport) {
-		this.validImport = validImport;
-	}
-
-	public String getObservations() {
-		return observations;
-	}
-
-	public void setObservations(String observations) {
-		this.observations = observations;
-	}
 }
