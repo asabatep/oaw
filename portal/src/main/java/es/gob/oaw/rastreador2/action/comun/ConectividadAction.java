@@ -146,8 +146,7 @@ public class ConectividadAction extends Action {
 				} catch (Exception e) {
 					Logger.putLog("Error: ", ConectividadAction.class, Logger.LOG_LEVEL_ERROR, e);
 				}
-			}
-			else if("modifyValidator".equals(action)) {
+			} else if ("modifyValidator".equals(action)) {
 				String validatorUrl = request.getParameter("validatorUrl");
 				String validatorStatus = request.getParameter("validatorStatus");
 				String pdfActive = request.getParameter("pdfActive");
@@ -162,8 +161,6 @@ public class ConectividadAction extends Action {
 				} catch (Exception e) {
 					Logger.putLog("Error: ", ConectividadAction.class, Logger.LOG_LEVEL_ERROR, e);
 				}
-
-
 			}
 		}
 		return mapping.findForward(Constants.EXITO);
