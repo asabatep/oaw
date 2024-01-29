@@ -603,9 +603,10 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 		}
 		chapter.add(addURLTable(this.messageResources, evaList));
 		if (isBasicService()) {
-			PDFUtils.addParagraph(messageResources.getMessage("pdf.accessibility.sample.config.p1"), ConstantsFont.PARAGRAPH, chapter, Element.ALIGN_LEFT, true, false);
+			PDFUtils.addParagraph(messageResources.getMessage("pdf.accessibility.sample.config.p1"), ConstantsFont.PARAGRAPH, chapter, Element.ALIGN_JUSTIFIED, true, true);
 			final List listaConfiguracionRastreo = new List();
 			listaConfiguracionRastreo.setIndentationLeft(LINE_SPACE);
+			PDFUtils.addListItem("Origen:", listaConfiguracionRastreo, ConstantsFont.PARAGRAPH, false, true);
 			listaConfiguracionRastreo.add(createOrigen(getBasicServiceForm().getDomain()));
 			if (getBasicServiceForm().getAnalysisType() == BasicServiceAnalysisType.URL) {
 				PDFUtils.addListItem(messageResources.getMessage("pdf.accessibility.sample.config.type"), listaConfiguracionRastreo, ConstantsFont.PARAGRAPH, false, true);
@@ -673,7 +674,7 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 			listaConfiguracionRastreo.setIndentationLeft(LINE_SPACE);
 			listaConfiguracionRastreo.add(createOrigen(getOriginSources(evaList)));
 			if (Constants.REPORT_OBSERVATORY_4.equals(getBasicServiceForm().getReport())|| Constants.REPORT_OBSERVATORY_4_PDF.equals(getBasicServiceForm().getReport())) {
-				PDFUtils.addListItem(messageResources.getMessage("pdf.accessibility.sample.p1.brokenlinks.yes"), listaConfiguracionRastreo, ConstantsFont.PARAGRAPH, false, true);
+				PDFUtils.addListItem(messageResources.getMessage("pdf.accessibility.sample.p1.brokenlinks.yes"), listaConfiguracionRastreo, ConstantsFont.PARAGRAPH, true, true);
 			} else if (Constants.REPORT_OBSERVATORY_4_NOBROKEN.equals(getBasicServiceForm().getReport())|| Constants.REPORT_OBSERVATORY_4_NOBROKEN_PDF.equals(getBasicServiceForm().getReport())) {
 				PDFUtils.addListItem(messageResources.getMessage("pdf.accessibility.sample.p1.brokenlinks.no"), listaConfiguracionRastreo, ConstantsFont.PARAGRAPH, false, true);
 			}
@@ -732,7 +733,9 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 			externalLink.setAnchor(domain);
 			final Map<Integer, SpecialChunk> specialChunkMap = new HashMap<>();
 			specialChunkMap.put(1, externalLink);
-			return new ListItem(PDFUtils.createParagraphAnchor(messageResources.getMessage("pdf.accessibility.sample.origin.other"), specialChunkMap, ConstantsFont.PARAGRAPH, false));
+			ListItem result = new ListItem(PDFUtils.createParagraphAnchor("[anchor1] " , specialChunkMap, ConstantsFont.PARAGRAPH, false));
+			result.setListSymbol(new Chunk(""));
+			return result;
 		}
 	}
 
