@@ -9,4 +9,4 @@ CREATE TABLE `observatorio_validator` (
   `url` varchar(64) NOT NULL,
   `pdf_active` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-INSERT INTO `observatorio_validator` VALUES (1,'http://172.18.0.9:8081/api/validation-request/tracker', 1);
+INSERT INTO `observatorio_validator` VALUES (1,'https://des-validador-oaw.redsara.es/api/validation-request/tracker', 1);
