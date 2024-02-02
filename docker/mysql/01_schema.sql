@@ -500,7 +500,7 @@ CREATE TABLE `observatorio_proxy` (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `observatorio_validator` (
   `status` tinyint(1) NOT NULL,
-  `url` varchar(64) NOT NULL,
+  `url` varchar(255) NOT NULL,
   `pdf_active` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
