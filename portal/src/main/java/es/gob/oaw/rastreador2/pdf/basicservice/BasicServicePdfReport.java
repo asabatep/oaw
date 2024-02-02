@@ -29,6 +29,7 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.PageSize;
+import com.itextpdf.text.pdf.PdfBoolean;
 import com.itextpdf.text.pdf.PdfName;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfString;
@@ -136,7 +137,7 @@ public class BasicServicePdfReport {
 		}
 		Logger.putLog("Exportando a PDF BasicServicePdfReport.exportToPdf", BasicServicePdfReport.class, Logger.LOG_LEVEL_DEBUG);
 		// PENDING Add document metadata (author, creator, subject, title...)
-		final Document document = new Document(PageSize.A4, 50, 50, 110, 72);
+		Document document = new Document(PageSize.A4, 50, 50, 110, 72);
 		// document.addAuthor("Ministerio de Hacienda y Función Pública");
 		// document.addCreationDate();
 		// document.addCreator("OAW - Observatorio de Accesibilidad Web");
@@ -146,14 +147,18 @@ public class BasicServicePdfReport {
 				MessageResources messageResourcesAccesibility = MessageResources.getMessageResources(Constants.MESSAGE_RESOURCES_ACCESIBILIDAD);
 				final PdfWriter writer = PdfWriter.getInstance(document, outputFileStream);
 				writer.setTagged(0);
+				writer.setUserProperties(true);
 				writer.setViewerPreferences(PdfWriter.PageModeUseOutlines);
+				writer.addViewerPreference(new PdfName("DisplayDocTitle"), new PdfBoolean(true));
 				writer.getExtraCatalog().put(new PdfName("Lang"), new PdfString("es"));
+				writer.setPdfVersion(PdfWriter.PDF_VERSION_1_7);
 				final String crawlingDate = CrawlerUtils.formatDate(pdfBuilder.getBasicServiceForm().getDate());
 				final String footerText = messageResources.getMessage("ob.resAnon.intav.report.foot.basic.service", new String[] { crawlingDate });
 				writer.setPageEvent(new ExportPageEventsObservatoryMP(footerText, crawlingDate));
 				ExportPageEventsObservatoryMP.setPrintFooter(true);
 				final PdfTocManager pdfTocManager = createPdfTocManager(writer);
 				document.open();
+				//document.addTitle("TITULO");
 				// Preserve "old" cover and add new cover for new cartidges
 				if (pdfBuilder instanceof AnonymousResultExportPdfAccesibilidad) {
 					PDFUtils.addNewCoverPage(document, messageResourcesAccesibility.getMessage("pdf.accessibility.title.basic.service"),
