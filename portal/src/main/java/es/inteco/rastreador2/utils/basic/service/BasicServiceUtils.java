@@ -32,6 +32,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.text.Normalizer;
+import java.text.Normalizer.Form;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Enumeration;
@@ -71,8 +72,6 @@ import es.inteco.rastreador2.dao.basic.service.DiagnosisDAO;
 import es.inteco.rastreador2.ws.CrawlerWS;
 import es.inteco.rastreador2.ws.CrawlerWSJob;
 import es.inteco.utils.FileUtils;
-import java.text.Normalizer;
-import java.text.Normalizer.Form;
 
 
 
@@ -302,14 +301,10 @@ public final class BasicServiceUtils {
 									else { 
 										content = org.apache.commons.io.IOUtils.toString(zipFile.getInputStream(entry), StandardCharsets.UTF_8.name());
 									}
-									 // Convert from CP437 to UTF-8
-        							byte[] utf8Bytes = name.getBytes(StandardCharsets.UTF_8);
-        							String utf8String = new String(utf8Bytes, StandardCharsets.UTF_8);
 
-									String textoNormalizado = Normalizer.normalize(utf8String, Normalizer.Form.NFD);
-       	 							String resultado = textoNormalizado.replace("[^\\p{ASCII}]", "");
+									String textoNormalizado = Normalizer.normalize(name, Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
 
-									file.setName(resultado);
+									file.setName(textoNormalizado);
 									file.setContent(content);
 									files.add(file);
 								} catch (UnsupportedEncodingException e) {
