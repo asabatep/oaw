@@ -187,6 +187,7 @@ you may find it at http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:3201
 var validatorUrl = $('#validatorUrl').val();
 var validatorStatus = $('#validatorStatus').is(':checked');
 var pdfActive = $('#pdfActive').is(':checked');
+var pdfPercentage = $('#pdfPercentage').val();
 
 if (validatorUrl == "") {
 	$('#proxy-url-error-message').removeClass('hidden');
@@ -199,7 +200,8 @@ if (validatorUrl == "") {
 						url : '/oaw/secure/conectividad.do?action=modifyValidator&validatorUrl='
 								+ decodeURI($('#validatorUrl').val())
 								+ "&validatorStatus=" + validatorStatus
-								+ "&pdfActive=" + pdfActive,
+								+ "&pdfActive=" + pdfActive
+								+ "&pdfPercentage=" + pdfPercentage,
 						method : 'POST'
 					}).success(function(data) {
 				location.reload();
@@ -553,6 +555,40 @@ if (validatorUrl == "") {
 							<bean:message key="conectividad.proxy.config.url.tip"/>
 
 						</div>
+
+						<div class="formItem">
+							<label for="url" class="labelCorto">
+								<strong class="labelVisu">
+									<acronym title="<bean:message key='campo.obligatorio' />"> * </acronym>
+									<bean:message key="conectividad.validator.pdf.percentage" />:
+								</strong>
+							</label>
+							<!-- Input field with type="number" and min/max attributes -->
+							<input id="pdfPercentage" type="number" class="textoCorto" 
+							name="pdfPercentage" required="required" min="0" max="100" value="<bean:write name='validatorconfig' property='pdfPercentage' />" />
+							
+							<!-- Buttons for increasing and decreasing value -->
+							<button type="button" onclick="decrementValue()">-</button>
+							<button type="button" onclick="incrementValue()">+</button>
+						</div>
+						
+						<script>
+							function incrementValue() {
+								var inputElement = document.getElementById('pdfPercentage');
+								var currentValue = parseInt(inputElement.value) || 0;
+								var newValue = currentValue + 5;
+								inputElement.value = newValue;
+							}
+						
+							function decrementValue() {
+								var inputElement = document.getElementById('pdfPercentage');
+								var currentValue = parseInt(inputElement.value) || 0;
+								var newValue = currentValue - 5;
+								inputElement.value = newValue;
+							}
+						</script>
+						
+
 						<span id="modifyValidator" onclick="modifyValidator()"
 							class="btn btn-default btn-sm"><bean:message key="conectividad.proxy.config.update"/> </span> <span
 							id="checkingurl" class="btn btn-default btn-sm hidden"> <span
