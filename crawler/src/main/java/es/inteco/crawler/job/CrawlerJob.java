@@ -852,7 +852,7 @@ public class CrawlerJob implements InterruptableJob {
 				return false;
 			}
 			DataBaseManager.closeConnection(c);
-			float pdfPercentage = 0.10f;
+			float pdfPercentage = validator.getPdfPercentage() / 100.0f;
 			if ((float) (pdfCount + 1) / complexity > pdfPercentage){
 			Logger.putLog("Superado el maximo numero de pdfs:",CrawlerJob.class, Logger.LOG_LEVEL_WARNING);
 			return false;
