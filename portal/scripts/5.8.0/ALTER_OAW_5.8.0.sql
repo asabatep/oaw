@@ -7,6 +7,7 @@ INSERT INTO cartucho values (11, 'es.inteco.accesibilidad.CartuchoAccesibilidad'
 CREATE TABLE `observatorio_validator` (
   `status` tinyint(1) NOT NULL,
   `url` varchar(64) NOT NULL,
-  `pdf_active` tinyint(1) NOT NULL
+  `pdf_active` tinyint(1) NOT NULL,
+  `pdf_percentage` int (3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-INSERT INTO `observatorio_validator` VALUES (1,'https://des-validador-oaw.redsara.es/api/validation-request/tracker', 1);
+INSERT INTO `observatorio_validator` VALUES (1,'https://des-validador-oaw.redsara.es/api/validation-request/tracker', 1, 10);
