@@ -795,7 +795,7 @@ public final class IntavExport {
 				p.add(anchor);
 				subSubSection.add(p);
 			}
-			if (maxNumErrors < 0) {
+			if (maxNumErrors <= 0) {
 				if (specificProblems.size() > Integer.parseInt(pmgr.getValue(Constants.PDF_PROPERTIES, "pdf.intav.specific.problems.number"))) {
 					Paragraph p = new Paragraph(CrawlerUtils.getResources(request).getMessage(CrawlerUtils.getLocale(request), "pdf.accessibility.num.errors.summary",
 							Integer.parseInt(pmgr.getValue(Constants.PDF_PROPERTIES, "pdf.intav.specific.problems.number")), specificProblems.size()), ConstantsFont.MORE_INFO_FONT);
