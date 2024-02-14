@@ -566,28 +566,7 @@ if (validatorUrl == "") {
 							<!-- Input field with type="number" and min/max attributes -->
 							<input id="pdfPercentage" type="number" class="textoCorto" 
 							name="pdfPercentage" required="required" min="0" max="100" value="<bean:write name='validatorconfig' property='pdfPercentage' />" />
-							
-							<!-- Buttons for increasing and decreasing value -->
-							<button type="button" onclick="decrementValue()">-</button>
-							<button type="button" onclick="incrementValue()">+</button>
-						</div>
-						
-						<script>
-							function incrementValue() {
-								var inputElement = document.getElementById('pdfPercentage');
-								var currentValue = parseInt(inputElement.value) || 0;
-								var newValue = currentValue + 5;
-								inputElement.value = newValue;
-							}
-						
-							function decrementValue() {
-								var inputElement = document.getElementById('pdfPercentage');
-								var currentValue = parseInt(inputElement.value) || 0;
-								var newValue = currentValue - 5;
-								inputElement.value = newValue;
-							}
-						</script>
-						
+												
 
 						<span id="modifyValidator" onclick="modifyValidator()"
 							class="btn btn-default btn-sm"><bean:message key="conectividad.proxy.config.update"/> </span> <span
