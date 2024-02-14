@@ -41,6 +41,7 @@ import es.inteco.common.Constants;
 import es.inteco.common.ConstantsFont;
 import es.inteco.common.logging.Logger;
 import es.inteco.common.properties.PropertiesManager;
+import es.inteco.common.utils.StringUtils;
 import es.inteco.intav.form.ObservatoryEvaluationForm;
 import es.inteco.rastreador2.actionform.basic.service.BasicServiceAnalysisType;
 import es.inteco.rastreador2.pdf.builder.AnonymousResultExportPdf;
@@ -169,7 +170,7 @@ public class BasicServicePdfReport {
 					String subtitle = "";
 					switch (pdfBuilder.getBasicServiceForm().getAnalysisType()) {
 					case URL:
-						subtitle = messageResources2019.getMessage("pdf.accessibility.cover.type.url", new String[] { pdfBuilder.getBasicServiceForm().getDomain() });
+						subtitle = messageResources2019.getMessage("pdf.accessibility.cover.type.url", new String[] { StringUtils.getDomainFromUrl(pdfBuilder.getBasicServiceForm().getDomain()) }); // Quitamos el protocolo de las url para que no molesten en el informe
 						break;
 					case CODIGO_FUENTE:
 					case CODIGO_FUENTE_MULTIPLE:
