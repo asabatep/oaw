@@ -338,7 +338,7 @@ public final class WcagEmUtils {
 				noWebpage.setId("_:struct_" + randCounterNoWeb);
 				noWebpage.setDescription(eval.getUrl());
 				noWebpage.setSource(eval.getUrl());
-				noWebpage.setTitle(BasicServiceUtils.getTitleDocFromContent(eval.getSource(), false));
+				noWebpage.setTitle(eval.getEntity());
 				noWebpage.setTested(false);// false to mark as incomplete un report step
 				noWebpages.add(noWebpage);
 				randCounterNoWeb++;

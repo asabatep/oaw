@@ -202,8 +202,12 @@ public class ObservatoryPageResultsPdfSectionBuilder {
 	 * @return the pdf P table
 	 */
 	protected PdfPTable createPaginaTableInfo(final MessageResources messageResources, final ObservatoryEvaluationForm evaluationForm) {
-		final String title = BasicServiceUtils.getTitleDocFromContent(evaluationForm.getSource(), false);
 		final String url = evaluationForm.getUrl();
+		String title = "";
+		if(url.contains(".pdf")){
+			title = evaluationForm.getEntity();
+		}
+		else title = BasicServiceUtils.getTitleDocFromContent(evaluationForm.getSource(), false);
 		final BigDecimal puntuacionMedia = evaluationForm.getScore();
 		final String nivelAdecuacion = ObservatoryUtils.getValidationLevel(messageResources, ObservatoryUtils.pageSuitabilityLevel(evaluationForm));
 		final List<BigDecimal> puntuacionesMediasNivel = new ArrayList<>();
