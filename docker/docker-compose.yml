@@ -88,6 +88,7 @@ services:
       - 7011:8443
     volumes:
       - ../portal/target/oaw.war:/usr/local/tomcat/webapps/oaw.war
+      - ./tomcat/server.xml:/usr/local/tomcat/conf/server.xml
       - ./tmp:/tmp
     container_name: oaw-dev-tomcat
     dns:
