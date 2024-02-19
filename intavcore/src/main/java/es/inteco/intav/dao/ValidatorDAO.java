@@ -25,7 +25,7 @@ public class ValidatorDAO {
 		
 		ValidatorForm validator = new ValidatorForm();
 		
-		String query = "SELECT p.status, p.url, p.pdf_active FROM observatorio_validator p WHERE 1=1";
+		String query = "SELECT p.status, p.url, p.pdf_active, p.pdf_percentage FROM observatorio_validator p WHERE 1=1";
 
 		try (PreparedStatement ps = c.prepareStatement(query)) {
 			
@@ -35,6 +35,7 @@ public class ValidatorDAO {
 					validator.setStatus(rs.getInt("p.status"));
 					validator.setUrl(rs.getString("p.url"));
 					validator.setPdfActive(rs.getInt("p.pdf_active"));
+					validator.setPdfPercentage(rs.getInt("p.pdf_percentage"));
 				}
 			}
 			
@@ -57,12 +58,13 @@ public class ValidatorDAO {
 	 * @throws SQLException the SQL exception
 	 */
 	public static void update(Connection c, ValidatorForm validator) throws SQLException {
-		final String query = "UPDATE observatorio_validator SET status = ?, url = ?, pdf_active = ? WHERE 1=1";
+		final String query = "UPDATE observatorio_validator SET status = ?, url = ?, pdf_active = ?, pdf_percentage = ? WHERE 1=1";
 
 		try (PreparedStatement ps = c.prepareStatement(query)) {
 			ps.setInt(1, validator.getStatus());
 			ps.setString(2, validator.getUrl());
 			ps.setInt(3, validator.getPdfActive());
+			ps.setInt(4,validator.getPdfPercentage());
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			Logger.putLog("SQL Exception: ", ValidatorDAO.class, Logger.LOG_LEVEL_ERROR, e);

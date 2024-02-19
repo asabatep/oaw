@@ -116,7 +116,7 @@ public final class WcagXlsxUtils {
 		for (NoWebpage nowebpage : nowebpageList) {
 			if (resultsProcessed < MAX_PAGES) {
 				resultsProcessed++;
-				sampleSheet.getRow(initRow - 1).getCell(2).setCellValue("PDF");
+				sampleSheet.getRow(initRow - 1).getCell(2).setCellValue(nowebpage.getTitle());
 				sampleSheet.getRow(initRow - 1).getCell(3).setCellValue("Documento no web");
 				sampleSheet.getRow(initRow - 1).getCell(4).setCellValue("");
 				sampleSheet.getRow(initRow - 1).getCell(5).setCellValue(nowebpage.getSource());

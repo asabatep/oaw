@@ -255,7 +255,7 @@ public class BasicServicePageResultsPdfSectionBuilder extends ObservatoryPageRes
 				p.add(anchor);
 				subSubSection.add(p);
 			}
-			if (maxNumErrors < 0) {
+			if (maxNumErrors <= 0) {
 				if (specificProblems.size() > Integer.parseInt(pmgr.getValue(Constants.PDF_PROPERTIES, "pdf.intav.specific.problems.number"))) {
 					final String[] arguments = new String[2];
 					arguments[0] = pmgr.getValue(Constants.PDF_PROPERTIES, "pdf.intav.specific.problems.number");
