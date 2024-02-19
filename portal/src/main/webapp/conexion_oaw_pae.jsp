@@ -356,7 +356,7 @@
                     }
                 }
             } else {
-                if (codigo.length() > 4194304 ) {
+                if (codigo.length() > 146800641) {
                     errores.add("El c&oacute;digo fuente a analizar es demasiado largo");
                 }
                 this.registerAnalysis = "false";
