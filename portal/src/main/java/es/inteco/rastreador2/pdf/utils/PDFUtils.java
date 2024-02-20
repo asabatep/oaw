@@ -444,7 +444,7 @@ public final class PDFUtils {
 	 * @return the paragraph
 	 */
 	public static Paragraph createParagraphAnchor(String text, Map<Integer, SpecialChunk> specialChunkMap, Font font) {
-		return createParagraphAnchor(text, specialChunkMap, font, true);
+		return createParagraphAnchor(text, specialChunkMap, font, false);
 	}
 
 	/**

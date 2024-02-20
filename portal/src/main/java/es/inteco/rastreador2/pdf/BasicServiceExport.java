@@ -885,14 +885,14 @@ public final class BasicServiceExport {
 	 */
 	public static void addSpecificProblemsPdf(final MessageResources messageResources, final Section subSubSection, final List<SpecificProblemForm> specificProblems) {
 		final PropertiesManager pmgr = new PropertiesManager();
-		final float[] widths = { 8f, 12f, 80f };
+		final float[] widths = { 12f, 80f };
 		final PdfPTable table = new PdfPTable(widths);
 		table.setHorizontalAlignment(Element.ALIGN_RIGHT);
 		table.setWidthPercentage(86);
 		table.setSpacingBefore(ConstantsFont.THIRD_LINE_SPACE);
 		table.setSpacingAfter(ConstantsFont.HALF_LINE_SPACE);
 		table.addCell(PDFUtils.createTableCell("Página", Constants.GRIS_MUY_CLARO, ConstantsFont.descriptionFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
-		table.addCell(PDFUtils.createTableCell("Código", Constants.GRIS_MUY_CLARO, ConstantsFont.descriptionFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+		table.addCell(PDFUtils.createTableCell("Ruta XMPPath", Constants.GRIS_MUY_CLARO, ConstantsFont.descriptionFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
 		// Indicamos que la primera fila es de encabezados para que la repita si
 		// la tabla se parte en varias páginas.
 		table.setHeaderRows(1);

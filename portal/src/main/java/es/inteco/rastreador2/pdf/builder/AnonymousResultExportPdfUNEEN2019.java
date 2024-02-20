@@ -358,12 +358,12 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 			externalLinkL1_3.setAnchor(messageResources.getMessage("pdf.accessibility.intro.next.basic.service.list.1.anchor1.url"));
 			specialChunkMap.put(3, externalLinkL1_3);
 			PDFUtils.addListItem(PDFUtils.createParagraphAnchor(messageResources.getMessage("pdf.accessibility.intro.next.basic.service.list.1"), specialChunkMap, ConstantsFont.PARAGRAPH), list,
-					ConstantsFont.paragraphBoldFont, true, true, Paragraph.ALIGN_JUSTIFIED);
+					ConstantsFont.paragraphBoldFont, false, true, Paragraph.ALIGN_JUSTIFIED);
 			// L2
 			Paragraph p = new Paragraph();
 			p.add(new Phrase(this.messageResources.getMessage("pdf.accessibility.intro.next.basic.service.list.2.bold"), ConstantsFont.paragraphBoldFont));
 			p.add(new Phrase(this.messageResources.getMessage("pdf.accessibility.intro.next.basic.service.list.2"), ConstantsFont.PARAGRAPH));
-			PDFUtils.addListItem(p, list, ConstantsFont.paragraphBoldFont, true, true, Paragraph.ALIGN_LEFT); // L3
+			PDFUtils.addListItem(p, list, ConstantsFont.paragraphBoldFont, false, true, Paragraph.ALIGN_LEFT); // L3
 			section.add(list);
 			list.setIndentationLeft(ConstantsFont.IDENTATION_LEFT_SPACE);
 			// L3 --> P
