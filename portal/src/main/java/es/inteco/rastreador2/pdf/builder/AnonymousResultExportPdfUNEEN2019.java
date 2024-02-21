@@ -1742,6 +1742,18 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 			}
 		}
 		tablaRankings.completeRow();
+
+		tablaRankings.addCell(PDFUtils.createTableCell("Puntuación de páginas html", Constants.VERDE_C_MP, ConstantsFont.labelCellFont, Element.ALIGN_LEFT,
+				DEFAULT_PADDING, -1));
+		tablaRankings.addCell(PDFUtils.createTableCell(currentScore.getTotalScoreHtml().toPlainString(), Color.WHITE, ConstantsFont.strongNoteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+		tablaRankings.completeRow();
+
+		tablaRankings.addCell(PDFUtils.createTableCell("Puntuación de documentos pdf", Constants.VERDE_C_MP, ConstantsFont.labelCellFont, Element.ALIGN_LEFT,
+				DEFAULT_PADDING, -1));
+		tablaRankings.addCell(PDFUtils.createTableCell(currentScore.getTotalScorePdf().toPlainString(), Color.WHITE, ConstantsFont.strongNoteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+		tablaRankings.completeRow();
+
+
 		if (rankingActual != null) {
 			// Global rank
 			tablaRankings.addCell(
@@ -2268,9 +2280,22 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 	public ScoreForm generateScores(final MessageResources messageResources, final java.util.List<ObservatoryEvaluationForm> evaList) {
 		final ScoreForm scoreForm = new ScoreForm();
 		int suitabilityGroups = 0;
+		int pdfNumber = 0;
+		int htmlNumber = 0;
 		BigDecimal totalScore = new BigDecimal(0);
 		for (ObservatoryEvaluationForm evaluationForm : evaList) {
+			java.util.List<Integer> checks = evaluationForm.getChecksFailed();
+			if (checks.get(0) >= 500) { // Check de pdf
+				scoreForm.setTotalScorePdf(scoreForm.getTotalScorePdf().add(evaluationForm.getScore()));
+				pdfNumber++;
+			}
+			else {
+				scoreForm.setTotalScoreHtml(scoreForm.getTotalScoreHtml().add(evaluationForm.getScore()));
+				htmlNumber++;
+			}
 			scoreForm.setTotalScore(scoreForm.getTotalScore().add(evaluationForm.getScore()));
+			
+
 			// Codigo duplicado en IntavUtils
 			final String pageSuitabilityLevel = ObservatoryUtils.pageSuitabilityLevel(evaluationForm);
 			if (pageSuitabilityLevel.equals(Constants.OBS_AA)) {
@@ -2303,6 +2328,8 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 		 */
 		if (!evaList.isEmpty()) {
 			scoreForm.setTotalScore(scoreForm.getTotalScore().divide(new BigDecimal(evaList.size()), 2, BigDecimal.ROUND_HALF_UP));
+			scoreForm.setTotalScoreHtml(scoreForm.getTotalScoreHtml().divide(new BigDecimal(htmlNumber), 2, BigDecimal.ROUND_HALF_UP));
+			scoreForm.setTotalScorePdf(scoreForm.getTotalScorePdf().divide(new BigDecimal(pdfNumber), 2, BigDecimal.ROUND_HALF_UP));
 			// Calculate mid from score verificatrion
 			BigDecimal sumL1 = new BigDecimal(0);
 			int countNA = 0;

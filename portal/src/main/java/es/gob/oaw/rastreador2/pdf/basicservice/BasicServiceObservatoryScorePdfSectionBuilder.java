@@ -255,6 +255,16 @@ public class BasicServiceObservatoryScorePdfSectionBuilder {
 					tablaRankings.addCell(createEvolutionLevelCell(messageResources, previousScore.getCompliance(), previousScore.getCompliance()));
 				}
 				tablaRankings.completeRow();
+				tablaRankings.addCell(PDFUtils.createTableCell("Puntuación de páginas html", Constants.VERDE_C_MP, ConstantsFont.labelCellFont, Element.ALIGN_LEFT,
+				DEFAULT_PADDING, -1));
+				tablaRankings.addCell(PDFUtils.createTableCell(currentScore.getTotalScoreHtml().toPlainString(), Color.WHITE, ConstantsFont.strongNoteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+				tablaRankings.completeRow();
+
+				tablaRankings.addCell(PDFUtils.createTableCell("Puntuación de documentos pdf", Constants.VERDE_C_MP, ConstantsFont.labelCellFont, Element.ALIGN_LEFT,
+				DEFAULT_PADDING, -1));
+				tablaRankings.addCell(PDFUtils.createTableCell(currentScore.getTotalScorePdf().toPlainString(), Color.WHITE, ConstantsFont.strongNoteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+				tablaRankings.completeRow();
+
 				chapter.add(tablaRankings);
 				chapter.add(Chunk.NEXTPAGE);
 				chapter.add(new Paragraph(messageResources.getMessage("observatorio.nivel.cumplimiento.p1.grafica"), ConstantsFont.PARAGRAPH));
