@@ -72,7 +72,6 @@ public class ValidationDatabaseService {
         }
     
         else checkAccessibility.setContent(setAnalysisDBRequestDTO.getCheckAccessibilityDTO().getContent());
-        Logger.putLog("CONTEEENT: "+ checkAccessibility.getContent(), ValidationDatabaseService.class, Logger.LOG_LEVEL_ERROR);
         checkAccessibility.setIdRastreo(setAnalysisDBRequestDTO.getCheckAccessibilityDTO().getIdRastreo());
         checkAccessibility.setGuidelineFile(setAnalysisDBRequestDTO.getCheckAccessibilityDTO().getGuidelineFile());
         evaluation.setEntidad(setAnalysisDBRequestDTO.getEvaluationDTO().getEntity());
