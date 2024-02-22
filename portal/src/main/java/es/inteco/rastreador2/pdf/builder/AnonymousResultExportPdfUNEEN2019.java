@@ -2285,6 +2285,7 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 		BigDecimal totalScore = new BigDecimal(0);
 		for (ObservatoryEvaluationForm evaluationForm : evaList) {
 			java.util.List<Integer> checks = evaluationForm.getChecksFailed();
+			if(!checks.isEmpty()){
 			if (checks.get(0) >= 500) { // Check de pdf
 				scoreForm.setTotalScorePdf(scoreForm.getTotalScorePdf().add(evaluationForm.getScore()));
 				pdfNumber++;
@@ -2292,6 +2293,7 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 			else {
 				scoreForm.setTotalScoreHtml(scoreForm.getTotalScoreHtml().add(evaluationForm.getScore()));
 				htmlNumber++;
+			}
 			}
 			scoreForm.setTotalScore(scoreForm.getTotalScore().add(evaluationForm.getScore()));
 			
@@ -2328,8 +2330,9 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 		 */
 		if (!evaList.isEmpty()) {
 			scoreForm.setTotalScore(scoreForm.getTotalScore().divide(new BigDecimal(evaList.size()), 2, BigDecimal.ROUND_HALF_UP));
-			scoreForm.setTotalScoreHtml(scoreForm.getTotalScoreHtml().divide(new BigDecimal(htmlNumber), 2, BigDecimal.ROUND_HALF_UP));
-			scoreForm.setTotalScorePdf(scoreForm.getTotalScorePdf().divide(new BigDecimal(pdfNumber), 2, BigDecimal.ROUND_HALF_UP));
+			if(pdfNumber > 0) scoreForm.setTotalScorePdf(scoreForm.getTotalScorePdf().divide(new BigDecimal(pdfNumber), 2, BigDecimal.ROUND_HALF_UP));
+			if(htmlNumber > 0) scoreForm.setTotalScoreHtml(scoreForm.getTotalScoreHtml().divide(new BigDecimal(htmlNumber), 2, BigDecimal.ROUND_HALF_UP));
+			
 			// Calculate mid from score verificatrion
 			BigDecimal sumL1 = new BigDecimal(0);
 			int countNA = 0;
@@ -2340,8 +2343,15 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 					sumL1 = sumL1.add(entry.getValue());
 				}
 			}
-			scoreForm.setScoreLevelA(sumL1.divide(new BigDecimal(resultL1.size() - countNA), 2, BigDecimal.ROUND_HALF_UP));
-			scoreForm.setScoreLevel1(sumL1.divide(new BigDecimal(resultL1.size() - countNA), 2, BigDecimal.ROUND_HALF_UP));
+			if(resultL1.size() - countNA > 0){
+				scoreForm.setScoreLevelA(sumL1.divide(new BigDecimal(resultL1.size() - countNA), 2, BigDecimal.ROUND_HALF_UP));
+				scoreForm.setScoreLevel1(sumL1.divide(new BigDecimal(resultL1.size() - countNA), 2, BigDecimal.ROUND_HALF_UP));
+			}
+			else {
+				scoreForm.setScoreLevelA(new BigDecimal(0));
+				scoreForm.setScoreLevel1(new BigDecimal(0));
+			}
+			
 			// Calculate mid from score verificatrion
 			BigDecimal sumL2 = new BigDecimal(0);
 			countNA = 0;
