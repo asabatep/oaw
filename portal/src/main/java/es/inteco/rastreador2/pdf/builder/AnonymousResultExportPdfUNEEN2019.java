@@ -59,6 +59,7 @@ import es.inteco.common.Constants;
 import es.inteco.common.ConstantsFont;
 import es.inteco.common.logging.Logger;
 import es.inteco.common.properties.PropertiesManager;
+import es.inteco.intav.datos.AnalisisDatos;
 import es.inteco.intav.form.ObservatoryEvaluationForm;
 import es.inteco.intav.form.ObservatoryLevelForm;
 import es.inteco.intav.form.ObservatorySuitabilityForm;
@@ -2284,17 +2285,25 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 		int htmlNumber = 0;
 		BigDecimal totalScore = new BigDecimal(0);
 		for (ObservatoryEvaluationForm evaluationForm : evaList) {
-			java.util.List<Integer> checks = evaluationForm.getChecksFailed();
+			try{
+			Connection c = DataBaseManager.getConnection();
+			String checks = AnalisisDatos.getExecutedChecks(c, evaluationForm.getIdAnalysis());
+			DataBaseManager.closeConnection(c);
 			if(!checks.isEmpty()){
-			if (checks.get(0) >= 500) { // Check de pdf
-				scoreForm.setTotalScorePdf(scoreForm.getTotalScorePdf().add(evaluationForm.getScore()));
-				pdfNumber++;
+				String[] parts = checks.split(",");
+				if(Integer.parseInt(parts[1]) >= 500){ //Si el check es de pdfs.
+					scoreForm.setTotalScorePdf(scoreForm.getTotalScorePdf().add(evaluationForm.getScore()));
+					pdfNumber++;
 			}
 			else {
 				scoreForm.setTotalScoreHtml(scoreForm.getTotalScoreHtml().add(evaluationForm.getScore()));
 				htmlNumber++;
 			}
 			}
+		}
+		catch(Exception e){
+			Logger.putLog("Error al sacar los checks ejecutados", AnonymousResultExportPdfUNEEN2019.class, Logger.LOG_LEVEL_ERROR, e);
+		}
 			scoreForm.setTotalScore(scoreForm.getTotalScore().add(evaluationForm.getScore()));
 			
 

@@ -180,6 +180,19 @@ public final class AnalisisDatos {
 		}
 	}
 
+	public static String getExecutedChecks(final Connection connection, final long idAnalisis) throws SQLException {
+		try (PreparedStatement pstmt = connection.prepareStatement("SELECT checks_ejecutados FROM tanalisis WHERE cod_analisis = ?;")) {
+			pstmt.setLong(1, idAnalisis);
+			try (ResultSet rs = pstmt.executeQuery()) {
+				if (rs.next()) {
+					return rs.getString("checks_ejecutados");
+				} else {
+					return null;
+				}
+			}
+		}
+	}
+
 	/**
 	 * Update checks ejecutados.
 	 *
