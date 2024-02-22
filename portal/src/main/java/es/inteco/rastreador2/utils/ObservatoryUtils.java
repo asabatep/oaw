@@ -32,6 +32,7 @@ import org.apache.struts.util.MessageResources;
 import org.apache.struts.util.PropertyMessageResources;
 
 import es.inteco.common.Constants;
+import es.inteco.intav.datos.AnalisisDatos;
 import es.inteco.common.logging.Logger;
 import es.inteco.common.properties.PropertiesManager;
 import es.inteco.intav.form.ObservatoryEvaluationForm;
@@ -399,10 +400,12 @@ public final class ObservatoryUtils {
 						numPages++;
 						avgScore = avgScore.add(observatory.getScore());
 						paginas.add(observatory);
-						if(!observatory.getChecksFailed().isEmpty()){
-							if(observatory.getChecksFailed().get(0) >= 500){ // Es check de pdf
-								avgScorePdf = avgScorePdf.add(observatory.getScore());
-								numPdf++;
+							String checks = AnalisisDatos.getExecutedChecks(c, observatory.getIdAnalysis());
+							if(!checks.isEmpty()){
+								String[] parts = checks.split(",");
+									if(Integer.parseInt(parts[1]) >= 500){ //Si el check es de pdfs.					 
+									avgScorePdf = avgScorePdf.add(observatory.getScore());
+									numPdf++;
 							}
 							else {
 								avgScoreHtml = avgScoreHtml.add(observatory.getScore());
@@ -419,6 +422,7 @@ public final class ObservatoryUtils {
 						htmlScore = avgScoreHtml.divide(BigDecimal.valueOf(numHtml), 2, BigDecimal.ROUND_HALF_UP).toPlainString();
 					}
 					if(numPdf !=0){
+						Logger.putLog("PUNTUACION PDF: " + avgScorePdf.toPlainString(), ObservatoryUtils.class, Logger.LOG_LEVEL_ERROR);
 						pdfScore = avgScorePdf.divide(BigDecimal.valueOf(numPdf), 2, BigDecimal.ROUND_HALF_UP).toPlainString();
 					}
 					String aplicacion = CartuchoDAO.getApplicationFromExecutedObservatoryId(c, Long.parseLong(seedResult.getIdFulfilledCrawling()), Long.parseLong(seedResult.getIdCrawling()));
