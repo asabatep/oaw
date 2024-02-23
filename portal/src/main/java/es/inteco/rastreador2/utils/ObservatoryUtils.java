@@ -339,7 +339,11 @@ public final class ObservatoryUtils {
 			final List<FulFilledCrawling> seedFulfilledCrawlings = fullfilledCrawlings.get(Long.valueOf(seedResult.getIdCrawling()));
 			if (seedFulfilledCrawlings != null && !seedFulfilledCrawlings.isEmpty()) {
 				int numPages = 0;
+				int numPdf = 0;
+				int numHtml = 0;
 				BigDecimal avgScore = BigDecimal.ZERO;
+				BigDecimal avgScorePdf = BigDecimal.ZERO;
+				BigDecimal avgScoreHtml = BigDecimal.ZERO;
 				// Cambio de numero de urls maximas a anilizar
 				PropertiesManager pmgr = new PropertiesManager();
 				int maxUrl = Integer.parseInt(pmgr.getValue("intav.properties", "max.url"));
@@ -349,10 +353,33 @@ public final class ObservatoryUtils {
 						numPages++;
 						avgScore = avgScore.add(observatory.getScore());
 						paginas.add(observatory);
+						String checks = AnalisisDatos.getExecutedChecks(c, observatory.getIdAnalysis());
+							if(!checks.isEmpty()){
+								String[] parts = checks.split(",");
+									if(Integer.parseInt(parts[1]) >= 500){ //Si el check es de pdfs.					 
+									avgScorePdf = avgScorePdf.add(observatory.getScore());
+									numPdf++;
+							}
+							else {
+								avgScoreHtml = avgScoreHtml.add(observatory.getScore());
+								numHtml++;
+							}
+						}
 					}
 				}
+				String htmlScore = "0.0";
+				String pdfScore = "0.0";
 				if (numPages != 0) {
+					
 					seedResult.setScore(avgScore.divide(BigDecimal.valueOf(numPages), 2, BigDecimal.ROUND_HALF_UP).toPlainString());
+					if(numHtml != 0){
+						htmlScore = avgScoreHtml.divide(BigDecimal.valueOf(numHtml), 2, BigDecimal.ROUND_HALF_UP).toPlainString();
+					}
+					seedResult.setScoreHtml(htmlScore);
+					if(numPdf !=0){
+						pdfScore = avgScorePdf.divide(BigDecimal.valueOf(numPdf), 2, BigDecimal.ROUND_HALF_UP).toPlainString();
+					}
+					seedResult.setScorePdf(pdfScore);
 					String aplicacion = CartuchoDAO.getApplicationFromExecutedObservatoryId(c, Long.parseLong(seedResult.getIdFulfilledCrawling()), Long.parseLong(seedResult.getIdCrawling()));
 					if (Constants.NORMATIVA_ACCESIBILIDAD.equalsIgnoreCase(aplicacion)) {
 						seedResult.setNivel(IntavUtils.generateScores(PropertyMessageResources.getMessageResources(Constants.MESSAGE_RESOURCES_ACCESIBILIDAD), paginas).getLevel());
@@ -414,17 +441,19 @@ public final class ObservatoryUtils {
 						}
 					}
 				}
+				String htmlScore = "0.0";
+				String pdfScore = "0.0";
 				if (numPages != 0) {
-					String htmlScore = "0.0";
-					String pdfScore = "0.0";
+					
 					seedResult.setScore(avgScore.divide(BigDecimal.valueOf(numPages), 2, BigDecimal.ROUND_HALF_UP).toPlainString());
 					if(numHtml != 0){
 						htmlScore = avgScoreHtml.divide(BigDecimal.valueOf(numHtml), 2, BigDecimal.ROUND_HALF_UP).toPlainString();
 					}
+					seedResult.setScoreHtml(htmlScore);
 					if(numPdf !=0){
-						Logger.putLog("PUNTUACION PDF: " + avgScorePdf.toPlainString(), ObservatoryUtils.class, Logger.LOG_LEVEL_ERROR);
 						pdfScore = avgScorePdf.divide(BigDecimal.valueOf(numPdf), 2, BigDecimal.ROUND_HALF_UP).toPlainString();
 					}
+					seedResult.setScorePdf(pdfScore);
 					String aplicacion = CartuchoDAO.getApplicationFromExecutedObservatoryId(c, Long.parseLong(seedResult.getIdFulfilledCrawling()), Long.parseLong(seedResult.getIdCrawling()));
 					if (Constants.NORMATIVA_ACCESIBILIDAD.equalsIgnoreCase(aplicacion)) {
 						seedResult.setNivel(IntavUtils.generateScoresAccesibility(PropertyMessageResources.getMessageResources(Constants.MESSAGE_RESOURCES_ACCESIBILIDAD), paginas).getLevel());
@@ -436,7 +465,7 @@ public final class ObservatoryUtils {
 						seedResult.setNivel(IntavUtils.generateScores(PropertyMessageResources.getMessageResources("ApplicationResources"), paginas).getLevel());
 					}
 					// Save scrore and level on database
-					RastreoDAO.setScoreAndLevelCrawling(c, Long.valueOf(seedResult.getIdFulfilledCrawling()), seedResult.getScore(), seedResult.getNivel(), pdfScore, htmlScore);
+					RastreoDAO.setScoreAndLevelCrawling(c, Long.valueOf(seedResult.getIdFulfilledCrawling()), seedResult.getScore(), seedResult.getNivel(), seedResult.getScorePdf(), seedResult.getScoreHtml());
 				}
 			}
 		}
@@ -515,7 +544,11 @@ public final class ObservatoryUtils {
 			final List<FulFilledCrawling> seedFulfilledCrawlings = fullfilledCrawlings.get(Long.valueOf(seedResult.getIdCrawling()));
 			if (seedFulfilledCrawlings != null && !seedFulfilledCrawlings.isEmpty()) {
 				int numPages = 0;
+				int numPdf = 0;
+				int numHtml = 0;
 				BigDecimal avgScore = BigDecimal.ZERO;
+				BigDecimal avgScorePdf = BigDecimal.ZERO;
+				BigDecimal avgScoreHtml = BigDecimal.ZERO;
 				// Cambio de numero de urls maximas a anilizar
 				PropertiesManager pmgr = new PropertiesManager();
 				int maxUrl = Integer.parseInt(pmgr.getValue("intav.properties", "max.url"));
@@ -526,10 +559,33 @@ public final class ObservatoryUtils {
 						avgScore = avgScore.add(observatory.getScore());
 						paginas.add(observatory);
 					}
+					String checks = AnalisisDatos.getExecutedChecks(c, observatory.getIdAnalysis());
+							if(!checks.isEmpty()){
+								String[] parts = checks.split(",");
+									if(Integer.parseInt(parts[1]) >= 500){ //Si el check es de pdfs.					 
+									avgScorePdf = avgScorePdf.add(observatory.getScore());
+									numPdf++;
+							}
+							else {
+								avgScoreHtml = avgScoreHtml.add(observatory.getScore());
+								numHtml++;
+							}
+						}
 				}
+				String htmlScore = "0.0";
+				String pdfScore = "0.0";
 				if (numPages != 0) {
+					
+					if(numHtml != 0){
+						htmlScore = avgScoreHtml.divide(BigDecimal.valueOf(numHtml), 2, BigDecimal.ROUND_HALF_UP).toPlainString();
+					}
+					if(numPdf !=0){
+						pdfScore = avgScorePdf.divide(BigDecimal.valueOf(numPdf), 2, BigDecimal.ROUND_HALF_UP).toPlainString();
+					}
 					seedResult.setScore(avgScore.divide(BigDecimal.valueOf(numPages), 2, BigDecimal.ROUND_HALF_UP).toPlainString());
 					seedResult.setNivel(IntavUtils.generateScores(MessageResources.getMessageResources("ApplicationResources"), paginas).getLevel());
+					seedResult.setScoreHtml(htmlScore);
+					seedResult.setScorePdf(pdfScore);
 				}
 			}
 		}

@@ -1,5 +1,5 @@
 <!--
-Copyright (C) 2012 INTECO, Instituto Nacional de Tecnologías de la Comunicación, 
+Copyright (C) 2012 INTECO, Instituto Nacional de Tecnologï¿½as de la Comunicaciï¿½n, 
 This program is licensed and may be used, modified and redistributed under the terms
 of the European Public License (EUPL), either version 1.2 or (at your option) any later 
 version as soon as they are approved by the European Commission.
@@ -10,7 +10,7 @@ permissions and more details.
 You should have received a copy of the EUPL1.2 license along with this program; if not, 
 you may find it at http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32017D0863
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Modificaciones: MINHAFP (Ministerio de Hacienda y Función Pública) 
+Modificaciones: MINHAFP (Ministerio de Hacienda y Funciï¿½n Pï¿½blica) 
 Email: observ.accesibilidad@correo.gob.es
 -->
 <%@ include file="/common/taglibs.jsp"%>
@@ -52,6 +52,8 @@ var colNameRemovePerm = '<bean:message key="colname.remove.permanently"/>';
 var colNameScope = '<bean:message key="colname.scope"/>';
 var colNameSegment = '<bean:message key="colname.segment"/>';
 var colNameScore = '<bean:message key="colname.puntuaction"/>';
+var colNameScoreHtml = '<bean:message key="colname.puntuaction.html"/>';
+var colNameScorePdf = '<bean:message key="colname.puntuaction.pdf"/>';
 var colNameTotalUrl = '<bean:message key="colname.total.url"/>';
 var colNameLevel = '<bean:message key="colname.level"/>';
 var colNameRelaunch = '<bean:message key="colname.relaunch"/>';
@@ -83,7 +85,7 @@ var translatedColNames = [ colNameId, colNameOldName,
 	colNameTags,
 	 "URLs",colNameActive, 
 	 colNameDirectory, colNameComplex, 
-	 colNameScore, 
+	 colNameScore, colNameScoreHtml, colNameScorePdf,
 	 colNameLevel, colNameTotalUrl, 
 	 colNameResults  ,colNameReport,
 	 colNameRelaunch,
@@ -288,7 +290,7 @@ var translatedColNames = [ colNameId, colNameOldName,
 			modal : true,
 			title: windowTitle + " - " + windowTitle2,
 			buttons : {
-				"Añadir" : {
+				"Aï¿½adir" : {
 					click: function() {
 						addSeedObservatory($('#autocompleteAddSeedObservatoryHidden').val());
 					},
@@ -370,7 +372,7 @@ var translatedColNames = [ colNameId, colNameOldName,
 
 		var dialogoReducir = $('<div id="dialogoReducirContent"></div>');
 
-		dialogoReducir.append('<p>&#191;Desea eliminar el código fuente analizado (html y css) de este observatorio? </p><p>Se conservarán las puntuaciones e incidencias, así como el listado de páginas analizadas.</p> <p>Esta acción <b>no puede deshacerse</b></p>');
+		dialogoReducir.append('<p>&#191;Desea eliminar el cï¿½digo fuente analizado (html y css) de este observatorio? </p><p>Se conservarï¿½n las puntuaciones e incidencias, asï¿½ como el listado de pï¿½ginas analizadas.</p> <p>Esta acciï¿½n <b>no puede deshacerse</b></p>');
 		
 		dialogoReducir
 			.dialog({
@@ -595,7 +597,7 @@ var translatedColNames = [ colNameId, colNameOldName,
 			<c:set target="${params}" property="idCartucho" value="${idCartucho}" />
 			<c:set target="${params}" property="idExObs" value="${idExObs}" />
 			<p class="pull-right">
-				<!-- AÑADIR SEMILLAS -->
+				<!-- Aï¿½ADIR SEMILLAS -->
 				<a onclick="dialogAddSeed()">
 					<span class="btn btn-default btn-lg">
 						<span class="glyphicon glyphicon glyphicon-plus" aria-hidden="true" data-toggle="tooltip"
