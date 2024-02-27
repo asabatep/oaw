@@ -99,11 +99,10 @@ public class ExportPageEventsObservatoryMP extends PdfPageEventHelper {
 		int posX = Integer.parseInt(pmgr.getValue(Constants.PDF_PROPERTIES, "pdf.logo.posX"));
 		int posY = Integer.parseInt(pmgr.getValue(Constants.PDF_PROPERTIES, "pdf.logo.posY"));
 		final Image logoMinisterio = ExportPageEventsUtils.createImage(pmgr.getValue(Constants.PDF_PROPERTIES, "path.ministerio.logo"), 158, 45,
-				"Vicepresidencia Tercera del Gobierno - Ministerio de Asuntos Económicos y Transformación Digital ");
+				"Ministerio Para la Transformación Digital y de la Función Pública");
 		if (logoMinisterio != null) {
 			pdfContentByte.beginMarkedContentSequence(PdfName.ARTIFACT);
 			logoMinisterio.setAbsolutePosition(posX, posY);
-			logoMinisterio.setAlt("Vicepresidencia Tercera del Gobierno - Ministerio de Asuntos Económicos y Transformación Digital ");
 			logoMinisterio.setAccessibleAttribute(PdfName.ARTIFACT, PdfBoolean.PDFTRUE);
 			pdfContentByte.addImage(logoMinisterio);
 			pdfContentByte.endMarkedContentSequence();
