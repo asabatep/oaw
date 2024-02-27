@@ -1744,12 +1744,12 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 		}
 		tablaRankings.completeRow();
 
-		tablaRankings.addCell(PDFUtils.createTableCell("Puntuación de páginas html", Constants.VERDE_C_MP, ConstantsFont.labelCellFont, Element.ALIGN_LEFT,
+		tablaRankings.addCell(PDFUtils.createTableCell("Puntuación Media de páginas html", Constants.GRIS_MINIMO, ConstantsFont.labelCellFont, Element.ALIGN_LEFT,
 				DEFAULT_PADDING, -1));
 		tablaRankings.addCell(PDFUtils.createTableCell(currentScore.getTotalScoreHtml().toPlainString(), Color.WHITE, ConstantsFont.strongNoteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
 		tablaRankings.completeRow();
 
-		tablaRankings.addCell(PDFUtils.createTableCell("Puntuación de documentos pdf", Constants.VERDE_C_MP, ConstantsFont.labelCellFont, Element.ALIGN_LEFT,
+		tablaRankings.addCell(PDFUtils.createTableCell("Puntuación Media de documentos pdf", Constants.GRIS_MINIMO, ConstantsFont.labelCellFont, Element.ALIGN_LEFT,
 				DEFAULT_PADDING, -1));
 		tablaRankings.addCell(PDFUtils.createTableCell(currentScore.getTotalScorePdf().toPlainString(), Color.WHITE, ConstantsFont.strongNoteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
 		tablaRankings.completeRow();
