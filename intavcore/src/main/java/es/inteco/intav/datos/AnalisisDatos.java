@@ -71,9 +71,10 @@ public final class AnalisisDatos {
 			pstmt.setLong(4, analisis.getTracker());
 			pstmt.setInt(5, getCodGuideline(connection, analisis.getGuideline()));
 			pstmt.setInt(6, IntavConstants.STATUS_EXECUTING);
-			// Encode BASE64 code
+			// Encode code to base64
 			String codigoFuente = analisis.getSource();
 			if (!StringUtils.isEmpty(codigoFuente)) {
+				if(!StringUtils.isBase64(codigoFuente))
 				codigoFuente = new String(Base64.encodeBase64(codigoFuente.getBytes("UTF-8")));
 			}
 			pstmt.setString(7, codigoFuente);
