@@ -1,5 +1,5 @@
 <!--
-Copyright (C) 2012 INTECO, Instituto Nacional de Tecnologías de la Comunicación, 
+Copyright (C) 2012 INTECO, Instituto Nacional de Tecnologï¿½as de la Comunicaciï¿½n, 
 This program is licensed and may be used, modified and redistributed under the terms
 of the European Public License (EUPL), either version 1.2 or (at your option) any later 
 version as soon as they are approved by the European Commission.
@@ -10,7 +10,7 @@ permissions and more details.
 You should have received a copy of the EUPL1.2 license along with this program; if not, 
 you may find it at http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32017D0863
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-Modificaciones: MINHAFP (Ministerio de Hacienda y Función Pública) 
+Modificaciones: MINHAFP (Ministerio de Hacienda y Funciï¿½n Pï¿½blica) 
 Email: observ.accesibilidad@correo.gob.es
 -->
 <%@ include file="/common/taglibs.jsp" %>
@@ -19,6 +19,6 @@ Email: observ.accesibilidad@correo.gob.es
 <div id="cabeza">
     <h1>
         <img class="pull-left" src="/oaw/images/logo.jpg" alt="<bean:message key="application.logo.alt" />" />
-        <img src="/oaw/images/logo-vice-maetd.png" alt="<bean:message key="ministerio.logo.alt" />" width="265px"/>
+        <img src="/oaw/images/MTDFP.Bis.Gob.png" alt="<bean:message key="ministerio.logo.alt" />" width="265px" height="73px"/>
     </h1>
 </div>
