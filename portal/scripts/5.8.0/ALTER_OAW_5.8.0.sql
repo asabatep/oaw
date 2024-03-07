@@ -9,4 +9,6 @@ CREATE TABLE `observatorio_validator` (
 );
 INSERT INTO `observatorio_validator` VALUES (1,'https://pre-validador-oaw.redsara.es/api/validation-request/tracker', 1, 10);
 
-
+ALTER TABLE `rastreos_realizados`
+ADD `score_html` varchar(32) COLLATE utf8_bin DEFAULT NULL,
+ADD `score_pdf` varchar(32) COLLATE utf8_bin DEFAULT NULL;

@@ -715,6 +715,8 @@ CREATE TABLE `rastreos_realizados` (
   `id_lista` bigint(20) DEFAULT NULL,
   `level` varchar(128) COLLATE utf8_bin DEFAULT NULL,
   `score` varchar(32) COLLATE utf8_bin DEFAULT NULL,
+  `score_html` varchar(32) COLLATE utf8_bin DEFAULT NULL,
+  `score_pdf` varchar(32) COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id_usuario` (`id_usuario`),
   KEY `id_rastreo` (`id_rastreo`),

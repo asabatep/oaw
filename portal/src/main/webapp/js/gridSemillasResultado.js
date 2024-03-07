@@ -44,6 +44,26 @@ function scoreFormatter(cellvalue, options, rowObject) {
 	}
 }
 
+function scoreHtmlFormatter(cellvalue, options, rowObject) {
+	if (rowObject.scoreHtml != null) {
+
+		return rowObject.scoreHtml;
+
+	} else {
+		return "";
+	}
+}
+
+function scorePdfFormatter(cellvalue, options, rowObject) {
+	if (rowObject.scorePdf != null) {
+
+		return rowObject.scorePdf;
+
+	} else {
+		return "";
+	}
+}
+
 
 function complejidadFormatter(cellvalue, options, rowObject) {
 	if (rowObject.complejidad.name != null) {
@@ -260,7 +280,7 @@ function reloadGrid(originalPath, col, direction) {
 													},
 													{
 														name : "l.nombre",
-														width : 50,
+														width : 30,
 														editrules : {
 															required : true
 														},
@@ -739,6 +759,22 @@ function reloadGrid(originalPath, col, direction) {
 														formatter: scoreFormatter, 
 													},
 													{
+														name : 'scoreHtml',
+														align : "center",
+														width : 10,
+														editable : false,
+														template: "numberStr",
+														formatter: scoreHtmlFormatter, 
+													},
+													{
+														name : 'scorePdf',
+														align : "center",
+														width : 10,
+														editable : false,
+														template: "numberStr",
+														formatter: scorePdfFormatter, 
+													},
+													{
 														name : 'nivel',
 														align : "center",
 														width : 10,
@@ -835,6 +871,8 @@ function reloadGrid(originalPath, col, direction) {
 														|| this.p.colModel[iCol].name === "relanzar"
 														|| this.p.colModel[iCol].name === "eliminarSemilla"
 														|| this.p.colModel[iCol].name === "score"
+														|| this.p.colModel[iCol].name === "scoreHtml"
+														|| this.p.colModel[iCol].name === "scorePdf"
 														|| this.p.colModel[iCol].name === "nivel") {
 													return false;
 												}
