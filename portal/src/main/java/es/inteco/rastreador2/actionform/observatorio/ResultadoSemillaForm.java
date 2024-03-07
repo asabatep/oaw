@@ -31,6 +31,10 @@ public class ResultadoSemillaForm {
 	private boolean active;
 	/** The score. */
 	private String score;
+	/** The pdf score. */
+	private String scorePdf;
+	/** The html score. */
+	private String scoreHtml;
 	/** The nivel. */
 	private String nivel;
 	/** The id category. */
@@ -208,6 +212,42 @@ public class ResultadoSemillaForm {
 	 */
 	public void setScore(String score) {
 		this.score = score;
+	}
+
+		/**
+	 * Gets the score.
+	 *
+	 * @return the score
+	 */
+	public String getScorePdf() {
+		return scorePdf;
+	}
+
+	/**
+	 * Sets the score.
+	 *
+	 * @param score the new score
+	 */
+	public void setScorePdf(String scorePdf) {
+		this.scorePdf = scorePdf;
+	}
+
+		/**
+	 * Gets the score.
+	 *
+	 * @return the score
+	 */
+	public String getScoreHtml() {
+		return scoreHtml;
+	}
+
+	/**
+	 * Sets the score.
+	 *
+	 * @param score the new score
+	 */
+	public void setScoreHtml(String scoreHtml) {
+		this.scoreHtml = scoreHtml;
 	}
 
 	/**

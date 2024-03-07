@@ -59,6 +59,7 @@ import es.inteco.common.Constants;
 import es.inteco.common.ConstantsFont;
 import es.inteco.common.logging.Logger;
 import es.inteco.common.properties.PropertiesManager;
+import es.inteco.intav.datos.AnalisisDatos;
 import es.inteco.intav.form.ObservatoryEvaluationForm;
 import es.inteco.intav.form.ObservatoryLevelForm;
 import es.inteco.intav.form.ObservatorySuitabilityForm;
@@ -339,7 +340,7 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 			chunk.setAnchor(messageResources.getMessage("pdf.accessibility.intro.how.p7.anchor2.url"));
 			chunk.setExternalLink(true);
 			specialChunkMap.put(2, chunk);
-			section.add(PDFUtils.createParagraphAnchor(messageResources.getMessage("pdf.accessibility.intro.how.p7"), specialChunkMap, ConstantsFont.PARAGRAPH));
+			section.add(PDFUtils.createParagraphAnchor(messageResources.getMessage("pdf.accessibility.intro.how.p7"), specialChunkMap, ConstantsFont.PARAGRAPH, false));
 		}
 		// 1.2 Next steps
 		section = PDFUtils.createSection(messageResources.getMessage("pdf.accessibility.intro.next.title"), pdfTocManager.getIndex(), ConstantsFont.CHAPTER_TITLE_MP_FONT_2_L, chapter,
@@ -357,13 +358,13 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 			externalLinkL1_3.setExternalLink(true);
 			externalLinkL1_3.setAnchor(messageResources.getMessage("pdf.accessibility.intro.next.basic.service.list.1.anchor1.url"));
 			specialChunkMap.put(3, externalLinkL1_3);
-			PDFUtils.addListItem(PDFUtils.createParagraphAnchor(messageResources.getMessage("pdf.accessibility.intro.next.basic.service.list.1"), specialChunkMap, ConstantsFont.PARAGRAPH), list,
-					ConstantsFont.paragraphBoldFont, true, true, Paragraph.ALIGN_JUSTIFIED);
+			PDFUtils.addListItem(PDFUtils.createParagraphAnchor(messageResources.getMessage("pdf.accessibility.intro.next.basic.service.list.1"), specialChunkMap, ConstantsFont.PARAGRAPH, false), list,
+					ConstantsFont.paragraphBoldFont, false, true, Paragraph.ALIGN_JUSTIFIED);
 			// L2
 			Paragraph p = new Paragraph();
 			p.add(new Phrase(this.messageResources.getMessage("pdf.accessibility.intro.next.basic.service.list.2.bold"), ConstantsFont.paragraphBoldFont));
 			p.add(new Phrase(this.messageResources.getMessage("pdf.accessibility.intro.next.basic.service.list.2"), ConstantsFont.PARAGRAPH));
-			PDFUtils.addListItem(p, list, ConstantsFont.paragraphBoldFont, true, true, Paragraph.ALIGN_LEFT); // L3
+			PDFUtils.addListItem(p, list, ConstantsFont.paragraphBoldFont, false, true, Paragraph.ALIGN_LEFT); // L3
 			section.add(list);
 			list.setIndentationLeft(ConstantsFont.IDENTATION_LEFT_SPACE);
 			// L3 --> P
@@ -381,7 +382,7 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 			externalLink.setAnchor(messageResources.getMessage("pdf.accessibility.intro.next.basic.service.list.3.anchor2.url")); // specialChunkMap.put(10, externalLink);
 //			PDFUtils.addListItem(PDFUtils.createParagraphAnchor(messageResources.getMessage("pdf.accessibility.intro.next.basic.service.list.3"), specialChunkMap, ConstantsFont.PARAGRAPH), list,
 //					ConstantsFont.paragraphBoldFont, true, true, Paragraph.ALIGN_JUSTIFIED);
-			section.add(PDFUtils.createParagraphAnchor(messageResources.getMessage("pdf.accessibility.intro.next.basic.service.list.3"), specialChunkMap, ConstantsFont.PARAGRAPH));
+			section.add(PDFUtils.createParagraphAnchor(messageResources.getMessage("pdf.accessibility.intro.next.basic.service.list.3"), specialChunkMap, ConstantsFont.PARAGRAPH, true));
 			// L4 --> P
 			specialChunkMap = new HashMap<>();
 			externalLink = new SpecialChunk(messageResources.getMessage("pdf.accessibility.intro.next.basic.service.list.4.bold1"), ConstantsFont.paragraphBoldFont);
@@ -394,7 +395,7 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 			specialChunkMap.put(3, externalLink);
 //			PDFUtils.addListItem(PDFUtils.createParagraphAnchor(messageResources.getMessage("pdf.accessibility.intro.next.basic.service.list.4"), specialChunkMap, ConstantsFont.PARAGRAPH), list,
 //					ConstantsFont.paragraphBoldFont, true, true, Paragraph.ALIGN_JUSTIFIED);
-			section.add(PDFUtils.createParagraphAnchor(messageResources.getMessage("pdf.accessibility.intro.next.basic.service.list.4"), specialChunkMap, ConstantsFont.PARAGRAPH));
+			section.add(PDFUtils.createParagraphAnchor(messageResources.getMessage("pdf.accessibility.intro.next.basic.service.list.4"), specialChunkMap, ConstantsFont.PARAGRAPH, false));
 		} else {
 			// L1
 			specialChunkMap = new HashMap<>();
@@ -405,13 +406,13 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 			specialChunk.setAnchor(messageResources.getMessage("pdf.accessibility.intro.next.list.1.anchor1.url"));
 			specialChunkMap.put(2, specialChunk);
 			PDFUtils.addListItem(PDFUtils.createParagraphAnchor(messageResources.getMessage("pdf.accessibility.intro.next.list.1"), specialChunkMap, ConstantsFont.PARAGRAPH), list,
-					ConstantsFont.paragraphBoldFont, true, true, Paragraph.ALIGN_JUSTIFIED);
+					ConstantsFont.paragraphBoldFont, false, true, Paragraph.ALIGN_JUSTIFIED);
 			// L2
 			specialChunkMap = new HashMap<>();
 			specialChunk = new SpecialChunk(messageResources.getMessage("pdf.accessibility.intro.next.list.2.bold"), ConstantsFont.paragraphBoldFont);
 			specialChunkMap.put(1, specialChunk);
 			PDFUtils.addListItem(PDFUtils.createParagraphAnchor(messageResources.getMessage("pdf.accessibility.intro.next.list.2"), specialChunkMap, ConstantsFont.PARAGRAPH), list,
-					ConstantsFont.paragraphBoldFont, true, true, Paragraph.ALIGN_JUSTIFIED);
+					ConstantsFont.paragraphBoldFont, false, true, Paragraph.ALIGN_JUSTIFIED);
 			list.setIndentationLeft(ConstantsFont.IDENTATION_LEFT_SPACE);
 			section.add(list);
 			// Ya no es lista
@@ -1742,6 +1743,18 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 			}
 		}
 		tablaRankings.completeRow();
+
+		tablaRankings.addCell(PDFUtils.createTableCell("Puntuación Media de páginas html", Constants.GRIS_MINIMO, ConstantsFont.labelCellFont, Element.ALIGN_LEFT,
+				DEFAULT_PADDING, -1));
+		tablaRankings.addCell(PDFUtils.createTableCell(currentScore.getTotalScoreHtml().toPlainString(), Color.WHITE, ConstantsFont.strongNoteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+		tablaRankings.completeRow();
+
+		tablaRankings.addCell(PDFUtils.createTableCell("Puntuación Media de documentos pdf", Constants.GRIS_MINIMO, ConstantsFont.labelCellFont, Element.ALIGN_LEFT,
+				DEFAULT_PADDING, -1));
+		tablaRankings.addCell(PDFUtils.createTableCell(currentScore.getTotalScorePdf().toPlainString(), Color.WHITE, ConstantsFont.strongNoteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+		tablaRankings.completeRow();
+
+
 		if (rankingActual != null) {
 			// Global rank
 			tablaRankings.addCell(
@@ -2268,9 +2281,32 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 	public ScoreForm generateScores(final MessageResources messageResources, final java.util.List<ObservatoryEvaluationForm> evaList) {
 		final ScoreForm scoreForm = new ScoreForm();
 		int suitabilityGroups = 0;
+		int pdfNumber = 0;
+		int htmlNumber = 0;
 		BigDecimal totalScore = new BigDecimal(0);
 		for (ObservatoryEvaluationForm evaluationForm : evaList) {
+			try{
+			Connection c = DataBaseManager.getConnection();
+			String checks = AnalisisDatos.getExecutedChecks(c, evaluationForm.getIdAnalysis());
+			DataBaseManager.closeConnection(c);
+			if(!checks.isEmpty()){
+				String[] parts = checks.split(",");
+				if(Integer.parseInt(parts[1]) >= 500){ //Si el check es de pdfs.
+					scoreForm.setTotalScorePdf(scoreForm.getTotalScorePdf().add(evaluationForm.getScore()));
+					pdfNumber++;
+			}
+			else {
+				scoreForm.setTotalScoreHtml(scoreForm.getTotalScoreHtml().add(evaluationForm.getScore()));
+				htmlNumber++;
+			}
+			}
+		}
+		catch(Exception e){
+			Logger.putLog("Error al sacar los checks ejecutados", AnonymousResultExportPdfUNEEN2019.class, Logger.LOG_LEVEL_ERROR, e);
+		}
 			scoreForm.setTotalScore(scoreForm.getTotalScore().add(evaluationForm.getScore()));
+			
+
 			// Codigo duplicado en IntavUtils
 			final String pageSuitabilityLevel = ObservatoryUtils.pageSuitabilityLevel(evaluationForm);
 			if (pageSuitabilityLevel.equals(Constants.OBS_AA)) {
@@ -2303,6 +2339,9 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 		 */
 		if (!evaList.isEmpty()) {
 			scoreForm.setTotalScore(scoreForm.getTotalScore().divide(new BigDecimal(evaList.size()), 2, BigDecimal.ROUND_HALF_UP));
+			if(pdfNumber > 0) scoreForm.setTotalScorePdf(scoreForm.getTotalScorePdf().divide(new BigDecimal(pdfNumber), 2, BigDecimal.ROUND_HALF_UP));
+			if(htmlNumber > 0) scoreForm.setTotalScoreHtml(scoreForm.getTotalScoreHtml().divide(new BigDecimal(htmlNumber), 2, BigDecimal.ROUND_HALF_UP));
+			
 			// Calculate mid from score verificatrion
 			BigDecimal sumL1 = new BigDecimal(0);
 			int countNA = 0;
@@ -2313,8 +2352,15 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 					sumL1 = sumL1.add(entry.getValue());
 				}
 			}
-			scoreForm.setScoreLevelA(sumL1.divide(new BigDecimal(resultL1.size() - countNA), 2, BigDecimal.ROUND_HALF_UP));
-			scoreForm.setScoreLevel1(sumL1.divide(new BigDecimal(resultL1.size() - countNA), 2, BigDecimal.ROUND_HALF_UP));
+			if(resultL1.size() - countNA > 0){
+				scoreForm.setScoreLevelA(sumL1.divide(new BigDecimal(resultL1.size() - countNA), 2, BigDecimal.ROUND_HALF_UP));
+				scoreForm.setScoreLevel1(sumL1.divide(new BigDecimal(resultL1.size() - countNA), 2, BigDecimal.ROUND_HALF_UP));
+			}
+			else {
+				scoreForm.setScoreLevelA(new BigDecimal(0));
+				scoreForm.setScoreLevel1(new BigDecimal(0));
+			}
+			
 			// Calculate mid from score verificatrion
 			BigDecimal sumL2 = new BigDecimal(0);
 			countNA = 0;
