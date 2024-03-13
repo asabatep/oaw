@@ -607,7 +607,9 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 			PDFUtils.addParagraph(messageResources.getMessage("pdf.accessibility.sample.config.p1"), ConstantsFont.PARAGRAPH, chapter, Element.ALIGN_JUSTIFIED, true, true);
 			final List listaConfiguracionRastreo = new List();
 			listaConfiguracionRastreo.setIndentationLeft(LINE_SPACE);
-			PDFUtils.addListItem("Origen:", listaConfiguracionRastreo, ConstantsFont.PARAGRAPH, false, true);
+			if (getBasicServiceForm().getAnalysisType() == BasicServiceAnalysisType.URL) {
+				PDFUtils.addListItem("Origen:", listaConfiguracionRastreo, ConstantsFont.PARAGRAPH, false, true);
+			}
 			listaConfiguracionRastreo.add(createOrigen(getBasicServiceForm().getDomain()));
 			if (getBasicServiceForm().getAnalysisType() == BasicServiceAnalysisType.URL) {
 				PDFUtils.addListItem(messageResources.getMessage("pdf.accessibility.sample.config.type"), listaConfiguracionRastreo, ConstantsFont.PARAGRAPH, false, true);
@@ -728,7 +730,11 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 	private TextElementArray createOrigen(final String domain) {
 		if (getBasicServiceForm().getAnalysisType() == BasicServiceAnalysisType.LISTA_URLS) {
 			return new ListItem(messageResources.getMessage("pdf.accessibility.sample.origin.list"), ConstantsFont.PARAGRAPH);
-		} else {
+		}
+		else if (getBasicServiceForm().getAnalysisType() == BasicServiceAnalysisType.MIXTO) {
+			return new ListItem("Origen: Análisis mixto", ConstantsFont.PARAGRAPH);
+		}
+		 else {
 			final SpecialChunk externalLink = new SpecialChunk(domain, ConstantsFont.ANCHOR_FONT);
 			externalLink.setExternalLink(true);
 			externalLink.setAnchor(domain);
