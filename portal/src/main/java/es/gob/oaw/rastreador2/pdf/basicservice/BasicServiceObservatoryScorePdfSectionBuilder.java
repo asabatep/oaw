@@ -257,12 +257,12 @@ public class BasicServiceObservatoryScorePdfSectionBuilder {
 				tablaRankings.completeRow();
 				tablaRankings.addCell(PDFUtils.createTableCell("Puntuación media de páginas HTML", Constants.GRIS_MINIMO, ConstantsFont.labelCellFont, Element.ALIGN_LEFT,
 				DEFAULT_PADDING, -1));
-				tablaRankings.addCell(PDFUtils.createTableCell(currentScore.getTotalScoreHtml().toPlainString(), Color.WHITE, ConstantsFont.strongNoteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+				tablaRankings.addCell(PDFUtils.createTableCell(currentScore.getTotalScoreHtml().compareTo(BigDecimal.ZERO) < 0 ? "No aplica": currentScore.getTotalScoreHtml().toPlainString() , Color.WHITE, ConstantsFont.strongNoteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
 				tablaRankings.completeRow();
 
 				tablaRankings.addCell(PDFUtils.createTableCell("Puntuación media de documentos PDF", Constants.GRIS_MINIMO, ConstantsFont.labelCellFont, Element.ALIGN_LEFT,
 				DEFAULT_PADDING, -1));
-				tablaRankings.addCell(PDFUtils.createTableCell(currentScore.getTotalScorePdf().toPlainString(), Color.WHITE, ConstantsFont.strongNoteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+				tablaRankings.addCell(PDFUtils.createTableCell(currentScore.getTotalScorePdf().compareTo(BigDecimal.ZERO) < 0 ? "No aplica": currentScore.getTotalScorePdf().toPlainString(), Color.WHITE, ConstantsFont.strongNoteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
 				tablaRankings.completeRow();
 
 				chapter.add(tablaRankings);

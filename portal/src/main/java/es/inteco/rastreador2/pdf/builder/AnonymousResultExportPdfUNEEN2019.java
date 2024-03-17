@@ -607,7 +607,9 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 			PDFUtils.addParagraph(messageResources.getMessage("pdf.accessibility.sample.config.p1"), ConstantsFont.PARAGRAPH, chapter, Element.ALIGN_JUSTIFIED, true, true);
 			final List listaConfiguracionRastreo = new List();
 			listaConfiguracionRastreo.setIndentationLeft(LINE_SPACE);
-			PDFUtils.addListItem("Origen:", listaConfiguracionRastreo, ConstantsFont.PARAGRAPH, false, true);
+			if (getBasicServiceForm().getAnalysisType() == BasicServiceAnalysisType.URL) {
+				PDFUtils.addListItem("Origen:", listaConfiguracionRastreo, ConstantsFont.PARAGRAPH, false, true);
+			}
 			listaConfiguracionRastreo.add(createOrigen(getBasicServiceForm().getDomain()));
 			if (getBasicServiceForm().getAnalysisType() == BasicServiceAnalysisType.URL) {
 				PDFUtils.addListItem(messageResources.getMessage("pdf.accessibility.sample.config.type"), listaConfiguracionRastreo, ConstantsFont.PARAGRAPH, false, true);
@@ -1746,12 +1748,12 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 
 		tablaRankings.addCell(PDFUtils.createTableCell("Puntuación Media de páginas html", Constants.GRIS_MINIMO, ConstantsFont.labelCellFont, Element.ALIGN_LEFT,
 				DEFAULT_PADDING, -1));
-		tablaRankings.addCell(PDFUtils.createTableCell(currentScore.getTotalScoreHtml().toPlainString(), Color.WHITE, ConstantsFont.strongNoteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+		tablaRankings.addCell(PDFUtils.createTableCell(currentScore.getTotalScoreHtml().compareTo(BigDecimal.ZERO) < 0 ? "No aplica": currentScore.getTotalScoreHtml().toPlainString(), Color.WHITE, ConstantsFont.strongNoteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
 		tablaRankings.completeRow();
 
 		tablaRankings.addCell(PDFUtils.createTableCell("Puntuación Media de documentos pdf", Constants.GRIS_MINIMO, ConstantsFont.labelCellFont, Element.ALIGN_LEFT,
 				DEFAULT_PADDING, -1));
-		tablaRankings.addCell(PDFUtils.createTableCell(currentScore.getTotalScorePdf().toPlainString(), Color.WHITE, ConstantsFont.strongNoteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+		tablaRankings.addCell(PDFUtils.createTableCell(currentScore.getTotalScorePdf().compareTo(BigDecimal.ZERO) < 0 ? "No aplica": currentScore.getTotalScorePdf().toPlainString(), Color.WHITE, ConstantsFont.strongNoteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
 		tablaRankings.completeRow();
 
 
@@ -2330,6 +2332,7 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 				}
 			}
 		}
+		Logger.putLog("SCORE HTML" + scoreForm.getTotalScoreHtml().toPlainString(), AnonymousResultExportPdfUNEEN2019.class, Logger.LOG_LEVEL_WARNING);
 		// scoreForm.setTotalScore(scoreForm.getScoreLevelA().add(scoreForm.getScoreLevelAA()).divide(new BigDecimal(2)));
 		generateScoresVerificacion(messageResources, scoreForm, evaList);
 		Map<Long, Map<String, BigDecimal>> results = ResultadosAnonimosObservatorioUNEEN2019Utils.getVerificationResultsByPointAndCrawl(evaList, Constants.OBS_PRIORITY_NONE);
@@ -2339,8 +2342,14 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 		 */
 		if (!evaList.isEmpty()) {
 			scoreForm.setTotalScore(scoreForm.getTotalScore().divide(new BigDecimal(evaList.size()), 2, BigDecimal.ROUND_HALF_UP));
-			if(pdfNumber > 0) scoreForm.setTotalScorePdf(scoreForm.getTotalScorePdf().divide(new BigDecimal(pdfNumber), 2, BigDecimal.ROUND_HALF_UP));
-			if(htmlNumber > 0) scoreForm.setTotalScoreHtml(scoreForm.getTotalScoreHtml().divide(new BigDecimal(htmlNumber), 2, BigDecimal.ROUND_HALF_UP));
+			if(pdfNumber > 0) {
+				scoreForm.setTotalScorePdf(scoreForm.getTotalScorePdf().divide(new BigDecimal(pdfNumber), 2, BigDecimal.ROUND_HALF_UP));
+			}
+			else scoreForm.setTotalScorePdf(new BigDecimal(-1.0));
+			if(htmlNumber > 0) {
+				scoreForm.setTotalScoreHtml(scoreForm.getTotalScoreHtml().divide(new BigDecimal(htmlNumber), 2, BigDecimal.ROUND_HALF_UP));
+			}
+			else scoreForm.setTotalScoreHtml(new BigDecimal(-1.0));
 			
 			// Calculate mid from score verificatrion
 			BigDecimal sumL1 = new BigDecimal(0);
