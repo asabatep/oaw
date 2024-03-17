@@ -730,7 +730,11 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 	private TextElementArray createOrigen(final String domain) {
 		if (getBasicServiceForm().getAnalysisType() == BasicServiceAnalysisType.LISTA_URLS) {
 			return new ListItem(messageResources.getMessage("pdf.accessibility.sample.origin.list"), ConstantsFont.PARAGRAPH);
-		} else {
+		}
+		else if (getBasicServiceForm().getAnalysisType() == BasicServiceAnalysisType.MIXTO) {
+			return new ListItem("Origen: Análisis mixto", ConstantsFont.PARAGRAPH);
+		}
+		 else {
 			final SpecialChunk externalLink = new SpecialChunk(domain, ConstantsFont.ANCHOR_FONT);
 			externalLink.setExternalLink(true);
 			externalLink.setAnchor(domain);
