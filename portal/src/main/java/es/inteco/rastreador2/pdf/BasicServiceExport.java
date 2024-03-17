@@ -214,7 +214,7 @@ public final class BasicServiceExport {
 	 * @param depthReport       the depth report
 	 * @return the string
 	 */
-	public static String compressReportWithCode(final String reportFile, final boolean isContentAnalysis, final String filename, final String depthReport) {
+	public static String compressReportWithCode(final String reportFile, final boolean isContentAnalysis, final String filename, final String depthReport, boolean isSourceNeeded) {
 		final String reportCompressFile;
 		if (reportFile.endsWith(".pdf")) {
 			reportCompressFile = reportFile.substring(0, reportFile.length() - 4) + ".zip";
@@ -233,7 +233,8 @@ public final class BasicServiceExport {
 			zos.closeEntry();
 			try {
 				File parentFile = new File(reportFile).getParentFile();
-				zipFile(new File(parentFile + "/codigo_fuente.zip"), "codigo_fuente.zip", zos);
+				if (isSourceNeeded)
+					zipFile(new File(parentFile + "/codigo_fuente.zip"), "codigo_fuente.zip", zos);
 				// ODT
 				File hallazgosFile = new File(parentFile + "/Informe Revision Accesibilidad - Hallazgos.odt");
 				if (hallazgosFile.exists()) {

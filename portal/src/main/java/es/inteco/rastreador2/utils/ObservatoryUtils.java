@@ -367,8 +367,8 @@ public final class ObservatoryUtils {
 						}
 					}
 				}
-				String htmlScore = "0.0";
-				String pdfScore = "0.0";
+				String htmlScore = "-1.0";
+				String pdfScore = "-1.0";
 				if (numPages != 0) {
 					
 					seedResult.setScore(avgScore.divide(BigDecimal.valueOf(numPages), 2, BigDecimal.ROUND_HALF_UP).toPlainString());
@@ -441,8 +441,8 @@ public final class ObservatoryUtils {
 						}
 					}
 				}
-				String htmlScore = "0.0";
-				String pdfScore = "0.0";
+				String htmlScore = "-1.0";
+				String pdfScore = "-1.0";
 				if (numPages != 0) {
 					
 					seedResult.setScore(avgScore.divide(BigDecimal.valueOf(numPages), 2, BigDecimal.ROUND_HALF_UP).toPlainString());
