@@ -65,7 +65,7 @@ public class SourceFilesManager {
 				final Analysis analysis = AnalisisDatos.getAnalisisFromId(c, evaluationId);
 				if(!analysis.getSource().startsWith("%PDF") && !analysis.getSource().endsWith("%%EOF")) { // Si el documento es un pdf no lo generamos
 					final File htmlTempFile = File.createTempFile("oaw_", "_html.html", pageSourcesDirectory);
-					notEmpty = !notEmpty;
+					notEmpty = true;
 					fw.println(writeTempFile(htmlTempFile, analysis.getSource(), analysis.getUrl()));
 					final List<CSSDTO> cssResourcesFromEvaluation = AnalisisDatos.getCSSResourcesFromEvaluation(evaluationId);
 					for (CSSDTO cssdto : cssResourcesFromEvaluation) {
@@ -124,7 +124,7 @@ public class SourceFilesManager {
 				final File sourceCode = new File(pageSourcesDirectory + "/" + originalFilename);
 				if(!analysis.getSource().startsWith("%PDF") && !analysis.getSource().endsWith("%%EOF")){ // Si el documento es un pdf no lo generamos
 					org.apache.commons.io.FileUtils.writeStringToFile(sourceCode, analysis.getSource());
-					notEmpty = !notEmpty;
+					notEmpty = true;
 				}
 			} catch (IOException e) {
 				Logger.putLog("Exception al intentar guardar el código fuente", SourceFilesManager.class, Logger.LOG_LEVEL_ERROR, e);
@@ -153,7 +153,7 @@ public class SourceFilesManager {
 				final File sourceCode = new File(pageSourcesDirectory + "/" + analysis.getUrl());
 				if(!analysis.getSource().startsWith("%PDF") && !analysis.getSource().endsWith("%%EOF")){ // Si el documento es un pdf no lo generamos
 					org.apache.commons.io.FileUtils.writeStringToFile(sourceCode, analysis.getSource());
-					notEmpty = !notEmpty;
+					notEmpty = true;
 				}
 			} catch (IOException e) {
 				Logger.putLog("Exception al intentar guardar el código fuente", SourceFilesManager.class, Logger.LOG_LEVEL_ERROR, e);
