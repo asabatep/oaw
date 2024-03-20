@@ -46,7 +46,8 @@ function scoreFormatter(cellvalue, options, rowObject) {
 
 function scoreHtmlFormatter(cellvalue, options, rowObject) {
 	if (rowObject.scoreHtml != null) {
-
+		if (rowObject.scoreHtml == -1.0)
+			return "No aplica";
 		return rowObject.scoreHtml;
 
 	} else {
@@ -56,7 +57,8 @@ function scoreHtmlFormatter(cellvalue, options, rowObject) {
 
 function scorePdfFormatter(cellvalue, options, rowObject) {
 	if (rowObject.scorePdf != null) {
-
+		if (rowObject.scorePdf == -1.0)
+			return "No aplica";
 		return rowObject.scorePdf;
 
 	} else {
