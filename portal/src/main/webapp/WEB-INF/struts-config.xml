@@ -1112,7 +1112,6 @@
 			type="es.inteco.rastreador2.action.observatorio.RangeObservatorioAction" name="RangeForm" parameter="action"
 			scope="request" validate="false">
 			<forward name="exito" path=".cargarRangosObservatorio" />
-
 		</action>
 
 		<action path="/secure/TemplateRangeObservatorio"
