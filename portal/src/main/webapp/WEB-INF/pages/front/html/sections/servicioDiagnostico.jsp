@@ -36,7 +36,7 @@
 	var colNameSegment = '<bean:message key="colname.segment"/>';
 	var colNameWebsiteType = '<bean:message key="colname.website.type"/>';
 	var colNameUser = '<bean:message key="colname.user"/>';
-	var colNameEmail = '<bean:message key="colname.email"/>';
+	var colNameEmail = '<bean:message key="colname.emails"/>';
 	var colNameDepth = '<bean:message key="colname.depth"/>';
 	var colNameWidth = '<bean:message key="colname.width"/>';
 	var colNameReportType = '<bean:message key="colname.report.type"/>';
@@ -227,7 +227,7 @@ td {
 					<div class="formItem">
 						<label for="email" class="control-label">
 							<strong class="labelVisu">
-								<bean:message key="servicio.diagnostico.estadisticas.email" />
+								<bean:message key="servicio.diagnostico.estadisticas.emails" />
 							</strong>
 						</label>
 						<input type="text" class="texto form-control" id="email" name="email" />
