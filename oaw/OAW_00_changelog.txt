@@ -4,6 +4,8 @@
 - Gestión del número máximo de PDF por muestra
 - Mejoras en la sincronización automática con el SeguimientoOAW - SSP
 - Mejoras en el cálculo de resultados, además de la evolución se tiene en cuenta la posición de partida
+- El servicio de diagnóstico soporta múltiples destinatarios
+- Se habilita la comprobación de enlaces rotos
 - Bug 6322 - Al analizar un sitio web En nivel de adecuación A, 1.1 Existencia de alternativas textuales, Problema: Textos alternativos demasiado extensos.
 - Bug 2800 - Análisis url, da error y advertencia de encabezados H1
 - Bug 6678 - Error al analizar un .zip con códigos fuente
@@ -11,6 +13,7 @@
 - Bug 6857 - Requisito 4.1.1 y equivalente verificación Compatibilidad 1.14 siempre deben ser PASA
 - Bug 6756 - Error enlaces análisis de pdf
 - Bug 6774 - Texto mal alineado informe pdf con la nueva metodología
+- Bug 7124 - Cambiar texto en diagnostico.html de la opción de declaración de accesibilidad 
 
 5.7.2
 ------------------------------------------------------------------------------------------------------------------------------------
