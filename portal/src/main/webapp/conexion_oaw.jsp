@@ -17,6 +17,8 @@
 <%@page import= "org.apache.tomcat.util.http.fileupload.disk.*" %>
 <%@page import= "org.apache.tomcat.util.http.fileupload.servlet.*" %>
 <%@page import= "org.apache.commons.codec.net.URLCodec" %>
+<%@page import= "java.util.regex.*" %>
+
 <%!
     // URL donde se encuentra ubicado el servidor OAW (dependerá del entorno donde estemos)
     // Indicar únicamente dominio + contexto de despliegue.
@@ -258,9 +260,7 @@
         }
 
         private void validateRequest() {
-            if (!correo.contains("@")) {
-                errores.add("La direcci&oacute;n de correo electr&oacute;nico no es v&aacute;lida");
-            }
+            validateEmails(correo,errores);
             if (isCrawlingRequest()) {
                 if (!url.startsWith("http") && !url.startsWith("https")) {
                     errores.add("La URL debe comenzar por http:// o https://");
@@ -316,14 +316,13 @@
                     }
                 }
             } else {
-            	
-                if (codigo.length() > 4194304) {
+                if (codigo.length() > 146800641) {
                     errores.add("El c&oacute;digo fuente a analizar es demasiado largo");
                 }
                 this.registerAnalysis = "false";
             }
         }
-
+ 
         private boolean isCrawlingRequest() {
             return "url".equalsIgnoreCase(type);
         }
@@ -335,6 +334,30 @@
         public boolean isConfirmed() {
             return Boolean.parseBoolean(confirm);
         }
+        
+    	private void validateEmails(String correo, List<String> errores) {
+    		if (correo != null && !correo.isEmpty()) {
+    			String[] emails = correo.split("[,;\\s]+"); // Split by comma, semicolon, or whitespace
+    			for (String email : emails) {
+    				if (!isValidEmail(email.trim())) {
+    					errores.add("El formato del correo electrónico es erróneo: "+email);
+    				}
+    			}
+    		}else{
+    			errores.add("El correo electrónico es obligatorio");
+    		}
+    	}
+
+    	private boolean isValidEmail(String email) {
+    	    // Regular expression for basic email validation
+    	    String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]+$";
+    	    // Compile the regular expression
+    	    Pattern pattern = Pattern.compile(emailRegex);
+    	    // Match the email with the pattern
+    	    Matcher matcher = pattern.matcher(email);
+    	    // Return true if the email matches the pattern, false otherwise
+    	    return matcher.matches();
+    	}
     }
 %>
 <html>

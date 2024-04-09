@@ -244,13 +244,14 @@ public class BasicServiceManager {
 				// Generar código analizado
 				final SourceFilesManager sourceFilesManager = new SourceFilesManager(new File(pdfPath).getParentFile());
 				final List<Long> analysisIdsByTracking = AnalisisDatos.getAnalysisIdsByTracking(DataBaseManager.getConnection(), idCrawling);
+				boolean notEmpty = false;
 				// Source code analysis
 				if (basicServiceForm.isContentAnalysisMultiple()) {
-					sourceFilesManager.writeSourceFilesContentMultiple(DataBaseManager.getConnection(), analysisIdsByTracking);
-					sourceFilesManager.zipSourcesContent(true);
+					notEmpty = sourceFilesManager.writeSourceFilesContentMultiple(DataBaseManager.getConnection(), analysisIdsByTracking);
+					if(notEmpty) sourceFilesManager.zipSourcesContent(true);
 				} else if (basicServiceForm.isContentAnalysis()) {
-					sourceFilesManager.writeSourceFilesContent(DataBaseManager.getConnection(), analysisIdsByTracking, basicServiceForm.getFileName());
-					sourceFilesManager.zipSourcesContent(true);
+					notEmpty = sourceFilesManager.writeSourceFilesContent(DataBaseManager.getConnection(), analysisIdsByTracking, basicServiceForm.getFileName());
+					if(notEmpty) sourceFilesManager.zipSourcesContent(true);
 				} else {
 					if (Constants.REPORT_OBSERVATORY_5.equals(basicServiceForm.getReport()) || Constants.REPORT_OBSERVATORY_5_NOBROKEN.equals(basicServiceForm.getReport())) {
 						// Add accesibility page if exists
@@ -259,11 +260,11 @@ public class BasicServiceManager {
 							sourceFilesManager.writeSourceFilesAccessibility(DataBaseManager.getConnection(), codFuente);
 						}
 					}
-					sourceFilesManager.writeSourceFiles(DataBaseManager.getConnection(), analysisIdsByTracking);
-					sourceFilesManager.zipSources(true);
+					notEmpty = sourceFilesManager.writeSourceFiles(DataBaseManager.getConnection(), analysisIdsByTracking);
+					if(notEmpty) sourceFilesManager.zipSources(true);
 				}
 				// Comprimimos el fichero
-				pdfPath = BasicServiceExport.compressReportWithCode(pdfPath, basicServiceForm.isContentAnalysis(), basicServiceForm.getFileName(), basicServiceForm.getDepthReport());
+				pdfPath = BasicServiceExport.compressReportWithCode(pdfPath, basicServiceForm.isContentAnalysis(), basicServiceForm.getFileName(), basicServiceForm.getDepthReport(), notEmpty);
 				if (!basicServiceForm.isRegisterAnalysis()) {
 					// Si no es necesario registrar el análisis se borra
 					// Logger.putLog("Borrando analisis " + idCrawling, BasicServiceManager.class, Logger.LOG_LEVEL_INFO);

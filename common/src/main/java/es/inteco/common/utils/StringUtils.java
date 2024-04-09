@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -306,5 +308,15 @@ public final class StringUtils {
         // If decoding fails, it's not Base64
         return false;
     }
-}
+
+    }
+    public static String getDomainFromUrl(String url){
+        
+        String uri = url.substring(url.indexOf("//") + 2, url.length());
+        if(uri.contains("www.")){
+          uri = uri.replace("www.", "");
+        }
+        return uri;
+        
+    }
 }

@@ -177,7 +177,7 @@ public class OAWService {
 	private String getType(ProblemForm problem) {
 		String message;
 		if (problem.getType().equals(pmgr.getValue(Constants.INTAV_PROPERTIES, "confidence.level.medium"))) {
-			message = messageResources.getMessage("pdf.accessibility.bs.warning");
+			message = messageResources.getMessage("pdf.accessibility.bs.problem");
 		} else if (problem.getType().equals(pmgr.getValue(Constants.INTAV_PROPERTIES, "confidence.level.high"))) {
 			message = messageResources.getMessage("pdf.accessibility.bs.problem");
 		} else if (problem.getType().equals(pmgr.getValue(Constants.INTAV_PROPERTIES, "confidence.level.cannottell"))) {
