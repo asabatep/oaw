@@ -71,9 +71,10 @@ public final class AnalisisDatos {
 			pstmt.setLong(4, analisis.getTracker());
 			pstmt.setInt(5, getCodGuideline(connection, analisis.getGuideline()));
 			pstmt.setInt(6, IntavConstants.STATUS_EXECUTING);
-			// Encode BASE64 code
+			// Encode code to base64
 			String codigoFuente = analisis.getSource();
 			if (!StringUtils.isEmpty(codigoFuente)) {
+				if(!StringUtils.isBase64(codigoFuente))
 				codigoFuente = new String(Base64.encodeBase64(codigoFuente.getBytes("UTF-8")));
 			}
 			pstmt.setString(7, codigoFuente);
@@ -180,6 +181,19 @@ public final class AnalisisDatos {
 		}
 	}
 
+	public static String getExecutedChecks(final Connection connection, final long idAnalisis) throws SQLException {
+		try (PreparedStatement pstmt = connection.prepareStatement("SELECT checks_ejecutados FROM tanalisis WHERE cod_analisis = ?;")) {
+			pstmt.setLong(1, idAnalisis);
+			try (ResultSet rs = pstmt.executeQuery()) {
+				if (rs.next()) {
+					return rs.getString("checks_ejecutados");
+				} else {
+					return null;
+				}
+			}
+		}
+	}
+
 	/**
 	 * Update checks ejecutados.
 	 *
@@ -203,10 +217,11 @@ public final class AnalisisDatos {
 	 */
 	public static void endAnalysisSuccess(final Evaluation eval) {
 		try (Connection conn = DataBaseManager.getConnection();
-				final PreparedStatement pstmt = conn.prepareStatement("UPDATE tanalisis SET CHECKS_EJECUTADOS = ?, ESTADO = ? WHERE COD_ANALISIS = ?;")) {
+				final PreparedStatement pstmt = conn.prepareStatement("UPDATE tanalisis SET CHECKS_EJECUTADOS = ?, NUM_DURACION = ?,  ESTADO = ? WHERE COD_ANALISIS = ?;")) {
 			pstmt.setString(1, eval.getChecksExecutedStr());
-			pstmt.setInt(2, IntavConstants.STATUS_SUCCESS);
-			pstmt.setLong(3, eval.getIdAnalisis());
+			pstmt.setLong(2, eval.getevaluation());
+			pstmt.setInt(3, IntavConstants.STATUS_SUCCESS);
+			pstmt.setLong(4, eval.getIdAnalisis());
 			pstmt.executeUpdate();
 		} catch (Exception e) {
 			Logger.putLog("endAnalysisSuccess: ", AnalisisDatos.class, Logger.LOG_LEVEL_ERROR, e);

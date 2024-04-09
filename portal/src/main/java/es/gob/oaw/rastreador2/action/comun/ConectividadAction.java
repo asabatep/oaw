@@ -146,24 +146,23 @@ public class ConectividadAction extends Action {
 				} catch (Exception e) {
 					Logger.putLog("Error: ", ConectividadAction.class, Logger.LOG_LEVEL_ERROR, e);
 				}
-			}
-			else if("modifyValidator".equals(action)) {
+			} else if ("modifyValidator".equals(action)) {
 				String validatorUrl = request.getParameter("validatorUrl");
 				String validatorStatus = request.getParameter("validatorStatus");
 				String pdfActive = request.getParameter("pdfActive");
+				String pdfPercentage = request.getParameter("pdfPercentage");
 				// Save validator config
 				try (Connection c = DataBaseManager.getConnection()) {
 					ValidatorForm validator = new ValidatorForm();
 					validator.setStatus("true".equals(validatorStatus) ? 1 : 0);
 					validator.setPdfActive("true".equals(pdfActive) ? 1 : 0);
 					validator.setUrl(validatorUrl);
+					validator.setPdfPercentage(Integer.valueOf(pdfPercentage));
 					ValidatorDAO.update(c, validator);
 					DataBaseManager.closeConnection(c);
 				} catch (Exception e) {
 					Logger.putLog("Error: ", ConectividadAction.class, Logger.LOG_LEVEL_ERROR, e);
 				}
-
-
 			}
 		}
 		return mapping.findForward(Constants.EXITO);

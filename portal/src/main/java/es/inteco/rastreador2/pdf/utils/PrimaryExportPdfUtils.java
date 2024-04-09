@@ -53,6 +53,7 @@ import com.itextpdf.text.Element;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Section;
+import com.itextpdf.text.pdf.PdfBoolean;
 import com.itextpdf.text.pdf.PdfName;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
@@ -251,6 +252,7 @@ public final class PrimaryExportPdfUtils {
 				final PdfWriter writer = PdfWriter.getInstance(document, outputFileStream);
 				writer.setTagged(0);
 				writer.setViewerPreferences(PdfWriter.PageModeUseOutlines);
+				writer.addViewerPreference(new PdfName("DisplayDocTitle"), new PdfBoolean(true));
 				writer.getExtraCatalog().put(new PdfName("Lang"), new PdfString("es"));
 				final String crawlingDate = crawling != null ? crawling.getDate() : CrawlerUtils.formatDate(new Date());
 				String footerText = "";

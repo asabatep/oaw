@@ -338,7 +338,7 @@ public final class WcagEmUtils {
 				noWebpage.setId("_:struct_" + randCounterNoWeb);
 				noWebpage.setDescription(eval.getUrl());
 				noWebpage.setSource(eval.getUrl());
-				noWebpage.setTitle(BasicServiceUtils.getTitleDocFromContent(eval.getSource(), false));
+				noWebpage.setTitle(eval.getEntity());
 				noWebpage.setTested(false);// false to mark as incomplete un report step
 				noWebpages.add(noWebpage);
 				randCounterNoWeb++;
@@ -431,7 +431,7 @@ public final class WcagEmUtils {
 			// Check 3.2.3
 			processSimpleVerification(tmpWcag, tmp.get(_2_6), WcagEmPointKey.WCAG_3_2_3.getWcagEmId(), false);
 			// Check 1.1.1
-			processSimpleVerification(tmpWcag, tmp.get(_1_14), WcagEmPointKey.WCAG_4_1_1.getWcagEmId(), false);
+			
 			/*
 			 * This OAW verification points only matchs partial WCAG verfication
 			 */
@@ -969,11 +969,6 @@ public final class WcagEmUtils {
 		checks.add("446");// 1.9
 		checkWcagRelationMap.put(WcagEmPointKey.WCAG_3_3_2.getWcagEmId(), checks);
 
-		checks = new ArrayList<>();
-		checks.add("501");
-		checks.add("502");
-		checks.add("505");
-		checkWcagRelationMap.put(WcagEmPointKey.WCAG_4_1_1.getWcagEmId(), checks);
 		// 4.1.2
 		checks = new ArrayList<>();
 		checks.add("432");// 1.8

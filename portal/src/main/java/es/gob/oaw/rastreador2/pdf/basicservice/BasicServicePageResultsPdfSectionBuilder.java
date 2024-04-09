@@ -42,6 +42,7 @@ import es.gob.oaw.rastreador2.pdf.utils.CheckDescriptionsManager;
 import es.gob.oaw.rastreador2.pdf.utils.PdfTocManager;
 import es.inteco.common.Constants;
 import es.inteco.common.ConstantsFont;
+import es.inteco.common.logging.Logger;
 import es.inteco.common.properties.PropertiesManager;
 import es.inteco.common.utils.StringUtils;
 import es.inteco.intav.form.ObservatoryEvaluationForm;
@@ -183,7 +184,9 @@ public class BasicServicePageResultsPdfSectionBuilder extends ObservatoryPageRes
 										celdaRationale.setPadding(DEFAULT_PADDING);
 										tablaVerificacionProblema.addCell(celdaRationale);
 									}
-									addSpecificProblems(messageResources, levelSection, problem.getSpecificProblems());
+									//Checks de pdf
+									if(Integer.parseInt(problem.getCheck()) > 499) addSpecificProblemsPdf(messageResources, levelSection, problem.getSpecificProblems());
+									else addSpecificProblems(messageResources, levelSection, problem.getSpecificProblems());
 									if ("232".equals(problem.getCheck()) || EvaluatorUtils.isCssValidationCheck(Integer.parseInt(problem.getCheck()))) {
 										addW3CCopyright(levelSection, problem.getCheck());
 									}
@@ -255,7 +258,7 @@ public class BasicServicePageResultsPdfSectionBuilder extends ObservatoryPageRes
 				p.add(anchor);
 				subSubSection.add(p);
 			}
-			if (maxNumErrors < 0) {
+			if (maxNumErrors <= 0) {
 				if (specificProblems.size() > Integer.parseInt(pmgr.getValue(Constants.PDF_PROPERTIES, "pdf.intav.specific.problems.number"))) {
 					final String[] arguments = new String[2];
 					arguments[0] = pmgr.getValue(Constants.PDF_PROPERTIES, "pdf.intav.specific.problems.number");
@@ -269,6 +272,81 @@ public class BasicServicePageResultsPdfSectionBuilder extends ObservatoryPageRes
 		}
 		subSubSection.add(table);
 	}
+
+
+		/**
+	 * Adds the specific problems.
+	 *
+	 * @param messageResources the message resources
+	 * @param subSubSection    the sub sub section
+	 * @param specificProblems the specific problems
+	 */
+	private void addSpecificProblemsPdf(final MessageResources messageResources, final Section subSubSection, final List<SpecificProblemForm> specificProblems) {
+		final PropertiesManager pmgr = new PropertiesManager();
+		final float[] widths = { 12f, 80f };
+		final PdfPTable table = new PdfPTable(widths);
+		table.setHorizontalAlignment(Element.ALIGN_RIGHT);
+		table.setWidthPercentage(86);
+		table.setSpacingBefore(ConstantsFont.THIRD_LINE_SPACE);
+		table.setSpacingAfter(ConstantsFont.HALF_LINE_SPACE);
+		table.addCell(PDFUtils.createTableCell("Página", Constants.GRIS_MUY_CLARO, ConstantsFont.descriptionFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+		table.addCell(PDFUtils.createTableCell("Ruta XMPPath", Constants.GRIS_MUY_CLARO, ConstantsFont.descriptionFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+		// Indicamos que la primera fila es de encabezados para que la repita si
+		// la tabla se parte en varias páginas.
+		table.setHeaderRows(1);
+		int maxNumErrors = Integer.parseInt(pmgr.getValue(Constants.PDF_PROPERTIES, "pdf.intav.specific.problems.number"));
+		for (SpecificProblemForm specificProblem : specificProblems) {
+			maxNumErrors--;
+			if (specificProblem.getCode() != null) {
+				final StringBuilder code = new StringBuilder();
+				for (int i = 0; i < specificProblem.getCode().size(); i++) {
+					code.append(specificProblem.getCode().get(i)).append("\n");
+				}
+				if (!specificProblem.getLine().isEmpty() && !"-1".equalsIgnoreCase(specificProblem.getLine())) {
+					table.addCell(PDFUtils.createTableCell(specificProblem.getLine(), Color.WHITE, ConstantsFont.codeCellFont, Element.ALIGN_RIGHT, DEFAULT_PADDING));
+				} else {
+					table.addCell(PDFUtils.createTableCell("-", Color.WHITE, ConstantsFont.codeCellFont, Element.ALIGN_RIGHT, DEFAULT_PADDING));
+				}
+				String text = HTMLEntities.unhtmlAngleBrackets(code.toString());
+				final String message = specificProblem.getMessage();
+				java.util.List<String> boldWords = new ArrayList<>();
+				if (!StringUtils.isEmpty(message)) {
+					text = "{0} \n\n" + text.trim();
+					boldWords.add(message);
+				}
+				final PdfPCell labelCell = new PdfPCell(PDFUtils.createParagraphWithDiferentFormatWord(text, boldWords, ConstantsFont.codeCellFont, ConstantsFont.codeCellFont, false));
+				labelCell.setPadding(0);
+				labelCell.setBackgroundColor(new BaseColor(255, 244, 223));
+				labelCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				labelCell.setPadding(DEFAULT_PADDING);
+				table.addCell(labelCell);
+			} else if (specificProblem.getNote() != null) {
+				final String linkCode = getMatch(specificProblem.getNote().get(0), "(<a.*?</a>)");
+				final String paragraphText = specificProblem.getNote().get(0).replace(linkCode, "");
+				final String linkHref = getMatch(specificProblem.getNote().get(0), "href='(.*?)'");
+				final Paragraph p = new Paragraph(paragraphText, ConstantsFont.noteCellFont);
+				final Anchor anchor = new Anchor(getMatch(specificProblem.getNote().get(0), "<a.*?>(.*?)</a>"), ConstantsFont.NOTE_ANCHOR_CELL_FONT);
+				anchor.setReference(linkHref);
+				p.add(anchor);
+				subSubSection.add(p);
+			}
+			if (maxNumErrors <= 0) {
+				if (specificProblems.size() > Integer.parseInt(pmgr.getValue(Constants.PDF_PROPERTIES, "pdf.intav.specific.problems.number"))) {
+					final String[] arguments = new String[2];
+					arguments[0] = pmgr.getValue(Constants.PDF_PROPERTIES, "pdf.intav.specific.problems.number");
+					arguments[1] = String.valueOf(specificProblems.size());
+					final Paragraph p = new Paragraph(messageResources.getMessage("pdf.accessibility.bs.num.errors.summary", arguments), ConstantsFont.MORE_INFO_FONT);
+					p.setAlignment(Paragraph.ALIGN_RIGHT);
+					subSubSection.add(p);
+				}
+				break;
+			}
+		}
+		subSubSection.add(table);
+	}
+
+
+
 
 	/**
 	 * Gets the match.
@@ -365,7 +443,8 @@ public class BasicServicePageResultsPdfSectionBuilder extends ObservatoryPageRes
 								celdaRationale.setPadding(DEFAULT_PADDING);
 								tablaVerificacionProblema.addCell(celdaRationale);
 							}
-							addSpecificProblems(messageResources, prioritySection, problem.getSpecificProblems());
+							if(Integer.parseInt(problem.getCheck()) > 499) addSpecificProblemsPdf(messageResources, prioritySection, problem.getSpecificProblems());
+									else addSpecificProblems(messageResources, prioritySection, problem.getSpecificProblems());
 							if ("232".equals(problem.getCheck()) || EvaluatorUtils.isCssValidationCheck(Integer.parseInt(problem.getCheck()))) {
 								addW3CCopyright(prioritySection, problem.getCheck());
 							}

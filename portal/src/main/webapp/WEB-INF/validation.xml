@@ -748,12 +748,9 @@
 				<arg1 name="maxlength" key="${var:minlength}" resource="false" />
 				<var>
 					<var-name>maxlength</var-name>
-					<var-value>4194304</var-value>
+					<var-value>146800641</var-value>
 				</var>
-			</field>
-			<field property="email" depends="required,email">
-				<arg0 key="basic.service.email" />
-			</field>
+			</field> 
 			<field property="user" depends="required">
 				<arg0 key="basic.service.user" />
 			</field>

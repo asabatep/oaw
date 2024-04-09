@@ -500,8 +500,9 @@ CREATE TABLE `observatorio_proxy` (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `observatorio_validator` (
   `status` tinyint(1) NOT NULL,
-  `url` varchar(64) NOT NULL,
-  `pdf_active` tinyint(1) NOT NULL
+  `url` varchar(255) NOT NULL,
+  `pdf_active` tinyint(1) NOT NULL,
+  `pdf_percentage`int(3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -714,6 +715,8 @@ CREATE TABLE `rastreos_realizados` (
   `id_lista` bigint(20) DEFAULT NULL,
   `level` varchar(128) COLLATE utf8_bin DEFAULT NULL,
   `score` varchar(32) COLLATE utf8_bin DEFAULT NULL,
+  `score_html` varchar(32) COLLATE utf8_bin DEFAULT NULL,
+  `score_pdf` varchar(32) COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id_usuario` (`id_usuario`),
   KEY `id_rastreo` (`id_rastreo`),

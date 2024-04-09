@@ -2135,11 +2135,13 @@ public final class RastreoDAO {
 	 * @param level             the level
 	 * @throws Exception the exception
 	 */
-	public static void setScoreAndLevelCrawling(Connection c, Long idFullfilledCrawl, String score, String level) throws Exception {
-		try (PreparedStatement ps = c.prepareStatement("UPDATE rastreos_realizados SET score= ?, level = ? WHERE id=?")) {
+	public static void setScoreAndLevelCrawling(Connection c, Long idFullfilledCrawl, String score, String level, String scorePdf, String scoreHtml) throws Exception {
+		try (PreparedStatement ps = c.prepareStatement("UPDATE rastreos_realizados SET score= ?, level = ?, score_html=?, score_pdf=? WHERE id=?")) {
 			ps.setString(1, score);
 			ps.setString(2, level);
-			ps.setLong(3, idFullfilledCrawl);
+			ps.setString(3, scoreHtml);
+			ps.setString(4, scorePdf);
+			ps.setLong(5, idFullfilledCrawl);
 			ps.executeUpdate();
 		} catch (Exception e) {
 			Logger.putLog("Exception: ", ObservatorioDAO.class, Logger.LOG_LEVEL_ERROR, e);

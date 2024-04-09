@@ -29,6 +29,7 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.PageSize;
+import com.itextpdf.text.pdf.PdfBoolean;
 import com.itextpdf.text.pdf.PdfName;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfString;
@@ -40,6 +41,7 @@ import es.inteco.common.Constants;
 import es.inteco.common.ConstantsFont;
 import es.inteco.common.logging.Logger;
 import es.inteco.common.properties.PropertiesManager;
+import es.inteco.common.utils.StringUtils;
 import es.inteco.intav.form.ObservatoryEvaluationForm;
 import es.inteco.rastreador2.actionform.basic.service.BasicServiceAnalysisType;
 import es.inteco.rastreador2.pdf.builder.AnonymousResultExportPdf;
@@ -136,7 +138,7 @@ public class BasicServicePdfReport {
 		}
 		Logger.putLog("Exportando a PDF BasicServicePdfReport.exportToPdf", BasicServicePdfReport.class, Logger.LOG_LEVEL_DEBUG);
 		// PENDING Add document metadata (author, creator, subject, title...)
-		final Document document = new Document(PageSize.A4, 50, 50, 110, 72);
+		Document document = new Document(PageSize.A4, 50, 50, 110, 72);
 		// document.addAuthor("Ministerio de Hacienda y Función Pública");
 		// document.addCreationDate();
 		// document.addCreator("OAW - Observatorio de Accesibilidad Web");
@@ -146,13 +148,18 @@ public class BasicServicePdfReport {
 				MessageResources messageResourcesAccesibility = MessageResources.getMessageResources(Constants.MESSAGE_RESOURCES_ACCESIBILIDAD);
 				final PdfWriter writer = PdfWriter.getInstance(document, outputFileStream);
 				writer.setTagged(0);
+				writer.setUserProperties(true);
 				writer.setViewerPreferences(PdfWriter.PageModeUseOutlines);
+				writer.addViewerPreference(new PdfName("DisplayDocTitle"), new PdfBoolean(true));
+				writer.addViewerPreference(new PdfName("Alt"), new PdfBoolean(true));
 				writer.getExtraCatalog().put(new PdfName("Lang"), new PdfString("es"));
+				writer.setPdfVersion(PdfWriter.PDF_VERSION_1_7);
 				final String crawlingDate = CrawlerUtils.formatDate(pdfBuilder.getBasicServiceForm().getDate());
 				final String footerText = messageResources.getMessage("ob.resAnon.intav.report.foot.basic.service", new String[] { crawlingDate });
 				writer.setPageEvent(new ExportPageEventsObservatoryMP(footerText, crawlingDate));
 				ExportPageEventsObservatoryMP.setPrintFooter(true);
 				final PdfTocManager pdfTocManager = createPdfTocManager(writer);
+				document.addTitle("Informe de accesibilidad web");
 				document.open();
 				// Preserve "old" cover and add new cover for new cartidges
 				if (pdfBuilder instanceof AnonymousResultExportPdfAccesibilidad) {
@@ -164,7 +171,7 @@ public class BasicServicePdfReport {
 					String subtitle = "";
 					switch (pdfBuilder.getBasicServiceForm().getAnalysisType()) {
 					case URL:
-						subtitle = messageResources2019.getMessage("pdf.accessibility.cover.type.url", new String[] { pdfBuilder.getBasicServiceForm().getDomain() });
+						subtitle = messageResources2019.getMessage("pdf.accessibility.cover.type.url", new String[] { StringUtils.getDomainFromUrl(pdfBuilder.getBasicServiceForm().getDomain()) }); // Quitamos el protocolo de las url para que no molesten en el informe
 						break;
 					case CODIGO_FUENTE:
 					case CODIGO_FUENTE_MULTIPLE:

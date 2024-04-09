@@ -214,7 +214,7 @@ public final class BasicServiceExport {
 	 * @param depthReport       the depth report
 	 * @return the string
 	 */
-	public static String compressReportWithCode(final String reportFile, final boolean isContentAnalysis, final String filename, final String depthReport) {
+	public static String compressReportWithCode(final String reportFile, final boolean isContentAnalysis, final String filename, final String depthReport, boolean isSourceNeeded) {
 		final String reportCompressFile;
 		if (reportFile.endsWith(".pdf")) {
 			reportCompressFile = reportFile.substring(0, reportFile.length() - 4) + ".zip";
@@ -233,7 +233,8 @@ public final class BasicServiceExport {
 			zos.closeEntry();
 			try {
 				File parentFile = new File(reportFile).getParentFile();
-				zipFile(new File(parentFile + "/codigo_fuente.zip"), "codigo_fuente.zip", zos);
+				if (isSourceNeeded)
+					zipFile(new File(parentFile + "/codigo_fuente.zip"), "codigo_fuente.zip", zos);
 				// ODT
 				File hallazgosFile = new File(parentFile + "/Informe Revision Accesibilidad - Hallazgos.odt");
 				if (hallazgosFile.exists()) {
@@ -433,7 +434,8 @@ public final class BasicServiceExport {
 								if (StringUtils.isNotEmpty(problem.getRationale())) {
 									PDFUtils.addParagraphRationale(Arrays.asList(messageResources.getMessage(problem.getRationale()).split("<p>|</p>")), subSection);
 								}
-								addSpecificProblems(messageResources, subSection, problem.getSpecificProblems());
+								if(Integer.parseInt(problem.getCheck()) > 499) addSpecificProblemsPdf(messageResources, subSection, problem.getSpecificProblems());
+									else addSpecificProblems(messageResources, subSection, problem.getSpecificProblems());
 								if (problem.getCheck().equals("232") || // PMGR.getValue("check.properties", "doc.valida.especif")) ||
 										EvaluatorUtils.isCssValidationCheck(Integer.parseInt(problem.getCheck()))) {
 									addW3CCopyright(subSection, problem.getCheck());
@@ -860,10 +862,81 @@ public final class BasicServiceExport {
 				p.add(anchor);
 				subSubSection.add(p);
 			}
-			if (maxNumErrors < 0) {
+			if (maxNumErrors <= 0) {
 				if (specificProblems.size() > Integer.parseInt(PMGR.getValue(Constants.PDF_PROPERTIES, "pdf.intav.specific.problems.number"))) {
 					final String[] arguments = new String[2];
 					arguments[0] = PMGR.getValue(Constants.PDF_PROPERTIES, "pdf.intav.specific.problems.number");
+					arguments[1] = String.valueOf(specificProblems.size());
+					final Paragraph p = new Paragraph(messageResources.getMessage("pdf.accessibility.bs.num.errors.summary", arguments), ConstantsFont.MORE_INFO_FONT);
+					p.setAlignment(Paragraph.ALIGN_RIGHT);
+					subSubSection.add(p);
+				}
+				break;
+			}
+		}
+		subSubSection.add(table);
+	}
+
+		/**
+	 * Adds the specific problems.
+	 *
+	 * @param messageResources the message resources
+	 * @param subSubSection    the sub sub section
+	 * @param specificProblems the specific problems
+	 */
+	public static void addSpecificProblemsPdf(final MessageResources messageResources, final Section subSubSection, final List<SpecificProblemForm> specificProblems) {
+		final PropertiesManager pmgr = new PropertiesManager();
+		final float[] widths = { 12f, 80f };
+		final PdfPTable table = new PdfPTable(widths);
+		table.setHorizontalAlignment(Element.ALIGN_RIGHT);
+		table.setWidthPercentage(86);
+		table.setSpacingBefore(ConstantsFont.THIRD_LINE_SPACE);
+		table.setSpacingAfter(ConstantsFont.HALF_LINE_SPACE);
+		table.addCell(PDFUtils.createTableCell("Página", Constants.GRIS_MUY_CLARO, ConstantsFont.descriptionFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+		table.addCell(PDFUtils.createTableCell("Ruta XMPPath", Constants.GRIS_MUY_CLARO, ConstantsFont.descriptionFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+		// Indicamos que la primera fila es de encabezados para que la repita si
+		// la tabla se parte en varias páginas.
+		table.setHeaderRows(1);
+		int maxNumErrors = Integer.parseInt(pmgr.getValue(Constants.PDF_PROPERTIES, "pdf.intav.specific.problems.number"));
+		for (SpecificProblemForm specificProblem : specificProblems) {
+			maxNumErrors--;
+			if (specificProblem.getCode() != null) {
+				final StringBuilder code = new StringBuilder();
+				for (int i = 0; i < specificProblem.getCode().size(); i++) {
+					code.append(specificProblem.getCode().get(i)).append("\n");
+				}
+				if (!specificProblem.getLine().isEmpty() && !"-1".equalsIgnoreCase(specificProblem.getLine())) {
+					table.addCell(PDFUtils.createTableCell(specificProblem.getLine(), Color.WHITE, ConstantsFont.codeCellFont, Element.ALIGN_RIGHT, DEFAULT_PADDING));
+				} else {
+					table.addCell(PDFUtils.createTableCell("-", Color.WHITE, ConstantsFont.codeCellFont, Element.ALIGN_RIGHT, DEFAULT_PADDING));
+				}
+				String text = HTMLEntities.unhtmlAngleBrackets(code.toString());
+				final String message = specificProblem.getMessage();
+				java.util.List<String> boldWords = new ArrayList<>();
+				if (!StringUtils.isEmpty(message)) {
+					text = "{0} \n\n" + text.trim();
+					boldWords.add(message);
+				}
+				final PdfPCell labelCell = new PdfPCell(PDFUtils.createParagraphWithDiferentFormatWord(text, boldWords, ConstantsFont.codeCellFont, ConstantsFont.codeCellFont, false));
+				labelCell.setPadding(0);
+				labelCell.setBackgroundColor(new BaseColor(255, 244, 223));
+				labelCell.setVerticalAlignment(Element.ALIGN_MIDDLE);
+				labelCell.setPadding(DEFAULT_PADDING);
+				table.addCell(labelCell);
+			} else if (specificProblem.getNote() != null) {
+				final String linkCode = getMatch(specificProblem.getNote().get(0), "(<a.*?</a>)");
+				final String paragraphText = specificProblem.getNote().get(0).replace(linkCode, "");
+				final String linkHref = getMatch(specificProblem.getNote().get(0), "href='(.*?)'");
+				final Paragraph p = new Paragraph(paragraphText, ConstantsFont.noteCellFont);
+				final Anchor anchor = new Anchor(getMatch(specificProblem.getNote().get(0), "<a.*?>(.*?)</a>"), ConstantsFont.NOTE_ANCHOR_CELL_FONT);
+				anchor.setReference(linkHref);
+				p.add(anchor);
+				subSubSection.add(p);
+			}
+			if (maxNumErrors <= 0) {
+				if (specificProblems.size() > Integer.parseInt(pmgr.getValue(Constants.PDF_PROPERTIES, "pdf.intav.specific.problems.number"))) {
+					final String[] arguments = new String[2];
+					arguments[0] = pmgr.getValue(Constants.PDF_PROPERTIES, "pdf.intav.specific.problems.number");
 					arguments[1] = String.valueOf(specificProblems.size());
 					final Paragraph p = new Paragraph(messageResources.getMessage("pdf.accessibility.bs.num.errors.summary", arguments), ConstantsFont.MORE_INFO_FONT);
 					p.setAlignment(Paragraph.ALIGN_RIGHT);

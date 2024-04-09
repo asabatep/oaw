@@ -202,8 +202,12 @@ public class ObservatoryPageResultsPdfSectionBuilder {
 	 * @return the pdf P table
 	 */
 	protected PdfPTable createPaginaTableInfo(final MessageResources messageResources, final ObservatoryEvaluationForm evaluationForm) {
-		final String title = BasicServiceUtils.getTitleDocFromContent(evaluationForm.getSource(), false);
 		final String url = evaluationForm.getUrl();
+		String title = "";
+		if(url.contains(".pdf")){
+			title = evaluationForm.getEntity();
+		}
+		else title = BasicServiceUtils.getTitleDocFromContent(evaluationForm.getSource(), false);
 		final BigDecimal puntuacionMedia = evaluationForm.getScore();
 		final String nivelAdecuacion = ObservatoryUtils.getValidationLevel(messageResources, ObservatoryUtils.pageSuitabilityLevel(evaluationForm));
 		final List<BigDecimal> puntuacionesMediasNivel = new ArrayList<>();
@@ -437,8 +441,8 @@ public class ObservatoryPageResultsPdfSectionBuilder {
 		final String problema;
 		final Font font;
 		if (problem.getType().equals(pmgr.getValue(Constants.INTAV_PROPERTIES, "confidence.level.medium"))) {
-			problema = messageResources.getMessage("pdf.accessibility.bs.warning");
-			font = ConstantsFont.WARNING_FONT;
+			problema = messageResources.getMessage("pdf.accessibility.bs.problem");
+			font = ConstantsFont.PROBLEM_FONT;
 		} else if (problem.getType().equals(pmgr.getValue(Constants.INTAV_PROPERTIES, "confidence.level.high"))) {
 			problema = messageResources.getMessage("pdf.accessibility.bs.problem");
 			font = ConstantsFont.PROBLEM_FONT;

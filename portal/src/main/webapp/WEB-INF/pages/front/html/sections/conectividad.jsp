@@ -187,6 +187,7 @@ you may find it at http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:3201
 var validatorUrl = $('#validatorUrl').val();
 var validatorStatus = $('#validatorStatus').is(':checked');
 var pdfActive = $('#pdfActive').is(':checked');
+var pdfPercentage = $('#pdfPercentage').val();
 
 if (validatorUrl == "") {
 	$('#proxy-url-error-message').removeClass('hidden');
@@ -199,7 +200,8 @@ if (validatorUrl == "") {
 						url : '/oaw/secure/conectividad.do?action=modifyValidator&validatorUrl='
 								+ decodeURI($('#validatorUrl').val())
 								+ "&validatorStatus=" + validatorStatus
-								+ "&pdfActive=" + pdfActive,
+								+ "&pdfActive=" + pdfActive
+								+ "&pdfPercentage=" + pdfPercentage,
 						method : 'POST'
 					}).success(function(data) {
 				location.reload();
@@ -503,21 +505,16 @@ if (validatorUrl == "") {
 							class="alert alert-danger hidden"><bean:message key="conectividad.proxy.config.error.url"/> </div>
 
 
-
 						<div id="proxy-port-error-message"
 							class="alert alert-danger hidden"><bean:message key="conectividad.proxy.config.error.port"/></div>
 
-
 						<p><bean:message key="conectividad.validator.info"/> </p>
-
 
 						<div class="formItem">
 							<label for="url" class="labelCorto"><strong
 								class="labelVisu"><acronym
 									title="<bean:message key="campo.obligatorio" />"> * </acronym>
 									<bean:message key="conectividad.proxy.activo" />: </strong></label>
-
-
 							<logic:equal name="validatorconfig" property="status" value="1">
 								<input id="validatorStatus" type="checkbox" class="textoCorto"
 									name="validatorStatus" required="required" checked="checked"
@@ -528,10 +525,6 @@ if (validatorUrl == "") {
 									style="width: auto !important;" name="validatorStatus"
 									required="required" />
 							</logic:equal>
-
-
-
-
 						</div>
 
 						<div class="formItem">
@@ -539,8 +532,6 @@ if (validatorUrl == "") {
 								class="labelVisu"><acronym
 									title="<bean:message key="campo.obligatorio" />"> * </acronym>
 									<bean:message key="conectividad.proxy.pdf.activo" />: </strong></label>
-
-
 							<logic:equal name="validatorconfig" property="pdfActive" value="1">
 								<input id="pdfActive" type="checkbox" class="textoCorto"
 									name="pdfActive" required="required" checked="checked"
@@ -551,10 +542,6 @@ if (validatorUrl == "") {
 									style="width: auto !important;" name="pdfActive"
 									required="required" />
 							</logic:equal>
-
-
-
-
 						</div>
 
 						<div class="formItem">
@@ -568,6 +555,19 @@ if (validatorUrl == "") {
 							<bean:message key="conectividad.proxy.config.url.tip"/>
 
 						</div>
+
+						<div class="formItem">
+							<label for="url" class="labelCorto">
+								<strong class="labelVisu">
+									<acronym title="<bean:message key='campo.obligatorio' />"> * </acronym>
+									<bean:message key="conectividad.validator.pdf.percentage" />:
+								</strong>
+							</label>
+							<!-- Input field with type="number" and min/max attributes -->
+							<input id="pdfPercentage" type="number" class="textoCorto" 
+							name="pdfPercentage" required="required" min="0" max="100" value="<bean:write name='validatorconfig' property='pdfPercentage' />" />
+												
+
 						<span id="modifyValidator" onclick="modifyValidator()"
 							class="btn btn-default btn-sm"><bean:message key="conectividad.proxy.config.update"/> </span> <span
 							id="checkingurl" class="btn btn-default btn-sm hidden"> <span

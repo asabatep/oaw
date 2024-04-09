@@ -8,7 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SaveDocumentsRequestDTO {
-    protected Long idAnalysis;
-    protected Map<String,String> elements;
-    
+	protected Long idAnalysis;
+	protected Map<String, String> elements;
 }

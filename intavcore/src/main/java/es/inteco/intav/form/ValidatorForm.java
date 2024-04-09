@@ -20,6 +20,9 @@ public class ValidatorForm {
 
 	/** If the pdf validation is active */
 	private Integer pdfActive;
+
+	/** The percentage of pdf allowed in a crawling */
+	private Integer pdfPercentage;
 	
     
 }

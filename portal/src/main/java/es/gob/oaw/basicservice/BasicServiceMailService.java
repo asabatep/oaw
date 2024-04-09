@@ -14,7 +14,9 @@ package es.gob.oaw.basicservice;
 
 import java.sql.Connection;
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import es.gob.oaw.MailException;
 import es.gob.oaw.MailService;
@@ -49,7 +51,6 @@ public class BasicServiceMailService {
 	/** The Constant OBSERVATORIO_UNE_UNE_EN2019_SIN_ENLACES_ROTOS. */
 //	private static final String OBSERVATORIO_UNE_UNE_EN2019_SIN_ENLACES_ROTOS = "Observatorio UNE EN2019 (sin comprobar enlaces rotos)";
 	private static final String OBSERVATORIO_UNE_UNE_EN2019_SIN_ENLACES_ROTOS = "Seguimiento simplificado Directiva (sin comprobar enlaces rotos)";
-
 	private static final String OBSERVATORIO_UNE_EN2019_PDF = "Seguimiento simplificado Directiva (Con análisis de PDF)";
 	private static final String OBSERVATORIO_UNE_EN2019_SIN_ENLACES_ROTOS_PDF = "Seguimiento simplificado Directiva (Con análisis de PDF sin comprobar enlaces rotos)";
 	/** The Constant OBSERVATORIO_UNE_2012_VERSION_2. */
@@ -80,7 +81,10 @@ public class BasicServiceMailService {
 	 */
 	public void sendBasicServiceReport(final BasicServiceForm basicServiceForm, final String attachUrl, final String attachName) {
 		try {
-			mailService.sendMail(Collections.singletonList(basicServiceForm.getEmail()), getMailSubject(basicServiceForm.getReport()), getMailBody(basicServiceForm), attachUrl, attachName, true);
+			List<String> emailList = Arrays.asList(basicServiceForm.getEmail().split("[,;\\s]+"));
+			for (String email : emailList) {
+				mailService.sendMail(Collections.singletonList(email), getMailSubject(basicServiceForm.getReport()), getMailBody(basicServiceForm), attachUrl, attachName, true);
+			}
 		} catch (MailException e) {
 			Logger.putLog("Fallo al enviar el correo", this.getClass(), Logger.LOG_LEVEL_ERROR, e);
 		}
@@ -95,7 +99,10 @@ public class BasicServiceMailService {
 	public void sendBasicServiceErrorMessage(final BasicServiceForm basicServiceForm, final String message) {
 		final String subject = pmgr.getValue(Constants.BASIC_SERVICE_PROPERTIES, "basic.service.mail.error.subject");
 		try {
-			mailService.sendMail(Collections.singletonList(basicServiceForm.getEmail()), subject, message);
+			List<String> emailList = Arrays.asList(basicServiceForm.getEmail().split("[,;\\s]+"));
+			for (String email : emailList) {
+				mailService.sendMail(Collections.singletonList(email), subject, message);
+			}
 		} catch (MailException e) {
 			Logger.putLog("Fallo al enviar el correo", this.getClass(), Logger.LOG_LEVEL_ERROR, e);
 		}
@@ -115,8 +122,8 @@ public class BasicServiceMailService {
 			return MessageFormat.format(message, OBSERVATORIO_UNE_2012_ANTIGUA);
 		} else if (Constants.REPORT_OBSERVATORY_3.equals(reportType) || Constants.REPORT_OBSERVATORY_3_NOBROKEN.equals(reportType)) {
 			return MessageFormat.format(message, OBSERVATORIO_UNE_2012_VERSION_2);
-		} else if (Constants.REPORT_OBSERVATORY_4.equals(reportType) || Constants.REPORT_OBSERVATORY_4_NOBROKEN.equals(reportType) 
-		|| Constants.REPORT_OBSERVATORY_4_PDF.equals(reportType) || Constants.REPORT_OBSERVATORY_4_NOBROKEN_PDF.equals(reportType)) {
+		} else if (Constants.REPORT_OBSERVATORY_4.equals(reportType) || Constants.REPORT_OBSERVATORY_4_NOBROKEN.equals(reportType) || Constants.REPORT_OBSERVATORY_4_PDF.equals(reportType)
+				|| Constants.REPORT_OBSERVATORY_4_NOBROKEN_PDF.equals(reportType)) {
 			return MessageFormat.format(message, OBSERVATORIO_UNE_EN2019);
 		} else if (Constants.REPORT_OBSERVATORY_5.equals(reportType) || Constants.REPORT_OBSERVATORY_5_NOBROKEN.equals(reportType)) {
 			return MessageFormat.format(message, OBSERVATORIO_ACCESIBILIDAD);
