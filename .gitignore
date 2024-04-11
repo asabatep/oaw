@@ -92,3 +92,9 @@ docker/volumes/*
 
 ### Tmp docker folder
 docker/tmp/*
+
+### Otros
+oaw_2017_2018/*
+portal/src/main/webapp/WEB-INF/templatesODT/*
+motor-js/*
+docker/*
