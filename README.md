@@ -1,92 +1,142 @@
-# Rastreador OAW
+# OAW
+Rastreador Observatorio de Accesibilidad Web
 
+This repository contains 3 applications:
 
+* OAW: Java Web Application.
+* Motor JS: An implementation of https://github.com/prerender/prerender to render web pages and return code.
+* WCAG EM Tool: An fork of https://github.com/w3c/wcag-em-report-tool with capabiluty to exports as ODS format.
 
-## Getting started
+## OAW (Observatorio de Accesibilidad Web)
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+The application code is distributed in several maven projects:
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+* common: library with common functions
+* crawler: web crawler
+* intavcore: analyzer core code
+* oaw: "father" project to generate all the libraries and dependencies
+* portal: web project of the accessibility observatory
 
-## Add your files
+To compile the application, we will use maven (version 3.0.0 or higher). It will be necessary to download a number of dependencies from the central repositories so it needs to be properly frozen. It may be necessary to configure the proxy or a mirror:
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+* https://maven.apache.org/guides/mini/guide-proxies.html
+* https://maven.apache.org/guides/mini/guide-mirror-settings.html
 
+To do this, inside the oaw directory we will execute the following command so that it builds us the complete project:
+
+>	mvn clean install -P development -DskipTests
+
+If everything goes well, a war will be generated in the portal/target folder which will be the one we should display this war in the webapps folder of the tomcat server. 
+
+### Requirements
+
+Currently OAW is deployment under this configuration:
+
+* [Java 1.8.0_202](https://www.oracle.com/es/java/technologies/javase/javase8-archive-downloads.html) 
+* [Apache Tomcat 7](https://tomcat.apache.org/tomcat-7.0-doc/)
+* [MySQL 5](https://dev.mysql.com/doc/relnotes/mysql/5.7/en/news-5-7-21.html)
+
+This is a Maven projet that requieres version 3.0.0 or high
+
+### Quick Deployment (Linux & Docker)
+
+You can deploy all application running `deploy.sh` script.
+
+But first, you need the following requirements:
+
+* [OpenSSL](https://www.openssl.org/) 3.0.2: Used for Nginx certificate generation
+* [java-8-openjdk-amd64](https://www.oracle.com/es/java/technologies/javase/javase8-archive-downloads.html): JDK, not JRE
+* [Apache Maven](https://maven.apache.org/what-is-maven.html) 3.6.3: Compile and war creation
+* [Docker](https://docs.docker.com/get-started/overview/) 24.0.5 and [Docker Compose](https://docs.docker.com/compose/) 2.20.2
+
+*Note: The quick Deployment was built with all of these specific versions. We do not guarantee that it will work with other versions. Especially lower versions.
+
+Run this command in your terminal at the root path:
+
+```bash
+./deploy.sh
 ```
-cd existing_repo
-git remote add origin https://gitlab-ic.scae.redsara.es/oaw/rastreador-oaw.git
-git branch -M main
-git push -uf origin main
+
+This script performs the following tasks:
+
+1. Set JAVA_HOME environment variable
+2. Generate Nginx certificates, if it doesn't already exist
+3. War generation
+4. Build and run docker containers
+
+### Instalation
+
+You can find full documentacion (in Spanish) at https://administracionelectronica.gob.es/ctt/oaw/descargas in __Rastreador OAW WCAG 2.1__ section. At this moment, the last documentation avalaible can be downloaded [here](https://administracionelectronica.gob.es/ctt/resources/Soluciones/2431/Descargas/Liberacion-codigo-OAW---MAETD-v5-0-4.zip?idIniciativa=2431&idElemento=19053)
+
+#### MySQL Database
+
+To fresh install execute the scripts locates in folder /portal/scripts from version 4.0.0 to higher version.
+
+#### Tomcat
+
+Create a context configuration like this in *server.xml*:
+```xml
+<Context path="/oaw" reloadable="true">
+    <Resource auth="Container" driverClassName="com.mysql.jdbc.Driver" type="javax.sql.DataSource" name="jdbc/oaw" url="jdbc:mysql://<server>:<port>/<schema>"
+    maxActive="100"  maxIdle="10"  maxWait="-1" validationQuery="SELECT 1 as dbcp_connection_test"
+    removeAbandoned="true" testOnBorrow="true"
+    timeBetweenEvictionRunsMillis="60000" testWhileIdle="true"                                         
+    defaultTransactionIsolation="READ_UNCOMMITTED" username="<username>" password="<password>"/>
+</Context>
 ```
+Note to change *url*, *port*, *user* and *password* values. In folder *profiles* exists an example of this configuracion. Adapt to your environment.
 
-## Integrate with your tools
 
-- [ ] [Set up project integrations](https://gitlab-ic.scae.redsara.es/oaw/rastreador-oaw/-/settings/integrations)
+#### Profiles
 
-## Collaborate with your team
+There are several parameters that are configurable by environment, as well as configuration files that depend on the environment. In the current project there are two default compilation profiles: development and integration. 
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+In the oaw project's pom.xml is reflected the configuration for each profile, being possible to create new ones or take advantage of the existing ones. There are also profiles in the portal project folder. 
 
-## Test and Deploy
+__It is necessary to review and adapt the configuration of the profiles if necessary.__
 
-Use the built-in continuous integration in GitLab.
+#### External properties
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+In the file /portal/profiles/<profile>/propertiesmanager.properties a series of properties files and their location are indicated. You should configure the files paths according to the information of this file.
 
-***
+* context.xml: Database connection parameters
+* mail.properties: Mailing parameters
+* basic.service.properties: Parameters of the mail sent by the diagnostic service
+* check.descriptions.properties: Explanatory texts for problem solving included in the reports
+* check.patterns.properties: Regural expressions and validation patterns
 
-# Editing this README
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+#### Unsatisfied dependencies  in Maven Central
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+Some of the links are not available in Maven's central repository. They can be downloaded at the following links:1
 
-## Name
-Choose a self-explaining name for your project.
+* javax.jms:jms:jar:1.1: http://www.java2s.com/Code/Jar/j/Downloadjavaxjms11jar.htm
+* javax.transaction:jta:jar:1.0.1B: http://www.java2s.com/Code/Jar/j/Downloadjta101bjar.htm
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+They need to be installed manually: https://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html 
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+## Motor JS
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+Into folder motor-js contains this tool has 3 packages:
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+* proxy: entrypoint of tool. Listen for petitions http/s.
+* nginx: recivies proxy petitions and handle http and https to renderer.
+* renderer: executes https://github.com/prerender/prerender ths listen to http/s requests, renderer the page and return result html
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+This project is configuring to execute as docker solution
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+## WCAG EM Tool
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+Into folder wcagemtool is an customitation of https://github.com/w3c/wcag-em-report-tool that can export result in ODS custom format.
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+## Templates
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+From version 5.6.0 new versions of templates are available that must be incorporated into the application. 
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+These templates can be found in the following path -> /portal/scripts/5.6.0
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+* hallazgos.odt -> Must be saved as "hallazgos" in the system
+* generica_accesible_v1.odt
+* segmentos_accesible_v1.odt
+* complejidades_accesible_v1.odt
+* evolucion_segmentos_accesible_v1.odt

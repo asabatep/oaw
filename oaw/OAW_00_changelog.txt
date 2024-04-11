@@ -1,0 +1,230 @@
+5.8.1
+------------------------------------------------------------------------------------------------------------------------------------
+- El servicio de diagnóstico soporta múltiples destinatarios
+- Bug 6857 - Requisito 4.1.1 y equivalente verificación Compatibilidad 1.14 siempre deben ser PASA
+- Bug 6756 - Error enlaces análisis de pdf
+- Bug 6774 - Texto mal alineado informe pdf con la nueva metodología
+- Bug 7124 - Cambiar texto en diagnostico.html de la opción de declaración de accesibilidad 
+
+5.8.0
+------------------------------------------------------------------------------------------------------------------------------------
+- Integración con el nuevo validador
+- Gestión del número máximo de PDF por muestra
+- Mejoras en la sincronización automática con el SeguimientoOAW - SSP
+- Mejoras en el cálculo de resultados, además de la evolución se tiene en cuenta la posición de partida
+- Se habilita la comprobación de enlaces rotos
+- Bug 6322 - Al analizar un sitio web En nivel de adecuación A, 1.1 Existencia de alternativas textuales, Problema: Textos alternativos demasiado extensos.
+- Bug 2800 - Análisis url, da error y advertencia de encabezados H1
+- Bug 6678 - Error al analizar un .zip con códigos fuente
+- Bug 6864 - Inconsistencia a la hora de analizar código html
+
+5.7.2
+------------------------------------------------------------------------------------------------------------------------------------
+- Mejoras de accesibilidad en los informes agregados
+- Cálculo del nivel de adecuación en los informes individuales, ajuste de metodología
+ 
+5.7.1
+------------------------------------------------------------------------------------------------------------------------------------
+- Bug 6286 - Relanzamiento de semillas del observatorio
+- Bug 6322 - Cambio de copy para las alternativas textuales
+- Bug 6351 - Formato de urls en el informe de hallazgos
+- Bug 6268 - Cálculo de parte fija en los informes de agregados
+ 
+5.7.0
+------------------------------------------------------------------------------------------------------------------------------------
+- Bug 6340 - Incidencia en urls con varios parámetros separados por &
+- Mejoras en la seguridad y en la gestión de apikeys para la comunicación con las integraciones: cms, navegador
+- Mejoras en la plantilla de envío de resultados. Se añade posición inicial de referencia
+- Primera versión dockerizada
+
+5.6.0
+------------------------------------------------------------------------------------------------------------------------------------
+- Mejoras en el servicio web: La validación de url y plugin de navegador usan el motor-js (renderer) para obtener el código de la pagina a analizar
+- Mejoras en la importación de entidades desde el SSP
+- Se permite hacer un backup de entidades que se importan desde el SSP
+- Fichero 1. Evolutivo y Envío de Resultados- EVOLUCION DISTORSIONADA - Iteración anterior o primera sin resultados (inactiva, sin resultados, nueva semilla...) y Cambio de Recurrencia
+- Bug [2021-2022] (4001) Informe agregado 2022 - Evolución mal
+- Bug [2021-2022] (4001) Informe agregado e Informe global datos mal última iteración
+- Plantillas de agregados accesibles
+- Importación de entidades desde el SSP
+- Análisis mixto
+- Fichero de hallazgos: Debe añadirse la plantilla hallazgos.odt como hallazgos en el sistema para su correcto funcionamiento
+- Servicio web de validación para el plugin de cms y el navegador
+
+5.5.0
+------------------------------------------------------------------------------------------------------------------------------------
+- Eliminar versión del de Informe Revision Accesibilidad
+- Ficheros PDFs individuales - EVOLUCION DISTORSIONADA - Cambio de Recurrencia
+- Envío correos automáticos observatorio. No se guarda rango con decimales.
+- Previsualización plantilla envío de resultados. Corregir Url
+- Añadir campos a listado semillas iteración observatorio relanzamiento
+- Detección errores envío correos observatorio automáticos
+- Ventana de relanzar semillas en observatorio. Comportamiento anómalo listados semillas.
+- Nuevas vulnerabilidades recibidas automáticamente 2022-06-02
+- Anexos - Fichero 4.Evolutivo y Progreso del observatorio - Cuando cambiar la recurrencia
+
+
+5.4.1
+------------------------------------------------------------------------------------------------------------------------------------
+- Fichero 1. Evolutivo SW y Discapacidad: No se estaba tratando el campo otros
+- Generación anexos - Ficheros excel - Temáticas sin espacios
+- Envío de resultados a varios correos
+- Seguimiento Simplificado - UNE del 2022
+- Al solicitar un informe de un código fuente, no se devuelve pdf
+- Vulnerabilidad: Deserialization of Untrusted Data in Gson
+- Campo Observaciones de las Semillas
+
+5.4.0
+------------------------------------------------------------------------------------------------------------------------------------
+- Actualización de formatos de los ficheros IRA
+- Modificación de leyendas de informes: UNE-EN301549:2019 -> UNE-EN 301549:2022
+- Resolución de falsos positivos en contraste con tamaños de letra grandes
+- Corrección de palabra mal escrita informe revisión de accesibilidad Multiples vías	
+- Fichero 4. Evolutivo y Progreso de Observatorio - Orden iteraciones #1470
+
+5.3.0
+------------------------------------------------------------------------------------------------------------------------------------
+- Posibilidad de envío de los anexos por email en lugar de esperar que se generen (ya que pueden tardar demasiado y terminar el tiempo de espera del servidor)
+- Los cálculos de mejora de las URA para el envío de resultados se hacen en segundo plano y se noticia por email cuando termina
+- Se puede acceder al paso 2 directamente en el envío de resultados sin calcular de nuevo los rangos
+- Generación del informe agregado del cartucho de la declaración de accesibilidad con la parte de evolutivo
+- Generación de los ficheros XLSX 1. Evolutivo y por dependencias en un nuevo formato
+- Corregida una distinción de mayúsculas/minúsculas en la detección de los media type de los CSS
+- Corregido el filtro de dependencias por ámbito y etiquetas en la edición de semillas desde los resultados de un observatorio
+- Soporte para múltiples ámbitos en las dependencias
+- Añadido el campo observaciones a la tabla de semillas sin resultados de la pantalla de estado del observatorio
+
+5.2.0
+------------------------------------------------------------------------------------------------------------------------------------
+- Funcionalidad para detener una ejecución en curso
+- Configuración global para observatorios: umbral de relanzamiento, timeout y tamaño de rastreo
+- Relanzamiento en bloque de semillas sin resultados
+- Relanzamiento en bloque de semillas por debajo del umbral
+- Relanzamiento automático de semillas sin resultados o por debajo del umbral al finalizar un observatorio
+- Generación de excels de adeucación y cumplimiento con y sin evolutivo junto con los anexos
+- Generación de excels de adeucación y cumplimiento con y sin evolutivo junto con los anexos por dependencia
+- Modificados xml de anexos para incluir más información
+- Generación de xml anexo-portales-verificaciones.xml
+- Generación de xml anexo-paginas-verificaciones.xml
+- Generación de varios XLSX en los anexos de resumen y estadísticas del observatorio
+- Adjuntado el código fuente de la página de accesibilidad en el cartucho de accesibilidad
+- Exportación/importación de semillas en xlsx 
+- Envío de resultados de iteración de un observatorio por email
+- Modificaciones en la entidad dependencias para añadir campos adicionales necesarios en el punto anterior (email, configuración de envío automático, etc)
+- Resumen de los envíos de resultados de una iteración
+- Posibilidad de subir un fichero zip con varios ficheros html en la opción "Código fuente" del servicio de diagnóstico 
+- Modificada la llamada a la API del validador W3C para recuperar los errores correctamente y actualizar a la nueva versión ya que 
+  la anterior está deprecada y será retirada en algún momento
+- Actualización de varias librerías para solventar vulnerabilidades.
+
+
+5.1.0
+------------------------------------------------------------------------------------------------------------------------------------
+- Generación de informe de accesibilidad en profundidad en ODS, XLSX y JSON en el servicio de diagnóstico
+- Campo adicional en el formulario del servicio de diagnóstico para indicar si se genera el informe de accesibilidad en profundidad
+- Ajuste de la verificación de 443 Grupos de tres o más de botones de radio y/o casillas de verificación (con el mismo “name”) para evitar que agrupaciones con name vacío den error
+- Control en el cartucho de accesibilidad para que en aquellas semillas con selección manual sólo se analize la primera URL
+- Correciones en la sección de evolutivo del informe agregado para el cartucho UNE-EN301549:2019
+- Modificada la sección de evolución de los segmentos para generar una plantilla externa
+- Corregida la ordenación de resultados de un observatorio que sólo ordenaba en la página actual y no todos los resultados
+- Modificada plantilla de informe global para incluir más secciones e información en el apartado 3
+- Añadidas en el XML anexo de portales las etiquetas de la semilla
+- Corregida la comprobación 476 que era sensible a mayúsculas y minúsculas
+- Corregida la comprobación 67 para incluir nuevos elementos etiquetables en html5
+- Actualizados los informes individuales de la metodología de accesibilidad 
+- Corregido un error al generar los anexos del cartucho de accesibilidad
+- Plantilla de informe agregado del cartucho de la metodología de accesibilidad
+- Incluidos en la exportación de JSON los checks que no aplican
+- Incluídas las puntuaciones 'No puntúa' de verificaciones en el agregado que se computaban erróneamente como 'Conforme'
+- Añadidas la complejidad a los anexos en XML
+
+5.0.5
+------------------------------------------------------------------------------------------------------------------------------------
+- Modificada la decodificación del los códigos fuentes almacenados que se hacía en el servidor MySQL para hacerlo en la codigo Java
+- Añadida a las cabeceras de las peticiones de CSS en el "Accept" el valor "text/css" para evitar 406 en algunas páginas por sólo aceptar "text/html"
+- Modificada la comprobación de generación de código mediante CSS para comprobar si las cadenas de más de 2 caracteres no soun un código unicode u otro elemento sin caracteres alfanuméricos como por ejemplo Option+0 generados por frameworks de forma automática
+- Ajustada la comprobación de enlaces en el mismo directorio para que no sea sensible a mayúsculas y minúsculas
+- Ajustados patrones de validaciones
+- Añadido el total de URLs analizadas al detalle de una análisis en los observatorios
+- Eliminado cálculo duplicado en anexos que provocaba tiempos de ejecución excesivamente largos
+- Corregida propagación de cookies en ciertos portales
+- Eliminada coletilla "beta" del cartucho UNE-EN301549:2019
+- Modificado la llamada al valdidador del W3C para forzar usar HTML5 como doctype de validación
+- Actualizada la librería de generación de PDF para incluir soporte a PDF/A
+
+5.0.4
+------------------------------------------------------------------------------------------------------------------------------------
+- Corregida la visualización de las estadísticas del servicio de diagnóstico en Internet Explorer
+- Añadido campo observaciones a las semillas
+- Añadido campo clave a los segmentos para ser usado en la ordenación
+- Modificada la exportación/importación de semillas para separar las etiquetas en tags diferentes en el XML según la clasificación
+- Modificada la exportación/importación de semillas para incluir las observaciones de semillas
+- Corregido el cálculo de la puntuación media por verificación para sacar la media de las verificaciones redondeada
+- Corregida edición de semillas en las que las etiquetas seguían paginadas y desaparecían en la edición
+- Corregido el cáĺculo del cumplimiento estimado que no tenía en cuenta los "No aplica" a la hora de comprobar si todas las verificacione estaban conformes
+- Corregido el cáculo de la evolución del nivel de cumplimiento
+- Corregido el informe agregado que insertaba gráficos de segmentos cuando eran más de 4 (ya que se hacen varios gráficos y sólo incluía el primero)
+- Corregido el informe agregado que se reemplazaban mal un valor en la tabla "Conformidad de verificación. Nivel de adecuación A"
+- Modificados literales de los gráficos opcionales a incluir en el informe agregado
+- Modificados los literales "Totalmente conforme" por "Parcialmente conforme"
+- Modificados los gráficos de puntaciones por aspecto para hacer coincidir el orden de la tabla con el de la gráfica
+- Modificado el informe individual del cartucho de accesibilidad
+- Modificada la generación de informes agregados en el cartucho UNE-EN301549:2019 dado que tardaba demasiado en generarse y finalizaba la conexión antes se envía enlace al fichero por email al terminar el proceso.
+
+5.0.3
+------------------------------------------------------------------------------------------------------------------------------------
+- Correcciones en el informe oficial del cartucho UNE-EN301549:2019.
+- Correcciones en el informe oficial del cartucho de Accesibilidad.
+- Correcciones en varias validaciones (1.11, 2.3).
+- Nueva forma de generar los informes individuales en la que se envían los enlaces por email separados por dependencias en lugar de bajarse un zip con todos los informes.
+- Corregidos contadores de ranking de portales, complejidad y segmento en los informes.
+- Corregida paginación de etiquetas.
+- Corregida paginación de semillas.
+- Corregido el cálculo del cumplimiento estimado de un sitio web.
+- Corregido acceso al motor de JS cuando un sitio web repospondia un código http 30x.
+- Corregido un error que provocaba que en la edición de un observatorio no se actualizar la normativa para las nuevas semillas.
+- Mostradas las etiquetas seleccionadas en el listado de observatorios.
+- Se ocultan las opciones de profundidad y amplitud cuando se seleccionan cartuchos UNE-EN301549:2019 o Accesibilidad 
+
+5.0.2
+------------------------------------------------------------------------------------------------------------------------------------
+- Correcciones informe oficial UNE-EN301549:2019
+- Correcciones informe servicio diagnótico cartucho accesibilidad
+- Corregida validación 1.11 de títulos iguales que se reportaba erróneamente como error cuando había menos de 10 páginas
+- Corregida valdiación 2.3 de etiquetas resposive en el CSS que se reportaba erróneamente si algún CSS no contenía ninguna
+- Corregida validación 2.5 de autocomplete que tenía mal el patrón de en el fichero check.patterns.properties
+- Modificada la deteción de CSS mediante el tag <link> para tener encuenta los que tenga atributos rel="stylesheet" o type="tex/css" y no ambos como hasta ahora
+- Correcciones en el listado de semillas que listaba varias veces la misma semillas tantas como etiquetas asociadas
+- Registro en base de datos de las URLs de accesibilidad utilizadas en las validaciones (cartucho accesibilidad)
+- Implementada opción para añadir una semilla a un observatorio ya creado.
+- Correcciones varias en textos de la interfaz
+
+5.0.1
+------------------------------------------------------------------------------------------------------------------------------------
+- Correcciones en los informes individuales
+- Eliminadas las palabras en inglés "us" y "on" del listado para detectar idioma inglés en el texto
+- Adjuntado código analizado en el servicio de diagnóstico
+- Modificado el contenido del mensaje de correo electrónico para incluir información adicional de la complejidad 
+- Corregidas las descripciones de los nuevos checks para el cartucho UNE-EN301549:2019
+- Añadida información adicional a los correos de inacabados
+- Mejorada el formulario de búsquedas de la sección de Semillas para incluir más campos de filtrado
+- La exportación de semillas ahora sólo exporta el resultado de la búsqueda realizada
+
+5.0.0
+------------------------------------------------------------------------------------------------------------------------------------
+
+- Implementación de cartuchos UNE-EN301549:2019 y Accesibilidad. 
+- Mejora en la clasificación de semillas. 
+- Informes agregados dinámicos. 
+- Consolas de control del observatorio y servicio diagnóstico.
+- Guardado de puntuaciones en base de datos.
+
+4.4.1
+------------------------------------------------------------------------------------------------------------------------------------
+- Mejoras en la redirección y control de redirecciones continuas en páginas de accesibilidad
+
+
+4.4.0
+------------------------------------------------------------------------------------------------------------------------------------
+- Mejorada la exportación/importación de semillas para incluir el id de las mismas y poder importar las existentes automáticamente
+
