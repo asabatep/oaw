@@ -90,7 +90,7 @@ server.key
 **/oaw_2017_2018/**
 **/portal/src/main/webapp/WEB-INF/templatesODT/**
 **/motor-js/**
-**/docker/**
+**/docker/** 
 
 ### Volumes docker folder
 docker/volumes/*
