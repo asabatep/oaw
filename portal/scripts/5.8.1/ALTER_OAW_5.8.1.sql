@@ -13,3 +13,6 @@ INSERT INTO `observatorio_validator` VALUES (1,'https://pre-validador-oaw.redsar
 ALTER TABLE `rastreos_realizados`
 ADD `score_html` varchar(32) COLLATE utf8_bin DEFAULT NULL,
 ADD `score_pdf` varchar(32) COLLATE utf8_bin DEFAULT NULL;
+
+ALTER TABLE `tanalisis` 
+CHANGE COLUMN `nom_entidad` `nom_entidad` VARCHAR(250) NOT NULL ;
