@@ -21,6 +21,8 @@ import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfArtifact;
+import com.itextpdf.text.pdf.PdfBoolean;
 import com.itextpdf.text.pdf.PdfContentByte;
 import com.itextpdf.text.pdf.PdfName;
 import com.itextpdf.text.pdf.PdfPageEventHelper;
@@ -97,16 +99,19 @@ public class ExportPageEventsObservatoryMP extends PdfPageEventHelper {
 		int posX = Integer.parseInt(pmgr.getValue(Constants.PDF_PROPERTIES, "pdf.logo.posX"));
 		int posY = Integer.parseInt(pmgr.getValue(Constants.PDF_PROPERTIES, "pdf.logo.posY"));
 		final Image logoMinisterio = ExportPageEventsUtils.createImage(pmgr.getValue(Constants.PDF_PROPERTIES, "path.ministerio.logo"), 158, 45,
-				"Vicepresidencia Tercera del Gobierno - Ministerio de Asuntos Económicos y Transformación Digital ");
+				"Ministerio Para la Transformación Digital y de la Función Pública");
 		if (logoMinisterio != null) {
-			pdfContentByte.beginMarkedContentSequence(PdfName.IMAGE);
+			pdfContentByte.beginMarkedContentSequence(PdfName.ARTIFACT);
 			logoMinisterio.setAbsolutePosition(posX, posY);
+			logoMinisterio.setAccessibleAttribute(PdfName.ARTIFACT, PdfBoolean.PDFTRUE);
 			pdfContentByte.addImage(logoMinisterio);
 			pdfContentByte.endMarkedContentSequence();
 		}
 		final Image logoObservatorio = ExportPageEventsUtils.createImage(pmgr.getValue(Constants.PDF_PROPERTIES, "path.observatorio.logo"), 233, 45, "Observatorio de Accesibilidad Web");
 		if (logoObservatorio != null) {
-			pdfContentByte.beginMarkedContentSequence(PdfName.IMAGE);
+			pdfContentByte.beginMarkedContentSequence(PdfName.ARTIFACT);
+			logoObservatorio.setAlt("Observatorio de Accesibilidad Web");
+			logoObservatorio.setAccessibleAttribute(PdfName.ARTIFACT, PdfBoolean.PDFTRUE);
 			logoObservatorio.setAbsolutePosition(document.getPageSize().getWidth() - logoObservatorio.getScaledWidth() - posX, posY);
 			pdfContentByte.addImage(logoObservatorio);
 			pdfContentByte.endMarkedContentSequence();

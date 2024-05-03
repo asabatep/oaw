@@ -151,6 +151,7 @@ public class BasicServicePdfReport {
 				writer.setUserProperties(true);
 				writer.setViewerPreferences(PdfWriter.PageModeUseOutlines);
 				writer.addViewerPreference(new PdfName("DisplayDocTitle"), new PdfBoolean(true));
+				writer.addViewerPreference(new PdfName("Alt"), new PdfBoolean(true));
 				writer.getExtraCatalog().put(new PdfName("Lang"), new PdfString("es"));
 				writer.setPdfVersion(PdfWriter.PDF_VERSION_1_7);
 				final String crawlingDate = CrawlerUtils.formatDate(pdfBuilder.getBasicServiceForm().getDate());
@@ -158,8 +159,8 @@ public class BasicServicePdfReport {
 				writer.setPageEvent(new ExportPageEventsObservatoryMP(footerText, crawlingDate));
 				ExportPageEventsObservatoryMP.setPrintFooter(true);
 				final PdfTocManager pdfTocManager = createPdfTocManager(writer);
+				document.addTitle("Informe de accesibilidad web");
 				document.open();
-				//document.addTitle("TITULO");
 				// Preserve "old" cover and add new cover for new cartidges
 				if (pdfBuilder instanceof AnonymousResultExportPdfAccesibilidad) {
 					PDFUtils.addNewCoverPage(document, messageResourcesAccesibility.getMessage("pdf.accessibility.title.basic.service"),

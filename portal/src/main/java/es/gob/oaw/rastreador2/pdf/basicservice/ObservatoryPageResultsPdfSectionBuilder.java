@@ -441,8 +441,8 @@ public class ObservatoryPageResultsPdfSectionBuilder {
 		final String problema;
 		final Font font;
 		if (problem.getType().equals(pmgr.getValue(Constants.INTAV_PROPERTIES, "confidence.level.medium"))) {
-			problema = messageResources.getMessage("pdf.accessibility.bs.warning");
-			font = ConstantsFont.WARNING_FONT;
+			problema = messageResources.getMessage("pdf.accessibility.bs.problem");
+			font = ConstantsFont.PROBLEM_FONT;
 		} else if (problem.getType().equals(pmgr.getValue(Constants.INTAV_PROPERTIES, "confidence.level.high"))) {
 			problema = messageResources.getMessage("pdf.accessibility.bs.problem");
 			font = ConstantsFont.PROBLEM_FONT;

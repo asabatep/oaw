@@ -255,8 +255,8 @@ public class AnonymousResultExportPdfAccesibilidad extends AnonymousResultExport
 		externalLinkL1_3.setExternalLink(false);
 		externalLinkL1_3.setAnchor(messageResources.getMessage("pdf.accessibility.intro.next.basic.service.list.1.anchor1.url"));
 		specialChunkMap.put(3, externalLinkL1_3);
-		PDFUtils.addListItem(PDFUtils.createParagraphAnchor(messageResources.getMessage("pdf.accessibility.intro.next.basic.service.list.1"), specialChunkMap, ConstantsFont.PARAGRAPH), list,
-				ConstantsFont.paragraphBoldFont, true, true, Paragraph.ALIGN_JUSTIFIED);
+		PDFUtils.addListItem(PDFUtils.createParagraphAnchor(messageResources.getMessage("pdf.accessibility.intro.next.basic.service.list.1"), specialChunkMap, ConstantsFont.PARAGRAPH, false), list,
+				ConstantsFont.paragraphBoldFont, false, true, Paragraph.ALIGN_JUSTIFIED);
 		// L2
 		specialChunkMap = new HashMap<>();
 		SpecialChunk externalLinkL2_1 = new SpecialChunk(messageResources.getMessage("pdf.accessibility.intro.next.basic.service.list.2.bold"), ConstantsFont.paragraphBoldFont);
@@ -266,7 +266,7 @@ public class AnonymousResultExportPdfAccesibilidad extends AnonymousResultExport
 		externalLinkL2_2.setAnchor(messageResources.getMessage("pdf.accessibility.intro.next.basic.service.list.2.anchor1.url"));
 		specialChunkMap.put(2, externalLinkL2_2);
 		PDFUtils.addListItem(PDFUtils.createParagraphAnchor(messageResources.getMessage("pdf.accessibility.intro.next.basic.service.list.2"), specialChunkMap, ConstantsFont.PARAGRAPH), list,
-				ConstantsFont.paragraphBoldFont, true, true, Paragraph.ALIGN_JUSTIFIED);
+				ConstantsFont.paragraphBoldFont, false, true, Paragraph.ALIGN_JUSTIFIED);
 		section.add(list);
 		list.setIndentationLeft(ConstantsFont.IDENTATION_LEFT_SPACE);
 		document.add(chapter);

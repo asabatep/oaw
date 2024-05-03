@@ -700,6 +700,8 @@ public interface Constants {
 	Color COLOR_RESULTADO_1_PASA = Color.WHITE;
 	/** The gris muy claro. */
 	Color GRIS_MUY_CLARO = new Color(245, 245, 245);
+
+	Color GRIS_MINIMO = new Color(118,118,118);
 	/** The no dependence. */
 	// ATRIBUTES
 	String NO_DEPENDENCE = "no_dependence";
