@@ -74,8 +74,8 @@ public class OAWService {
 		EvaluatorUtility.initialize();
 		Evaluation evaluation = null;
 		// Validación de código fuente (Plugin de CMS, Plugin de Navegador)
-		if (!StringUtils.isBlank(validationRequestDTO.getHtmlContent())) {
-			byte[] decodedBytes = Base64.getDecoder().decode(validationRequestDTO.getHtmlContent().trim());
+		if (!StringUtils.isBlank(validationRequestDTO.getContent())) {
+			byte[] decodedBytes = Base64.getDecoder().decode(validationRequestDTO.getContent().trim());
 			String sourceCode = new String(decodedBytes);
 			checkAccessibility.setContent(sourceCode);
 			evaluation = EvaluatorUtils.evaluateContent(checkAccessibility, defaultLanguage);
