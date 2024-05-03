@@ -392,21 +392,21 @@
 					<!-- Comprobación para validación estricta de la gramática del docuemnto -->
 					<!--<check id="232"/> -->
 					<!-- Documento tenga un DTD válido -->
-					<check id="323" />
+					<!--<check id="323" /> -->
 					<!-- Código HTML sea parseable (apertura y cierre de etiquetas y anidamiento 
 						correcto de elementos) -->
-					<check id="440" />
+					<!--<check id="440" /> -->
 					<!-- Se verifica que no se repite el mismo atributo con diferente valor 
 						en el mismo elemento -->
-					<check id="441" />
+					<!--<check id="441" /> -->
 					<!-- Se verifica que los valores de los atributos están entrecomillados -->
-					<check id="439" />
+					<!--<check id="439" /> -->
 					<!-- Se verifica que el valor de los atributos que deben tener un valor 
 						único por página (“id”, “accesskey”) efectivamente tienen un valor único -->
-					<check id="438" />
+					<!--<check id="438" /> -->
 					<!-- Se verifica que el código CSS es parseable (bien formado, sin errores 
 						de sintaxis) -->
-					<check id="450" />
+					<!--<check id="450" /> -->
 				</checks>
 			</subgroup>
 		</suitability>
@@ -494,14 +494,14 @@
 						455 con valor GREEN-ZERO si hay más de un enlace interno entonces falla también 
 						por la comprobación 456 y el valor es RED-ZERO -->
 					<!-- Comprobamos que si hay enlaces rotos -->
-<!-- 					<check id="455" onlyWarning="true" /> -->
+ 					<check id="455" onlyWarning="true" />
 					<!-- Comprobamos que haya MÁS de 1 enlace roto -->
-<!-- 					<check id="456" relatedWith="455" /> -->
+ 					<check id="456" relatedWith="455" /> 
 					<!-- Idem para enlaces externos -->
 					<!-- Comprobamos que si hay enlaces externos rotos -->
-<!-- 					<check id="457" onlyWarning="true" /> -->
+					<check id="457" onlyWarning="true" />
 					<!-- Comprobamos que haya MÁS de 2 enlaces rotos -->
-<!-- 					<check id="458" relatedWith="457" /> -->
+ 					<check id="458" relatedWith="457" /> 
 				</checks>
 			</subgroup>
 		</suitability>

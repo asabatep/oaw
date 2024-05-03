@@ -311,13 +311,12 @@ public final class StringUtils {
 
     }
     public static String getDomainFromUrl(String url){
-        try{
-        URI uri = new URI(url);
-        return uri.getHost().substring(uri.getHost().indexOf(".") + 1, uri.getHost().length());
+        
+        String uri = url.substring(url.indexOf("//") + 2, url.length());
+        if(uri.contains("www.")){
+          uri = uri.replace("www.", "");
         }
-        catch (URISyntaxException e) {
-            e.printStackTrace();
-            return url;
-        }
+        return uri;
+        
     }
 }

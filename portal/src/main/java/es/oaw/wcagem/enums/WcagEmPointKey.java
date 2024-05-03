@@ -50,7 +50,7 @@ public enum WcagEmPointKey {
 	WCAG_3_2_3("3.2.3", "WCAG2:consistent-navigation"),
 	/** The wcag 3 3 2. */
 	WCAG_3_3_2("3.3.2", "WCAG2:labels-or-instructions"),
-	/** The wcag 4 1 1. */
+	/** The wcag 4 1 1. Deprecated */
 	WCAG_4_1_1("4.1.1", "WCAG2:parsing"),
 	/** The wcag 4 1 2. */
 	WCAG_4_1_2("4.1.2", "WCAG2:name-role-value");

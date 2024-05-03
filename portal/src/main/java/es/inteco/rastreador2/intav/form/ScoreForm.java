@@ -31,6 +31,8 @@ public class ScoreForm {
 	 */
 	public ScoreForm() {
 		totalScore = BigDecimal.ZERO;
+		totalScoreHtml = BigDecimal.ZERO;
+		totalScorePdf = BigDecimal.ZERO;
 		scoreLevel1 = BigDecimal.ZERO;
 		scoreLevel2 = BigDecimal.ZERO;
 		scoreLevelA = BigDecimal.ZERO;
@@ -42,6 +44,10 @@ public class ScoreForm {
 	private String level;
 	/** The total score. */
 	private BigDecimal totalScore;
+	/** The total score pdf. */
+	private BigDecimal totalScorePdf;
+	/** The total score of html. */
+	private BigDecimal totalScoreHtml;
 	/** The score level 1. */
 	private BigDecimal scoreLevel1;
 	/** The score level 2. */
@@ -95,6 +101,42 @@ public class ScoreForm {
 	 */
 	public void setTotalScore(BigDecimal totalScore) {
 		this.totalScore = totalScore;
+	}
+
+		/**
+	 * Gets the total score.
+	 *
+	 * @return the total score
+	 */
+	public BigDecimal getTotalScorePdf() {
+		return totalScorePdf;
+	}
+
+	/**
+	 * Sets the total score.
+	 *
+	 * @param totalScore the new total score
+	 */
+	public void setTotalScorePdf(BigDecimal totalScorePdf) {
+		this.totalScorePdf = totalScorePdf;
+	}
+
+		/**
+	 * Gets the total score.
+	 *
+	 * @return the total score
+	 */
+	public BigDecimal getTotalScoreHtml() {
+		return totalScoreHtml;
+	}
+
+	/**
+	 * Sets the total score.
+	 *
+	 * @param totalScore the new total score
+	 */
+	public void setTotalScoreHtml(BigDecimal totalScoreHtml) {
+		this.totalScoreHtml = totalScoreHtml;
 	}
 
 	/**
