@@ -4,7 +4,7 @@
 - Bug 6857 - Requisito 4.1.1 y equivalente verificación Compatibilidad 1.14 siempre deben ser PASA
 - Bug 6756 - Error enlaces análisis de pdf
 - Bug 6774 - Texto mal alineado informe pdf con la nueva metodología
-- Bug 7124 - Cambiar texto en diagnostico.html de la opción de declaración de accesibilidad 
+- Bug 7124 - Cambiar texto en diagnostico.html en la opción de declaración de accesibilidad 
 
 5.8.0
 ------------------------------------------------------------------------------------------------------------------------------------
