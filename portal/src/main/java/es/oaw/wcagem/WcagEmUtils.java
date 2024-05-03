@@ -804,6 +804,7 @@ public final class WcagEmUtils {
 		List<String> checks = new ArrayList<>();
 
 		checks = new ArrayList<>();
+		checks.add("1");
 		checks.add("502");
 		checks.add("508");
 		checkWcagRelationMap.put(WcagEmPointKey.WCAG_1_1_1.getWcagEmId(), checks);
