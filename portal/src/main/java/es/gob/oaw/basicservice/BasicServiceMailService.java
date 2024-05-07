@@ -149,19 +149,13 @@ public class BasicServiceMailService {
 			text = MessageFormat.format(pmgr.getValue(Constants.BASIC_SERVICE_PROPERTIES, "basic.service.mail.text.observatory.content"), basicServiceForm.getUser(),
 					reportToString(basicServiceForm.getReport()), irap);
 		} else {
-			if ("0".equals(basicServiceForm.getComplexity())) {
-				basicServiceForm.setAmplitud("-");
-				basicServiceForm.setProfundidad("-");
-				complexName = "Única";
-			} else {
-				try (Connection c = DataBaseManager.getConnection()) {
-					ComplejidadForm comp = ComplejidadDAO.getById(c, basicServiceForm.getComplexity());
-					basicServiceForm.setAmplitud(String.valueOf(comp.getAmplitud()));
-					basicServiceForm.setProfundidad(String.valueOf(comp.getProfundidad()));
-					complexName = comp.getName();
-				} catch (Exception e) {
-					Logger.putLog("Error: ", CrawlerUtils.class, Logger.LOG_LEVEL_ERROR, e);
-				}
+			try (Connection c = DataBaseManager.getConnection()) {
+				ComplejidadForm comp = ComplejidadDAO.getById(c, basicServiceForm.getComplexity());
+				basicServiceForm.setAmplitud(String.valueOf(comp.getAmplitud()));
+				basicServiceForm.setProfundidad(String.valueOf(comp.getProfundidad()));
+				complexName = comp.getName();
+			} catch (Exception e) {
+				Logger.putLog("Error: ", CrawlerUtils.class, Logger.LOG_LEVEL_ERROR, e);
 			}
 			final String inDirectory = basicServiceForm.isInDirectory() ? pmgr.getValue(Constants.BASIC_SERVICE_PROPERTIES, "basic.service.indomain.yes")
 					: pmgr.getValue(Constants.BASIC_SERVICE_PROPERTIES, "basic.service.indomain.no");
@@ -175,7 +169,10 @@ public class BasicServiceMailService {
 			}
 			final String irap = "true".equalsIgnoreCase(basicServiceForm.getDepthReport()) ? pmgr.getValue(Constants.BASIC_SERVICE_PROPERTIES, "basic.service.indomain.yes")
 					: pmgr.getValue(Constants.BASIC_SERVICE_PROPERTIES, "basic.service.indomain.no");
-			if (basicServiceForm.isAnalysisMix()) {
+			if (basicServiceForm.isListofURL()) {
+				text = MessageFormat.format(pmgr.getValue(Constants.BASIC_SERVICE_PROPERTIES, "basic.service.mail.text.observatory"), basicServiceForm.getUser(), basicServiceForm.getDomain(), "-",
+						"-", "-", inDirectory, reportToString(basicServiceForm.getReport()), proxyActive, irap);
+			} else if (basicServiceForm.isAnalysisMix()) {
 				text = MessageFormat.format(pmgr.getValue(Constants.BASIC_SERVICE_PROPERTIES, "basic.service.mail.text.observatory.mix"), basicServiceForm.getUser(), basicServiceForm.getDomain(),
 						complexName, basicServiceForm.getProfundidad(), basicServiceForm.getAmplitud(), inDirectory, reportToString(basicServiceForm.getReport()), proxyActive, irap);
 			} else {
