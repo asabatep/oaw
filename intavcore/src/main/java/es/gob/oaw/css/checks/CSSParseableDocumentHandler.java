@@ -48,12 +48,12 @@ public class CSSParseableDocumentHandler extends OAWCSSVisitor {
                 resource = cssResource;
                 final CollectingCSSParseErrorHandler errorHandler = new CollectingCSSParseErrorHandler();
                 final CascadingStyleSheet aCSS = CSSReader.readFromString(cssResource.getContent(), ECSSVersion.CSS30, errorHandler);
-                if (aCSS != null) {
+                /*if (aCSS != null) {
                     CSSVisitor.visitCSS(aCSS, this);
                     for (CSSParseError cssParseError : errorHandler.getAllParseErrors()) {
                         getProblems().add(createCSSParserError(cssParseError));
                     }
-                }
+                }*/
             } catch (Exception e) {
                 Logger.putLog("Error al intentar parsear el CSS", CSSParseableDocumentHandler.class, Logger.LOG_LEVEL_INFO);
             }
