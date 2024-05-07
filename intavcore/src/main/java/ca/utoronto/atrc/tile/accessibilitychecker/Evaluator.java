@@ -72,6 +72,7 @@ import es.inteco.common.IntavConstants;
 import es.inteco.common.ValidationError;
 import es.inteco.common.logging.Logger;
 import es.inteco.common.properties.PropertiesManager;
+import es.inteco.common.utils.StringUtils;
 import es.inteco.intav.comun.Incidencia;
 import es.inteco.intav.datos.AnalisisDatos;
 import es.inteco.intav.datos.IncidenciaDatos;
@@ -178,6 +179,7 @@ public class Evaluator {
 		final Guideline guideline = EvaluatorUtility.loadGuideline(checkAccessibility.getGuidelineFile());
 		// create a list of checks that fulfill the given guidelines
 		final List<Integer> checksSelected = createCheckList(checkAccessibility, guideline);
+		if (!StringUtils.isUrl(checkAccessibility.getUrl())) checksSelected.removeIf(n -> n == 479); // Remove the media queries check if it is a source code analysis
 		final boolean htmlValidationNeeded = EvaluatorUtils.isHtmlValidationNeeded(checksSelected);
 		final boolean cssValidationNeeded = EvaluatorUtils.isCssValidationNeeded(checksSelected);
 		// Si se ha invocado desde el rastreador, llevará asociado un ID de
