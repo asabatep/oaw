@@ -19,7 +19,6 @@ import static es.inteco.common.Constants.CRAWLER_PROPERTIES;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -28,8 +27,6 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.text.Normalizer;
 import java.text.Normalizer.Form;
@@ -72,8 +69,6 @@ import es.inteco.rastreador2.dao.basic.service.DiagnosisDAO;
 import es.inteco.rastreador2.ws.CrawlerWS;
 import es.inteco.rastreador2.ws.CrawlerWSJob;
 import es.inteco.utils.FileUtils;
-
-
 
 /**
  * The Class BasicServiceUtils.
@@ -158,40 +153,35 @@ public final class BasicServiceUtils {
 					Logger.putLog("No se puede decodificar la url como UTF-8", CheckHistoricoAction.class, Logger.LOG_LEVEL_WARNING, e);
 				}
 			}
-			
-			
 			basicServiceForm.setDomain(url);
 			if (StringUtils.isNotEmpty(basicServiceForm.getDomain())) {
 				basicServiceForm.setDomain(es.inteco.utils.CrawlerUtils.encodeUrl(basicServiceForm.getDomain()));
 			}
+			basicServiceForm.setAnalysisType(BasicServiceAnalysisType.URL);
 		}
 		basicServiceForm.setEmail(request.getParameter(Constants.PARAM_EMAIL));
 		basicServiceForm.setProfundidad(request.getParameter(Constants.PARAM_DEPTH));
 		basicServiceForm.setAmplitud(request.getParameter(Constants.PARAM_WIDTH));
 		basicServiceForm.setLanguage("es");
 		basicServiceForm.setReport(request.getParameter(Constants.PARAM_REPORT));
-			try{
+		try {
 			Connection c = DataBaseManager.getConnection();
 			ValidatorForm validator = ValidatorDAO.getValidator(c);
-			if(!basicServiceForm.getReport().contains("_pdf")){
+			if (!basicServiceForm.getReport().contains("_pdf")) {
 				validator.setPdfActive(0);
 				ValidatorDAO.update(c, validator);
-				
-			}
-			else{
+			} else {
 				validator.setPdfActive(1);
 				validator.setStatus(1);
 				ValidatorDAO.update(c, validator);
 			}
 			DataBaseManager.closeConnection(c);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-			catch (Exception e){
-				e.printStackTrace();
-			}
 		if (request.getParameter("informe-nobroken") != null && Boolean.parseBoolean(request.getParameter("informe-nobroken"))) {
 			basicServiceForm.setReport(basicServiceForm.getReport() + "-nobroken");
 		}
-		
 		// Prevent full paths
 		String parameterFileName = request.getParameter("filename");
 		if (!org.apache.commons.lang3.StringUtils.isEmpty(parameterFileName)) {
@@ -226,14 +216,10 @@ public final class BasicServiceUtils {
 					Logger.putLog("No se puede decodificar la url como UTF-8", CheckHistoricoAction.class, Logger.LOG_LEVEL_WARNING, e);
 				}
 			}
-			
 			basicServiceForm.setDomain(url);
-			
-			
 			if (StringUtils.isNotEmpty(basicServiceForm.getDomain())) {
 				basicServiceForm.setDomain(es.inteco.utils.CrawlerUtils.encodeUrl(basicServiceForm.getDomain()));
 			}
-			// basicServiceForm.setDomain(request.getParameter("urls"));
 			if (basicServiceForm.getContent() != null && StringUtils.isNotEmpty(basicServiceForm.getContent())) {
 				basicServiceForm.setAnalysisType(BasicServiceAnalysisType.MIXTO);
 			} else {
@@ -244,7 +230,19 @@ public final class BasicServiceUtils {
 		basicServiceForm.setRegisterAnalysis(Boolean.parseBoolean(request.getParameter("registerAnalysis")));
 		basicServiceForm.setAnalysisToDelete(request.getParameter("analysisToDelete"));
 		basicServiceForm.setDomain(BasicServiceUtils.checkIDN(basicServiceForm.getDomain()));
-		basicServiceForm.setComplexity(request.getParameter(Constants.PARAM_COMPLEXITY));
+		// Get the complexity parameter from the request
+		String complexityValue = request.getParameter(Constants.PARAM_COMPLEXITY);
+		if (complexityValue != null) {
+			// Parse the complexity parameter to an integer
+			int complexity = Integer.parseInt(complexityValue);
+			// Increment the complexity by 1
+			complexity++;
+			// Convert the incremented complexity back to a string
+			complexityValue = String.valueOf(complexity);
+		} else {
+			complexityValue = "1";
+		}
+		basicServiceForm.setComplexity(complexityValue);
 		basicServiceForm.setDepthReport(request.getParameter(Constants.PARAM_DEPTH_REPORT));
 		return basicServiceForm;
 	}
@@ -263,112 +261,100 @@ public final class BasicServiceUtils {
 			c = DataBaseManager.getConnection();
 			ValidatorForm validator = ValidatorDAO.getValidator(c);
 			DataBaseManager.closeConnection(c);
-		
-		if (!org.apache.commons.lang3.StringUtils.isEmpty(parameterFileName) && parameterFileName.toLowerCase().endsWith(".zip")) {
-			try {
-				File tmp = File.createTempFile("oaw_basic_service_", ".zip");
-				org.apache.commons.io.FileUtils.writeByteArrayToFile(tmp, Base64.getUrlDecoder().decode(contentParameter.getBytes(StandardCharsets.ISO_8859_1.name())));
-				ZipFile zipFile;
+			if (!org.apache.commons.lang3.StringUtils.isEmpty(parameterFileName) && parameterFileName.toLowerCase().endsWith(".zip")) {
 				try {
-					zipFile = new ZipFile(tmp, Charset.forName("CP437"));
-					Enumeration<? extends ZipEntry> entries = zipFile.entries();
-					List<BasicServiceFile> files = new ArrayList<>();
-					
-					while (entries.hasMoreElements()) {
-						try {
-							ZipEntry entry = entries.nextElement();
-							String name = entry.getName();
+					File tmp = File.createTempFile("oaw_basic_service_", ".zip");
+					org.apache.commons.io.FileUtils.writeByteArrayToFile(tmp, Base64.getUrlDecoder().decode(contentParameter.getBytes(StandardCharsets.ISO_8859_1.name())));
+					ZipFile zipFile;
+					try {
+						zipFile = new ZipFile(tmp, Charset.forName("CP437"));
+						Enumeration<? extends ZipEntry> entries = zipFile.entries();
+						List<BasicServiceFile> files = new ArrayList<>();
+						while (entries.hasMoreElements()) {
+							try {
+								ZipEntry entry = entries.nextElement();
+								String name = entry.getName();
 //						if (entry.getName().toLowerCase().endsWith(".html")) {
-							if (!entry.isDirectory()) {
-								try {
-									BasicServiceFile file = new BasicServiceFile();
-									String content = "";
-									if(name.endsWith(".pdf")){
-										InputStream inputStream = zipFile.getInputStream(entry);
-										ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                    					byte[] buffer = new byte[1024];
-                    					int bytesRead;
-                    					while ((bytesRead = inputStream.read(buffer)) != -1) {
-                        					byteArrayOutputStream.write(buffer, 0, bytesRead);
-                    					}
-
-                    					byte[] pdfBytes = byteArrayOutputStream.toByteArray();
-
-                    					// Convert the byte array to Base64 encoded string
-                    					content = Base64.getEncoder().encodeToString(pdfBytes);
-										
-									}
-									else { 
-										content = org.apache.commons.io.IOUtils.toString(zipFile.getInputStream(entry), StandardCharsets.UTF_8.name());
-									}
-
-									String textoNormalizado = Normalizer.normalize(name, Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
-
-									file.setName(textoNormalizado);
-									file.setContent(content);
-									files.add(file);
-								} catch (UnsupportedEncodingException e) {
-									Logger.putLog("No se puede codificar el contenido como UTF-8", BasicServiceUtils.class, Logger.LOG_LEVEL_WARNING, e);
+								if (!entry.isDirectory()) {
 									try {
-										String content = org.apache.commons.io.IOUtils.toString(zipFile.getInputStream(entry), StandardCharsets.ISO_8859_1.name());
 										BasicServiceFile file = new BasicServiceFile();
-										file.setName(name);
+										String content = "";
+										if (name.endsWith(".pdf")) {
+											InputStream inputStream = zipFile.getInputStream(entry);
+											ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+											byte[] buffer = new byte[1024];
+											int bytesRead;
+											while ((bytesRead = inputStream.read(buffer)) != -1) {
+												byteArrayOutputStream.write(buffer, 0, bytesRead);
+											}
+											byte[] pdfBytes = byteArrayOutputStream.toByteArray();
+											// Convert the byte array to Base64 encoded string
+											content = Base64.getEncoder().encodeToString(pdfBytes);
+										} else {
+											content = org.apache.commons.io.IOUtils.toString(zipFile.getInputStream(entry), StandardCharsets.UTF_8.name());
+										}
+										String textoNormalizado = Normalizer.normalize(name, Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+										file.setName(textoNormalizado);
 										file.setContent(content);
 										files.add(file);
-									} catch (UnsupportedEncodingException e1) {
+									} catch (UnsupportedEncodingException e) {
 										Logger.putLog("No se puede codificar el contenido como UTF-8", BasicServiceUtils.class, Logger.LOG_LEVEL_WARNING, e);
+										try {
+											String content = org.apache.commons.io.IOUtils.toString(zipFile.getInputStream(entry), StandardCharsets.ISO_8859_1.name());
+											BasicServiceFile file = new BasicServiceFile();
+											file.setName(name);
+											file.setContent(content);
+											files.add(file);
+										} catch (UnsupportedEncodingException e1) {
+											Logger.putLog("No se puede codificar el contenido como UTF-8", BasicServiceUtils.class, Logger.LOG_LEVEL_WARNING, e);
+										}
 									}
 								}
+							} catch (IllegalArgumentException e) {
+								Logger.putLog("No se puede procesar la entrada del fichero zip", BasicServiceUtils.class, Logger.LOG_LEVEL_WARNING, e);
 							}
-						} catch (IllegalArgumentException e) {
-							Logger.putLog("No se puede procesar la entrada del fichero zip", BasicServiceUtils.class, Logger.LOG_LEVEL_WARNING, e);
 						}
+						basicServiceForm.setContents(files);
+					} catch (IOException e) {
+						Logger.putLog("No se puede procesar el fichero zip", BasicServiceUtils.class, Logger.LOG_LEVEL_WARNING, e);
 					}
-					basicServiceForm.setContents(files);
 				} catch (IOException e) {
-					Logger.putLog("No se puede procesar el fichero zip", BasicServiceUtils.class, Logger.LOG_LEVEL_WARNING, e);
+					Logger.putLog("No se puede leer el fichero zip adjuntado", BasicServiceUtils.class, Logger.LOG_LEVEL_WARNING, e);
 				}
-			} catch (IOException e) {
-				Logger.putLog("No se puede leer el fichero zip adjuntado", BasicServiceUtils.class, Logger.LOG_LEVEL_WARNING, e);
-			}
-			if (basicServiceForm.getDomain() != null && StringUtils.isNotEmpty(basicServiceForm.getDomain())) {
-				basicServiceForm.setAnalysisType(BasicServiceAnalysisType.MIXTO);
-			} else {
-				basicServiceForm.setAnalysisType(BasicServiceAnalysisType.CODIGO_FUENTE_MULTIPLE);
-			}
-		} else {
-			try {
-				String content = "";
-				if (!org.apache.commons.lang3.StringUtils.isEmpty(parameterFileName) && parameterFileName.toLowerCase().endsWith(".pdf")) {
-							// Por alguna razón no se codifica correctamente si pasamos un pdf a pelo. 
-							content = contentParameter.replaceAll("_", "/").replaceAll("-", "+");
-							basicServiceForm.setName(parameterFileName);
-				}
-				else{
-				
-				if (decode) {
-					File tmp = File.createTempFile("oaw_basic_service_", ".txt");
-					org.apache.commons.io.FileUtils.writeByteArrayToFile(tmp, Base64.getUrlDecoder().decode(contentParameter.getBytes(StandardCharsets.ISO_8859_1.name())));
-					content = org.apache.commons.io.FileUtils.readFileToString(tmp, StandardCharsets.ISO_8859_1.name());
-				} else {
-					content = new String(contentParameter.getBytes(StandardCharsets.ISO_8859_1.name()));
-				}
-			}
-				basicServiceForm.setContent(content);
 				if (basicServiceForm.getDomain() != null && StringUtils.isNotEmpty(basicServiceForm.getDomain())) {
 					basicServiceForm.setAnalysisType(BasicServiceAnalysisType.MIXTO);
 				} else {
-					basicServiceForm.setAnalysisType(BasicServiceAnalysisType.CODIGO_FUENTE);
+					basicServiceForm.setAnalysisType(BasicServiceAnalysisType.CODIGO_FUENTE_MULTIPLE);
 				}
-			} catch (Exception e) {
-				Logger.putLog("No se puede procesar la entrada del fichero", BasicServiceUtils.class, Logger.LOG_LEVEL_WARNING, e);
+			} else {
+				try {
+					String content = "";
+					if (!org.apache.commons.lang3.StringUtils.isEmpty(parameterFileName) && parameterFileName.toLowerCase().endsWith(".pdf")) {
+						// Por alguna razón no se codifica correctamente si pasamos un pdf a pelo.
+						content = contentParameter.replaceAll("_", "/").replaceAll("-", "+");
+						basicServiceForm.setName(parameterFileName);
+					} else {
+						if (decode) {
+							File tmp = File.createTempFile("oaw_basic_service_", ".txt");
+							org.apache.commons.io.FileUtils.writeByteArrayToFile(tmp, Base64.getUrlDecoder().decode(contentParameter.getBytes(StandardCharsets.ISO_8859_1.name())));
+							content = org.apache.commons.io.FileUtils.readFileToString(tmp, StandardCharsets.ISO_8859_1.name());
+						} else {
+							content = new String(contentParameter.getBytes(StandardCharsets.ISO_8859_1.name()));
+						}
+					}
+					basicServiceForm.setContent(content);
+					if (basicServiceForm.getDomain() != null && StringUtils.isNotEmpty(basicServiceForm.getDomain())) {
+						basicServiceForm.setAnalysisType(BasicServiceAnalysisType.MIXTO);
+					} else {
+						basicServiceForm.setAnalysisType(BasicServiceAnalysisType.CODIGO_FUENTE);
+					}
+				} catch (Exception e) {
+					Logger.putLog("No se puede procesar la entrada del fichero", BasicServiceUtils.class, Logger.LOG_LEVEL_WARNING, e);
+				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-	}
-	catch(Exception e){
-		e.printStackTrace();
-	}
-	
 	}
 
 	/**
@@ -592,8 +578,8 @@ public final class BasicServiceUtils {
 		for (String url : urls) {
 			Logger.putLog("URL: " + url, BasicServiceUtils.class, Logger.LOG_LEVEL_WARNING);
 			if (url.contains("http:") || url.contains("https:")) {
-				if(!url.contains(".pdf"))
-				out.add(url);
+				if (!url.contains(".pdf"))
+					out.add(url);
 			}
 		}
 		return String.join("\n", out);
