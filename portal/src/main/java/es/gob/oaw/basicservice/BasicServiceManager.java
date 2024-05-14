@@ -217,7 +217,7 @@ public class BasicServiceManager {
 					try {
 			    	Connection c = DataBaseManager.getConnection();
 					ValidatorForm validator = ValidatorDAO.getValidator(c);
-					if(validator.getStatus() == 1 && validator.getPdfActive() == 1){
+					if(validator.getStatus() == 1 && basicServiceForm.getReport().contains("pdf")){
 						pdfActive = true;
 						DataBaseManager.closeConnection(c);
 					}

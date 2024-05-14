@@ -405,7 +405,9 @@ public final class PrimaryExportPdfUtils {
 					try {
 			    	Connection c = DataBaseManager.getConnection();
 					ValidatorForm validator = ValidatorDAO.getValidator(c);
-					if(validator.getStatus() == 1 && validator.getPdfActive() == 1){
+					final String application = CartuchoDAO.getApplication(c, Long.valueOf(crawling.getIdCartridge()));
+					
+					if(validator.getStatus() == 1 && application.toLowerCase().contains("pdf")){
 						pdfActive = true;
 						DataBaseManager.closeConnection(c);
 					}

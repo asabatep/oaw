@@ -850,7 +850,7 @@ public class CrawlerJob implements InterruptableJob {
 			try {
 				Connection c = DataBaseManager.getConnection();
 				ValidatorForm validator = ValidatorDAO.getValidator(c);
-				if (validator.getStatus() == 0 || validator.getPdfActive() == 0 || !guideline.contains("_pdf")) {
+				if (validator.getStatus() == 0 || !guideline.contains("_pdf")) {
 					DataBaseManager.closeConnection(c);
 					return false;
 				}
