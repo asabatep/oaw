@@ -54,6 +54,7 @@ import org.quartz.impl.triggers.SimpleTriggerImpl;
 
 import com.tecnick.htmlutils.htmlentities.HTMLEntities;
 
+import es.gob.oaw.basicservice.BasicServiceMailService;
 import es.gob.oaw.basicservice.historico.CheckHistoricoAction;
 import es.inteco.common.Constants;
 import es.inteco.common.logging.Logger;
@@ -164,21 +165,6 @@ public final class BasicServiceUtils {
 		basicServiceForm.setAmplitud(request.getParameter(Constants.PARAM_WIDTH));
 		basicServiceForm.setLanguage("es");
 		basicServiceForm.setReport(request.getParameter(Constants.PARAM_REPORT));
-		try {
-			Connection c = DataBaseManager.getConnection();
-			ValidatorForm validator = ValidatorDAO.getValidator(c);
-			if (!basicServiceForm.getReport().contains("_pdf")) {
-				validator.setPdfActive(0);
-				ValidatorDAO.update(c, validator);
-			} else {
-				validator.setPdfActive(1);
-				validator.setStatus(1);
-				ValidatorDAO.update(c, validator);
-			}
-			DataBaseManager.closeConnection(c);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 		if (request.getParameter("informe-nobroken") != null && Boolean.parseBoolean(request.getParameter("informe-nobroken"))) {
 			basicServiceForm.setReport(basicServiceForm.getReport() + "-nobroken");
 		}
@@ -232,17 +218,12 @@ public final class BasicServiceUtils {
 		basicServiceForm.setDomain(BasicServiceUtils.checkIDN(basicServiceForm.getDomain()));
 		// Get the complexity parameter from the request
 		String complexityValue = request.getParameter(Constants.PARAM_COMPLEXITY);
-		if (complexityValue != null) {
-			// Parse the complexity parameter to an integer
-			int complexity = Integer.parseInt(complexityValue);
-			// Increment the complexity by 1
-			complexity++;
-			// Convert the incremented complexity back to a string
-			complexityValue = String.valueOf(complexity);
-		} else {
-			complexityValue = "1";
+		if (complexityValue == null || complexityValue == "0") {
+			
+			complexityValue = "4";
 		}
 		basicServiceForm.setComplexity(complexityValue);
+		Logger.putLog("COMPLEJIDAD: "+ basicServiceForm.getComplexity(), BasicServiceUtils.class, Logger.LOG_LEVEL_ERROR);
 		basicServiceForm.setDepthReport(request.getParameter(Constants.PARAM_DEPTH_REPORT));
 		return basicServiceForm;
 	}
@@ -259,7 +240,6 @@ public final class BasicServiceUtils {
 		Connection c;
 		try {
 			c = DataBaseManager.getConnection();
-			ValidatorForm validator = ValidatorDAO.getValidator(c);
 			DataBaseManager.closeConnection(c);
 			if (!org.apache.commons.lang3.StringUtils.isEmpty(parameterFileName) && parameterFileName.toLowerCase().endsWith(".zip")) {
 				try {
@@ -274,7 +254,6 @@ public final class BasicServiceUtils {
 							try {
 								ZipEntry entry = entries.nextElement();
 								String name = entry.getName();
-//						if (entry.getName().toLowerCase().endsWith(".html")) {
 								if (!entry.isDirectory()) {
 									try {
 										BasicServiceFile file = new BasicServiceFile();

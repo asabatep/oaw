@@ -150,6 +150,7 @@ public class BasicServiceMailService {
 					reportToString(basicServiceForm.getReport()), irap);
 		} else {
 			try (Connection c = DataBaseManager.getConnection()) {
+				Logger.putLog("COMPLEJIDAD: "+ basicServiceForm.getComplexity(), BasicServiceMailService.class, Logger.LOG_LEVEL_ERROR);
 				ComplejidadForm comp = ComplejidadDAO.getById(c, basicServiceForm.getComplexity());
 				basicServiceForm.setAmplitud(String.valueOf(comp.getAmplitud()));
 				basicServiceForm.setProfundidad(String.valueOf(comp.getProfundidad()));

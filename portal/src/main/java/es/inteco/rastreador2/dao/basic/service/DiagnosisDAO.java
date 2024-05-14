@@ -113,15 +113,14 @@ public final class DiagnosisDAO {
 				ps.setString(11, BasicServiceAnalysisType.CODIGO_FUENTE.getLabel());
 			}
 			ps.setString(4, basicServiceForm.getEmail());
-			if (!org.apache.commons.lang3.StringUtils.isEmpty(basicServiceForm.getComplexity()) && !"0".equalsIgnoreCase(basicServiceForm.getComplexity())) {
-				String complex = basicServiceForm.getComplexity();
-				ComplejidadForm cx = ComplejidadDAO.getById(conn, complex);
-				ps.setString(5, String.valueOf(cx.getProfundidad()));
-				ps.setString(6, String.valueOf(cx.getAmplitud()));
-			} else {
-				ps.setString(5, basicServiceForm.getProfundidad());
-				ps.setString(6, basicServiceForm.getAmplitud());
+			String complex = basicServiceForm.getComplexity();
+			if (org.apache.commons.lang3.StringUtils.isEmpty(basicServiceForm.getComplexity()) || "0".equalsIgnoreCase(basicServiceForm.getComplexity())) {
+				complex = "4";
 			}
+			ComplejidadForm cx = ComplejidadDAO.getById(conn, complex);
+			ps.setString(5, String.valueOf(cx.getProfundidad()));
+			ps.setString(6, String.valueOf(cx.getAmplitud()));
+			
 			ps.setString(7, basicServiceForm.getReport());
 			ps.setTimestamp(8, new Timestamp(new java.util.Date().getTime()));
 			ps.setString(9, status);
@@ -132,7 +131,7 @@ public final class DiagnosisDAO {
 			}
 			ps.setBoolean(12, basicServiceForm.isInDirectory());
 			ps.setBoolean(13, basicServiceForm.isRegisterAnalysis());
-			ps.setString(14, basicServiceForm.getComplexity());
+			ps.setString(14, complex);
 			ps.setString(15, basicServiceForm.getFileName());
 			ps.setString(16, basicServiceForm.getDepthReport());
 			ps.executeUpdate();

@@ -186,7 +186,6 @@ you may find it at http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:3201
 
 var validatorUrl = $('#validatorUrl').val();
 var validatorStatus = $('#validatorStatus').is(':checked');
-var pdfActive = $('#pdfActive').is(':checked');
 var pdfPercentage = $('#pdfPercentage').val();
 
 if (validatorUrl == "") {
@@ -200,7 +199,6 @@ if (validatorUrl == "") {
 						url : '/oaw/secure/conectividad.do?action=modifyValidator&validatorUrl='
 								+ decodeURI($('#validatorUrl').val())
 								+ "&validatorStatus=" + validatorStatus
-								+ "&pdfActive=" + pdfActive
 								+ "&pdfPercentage=" + pdfPercentage,
 						method : 'POST'
 					}).success(function(data) {
@@ -526,24 +524,7 @@ if (validatorUrl == "") {
 									required="required" />
 							</logic:equal>
 						</div>
-
-						<div class="formItem">
-							<label for="url" class="labelCorto"><strong
-								class="labelVisu"><acronym
-									title="<bean:message key="campo.obligatorio" />"> * </acronym>
-									<bean:message key="conectividad.proxy.pdf.activo" />: </strong></label>
-							<logic:equal name="validatorconfig" property="pdfActive" value="1">
-								<input id="pdfActive" type="checkbox" class="textoCorto"
-									name="pdfActive" required="required" checked="checked"
-									style="width: auto !important;" />
-							</logic:equal>
-							<logic:equal name="validatorconfig" property="pdfActive" value="0">
-								<input id="pdfActive" type="checkbox" class="textoCorto"
-									style="width: auto !important;" name="pdfActive"
-									required="required" />
-							</logic:equal>
-						</div>
-
+						
 						<div class="formItem">
 							<label for="url" class="labelCorto"><strong
 								class="labelVisu"><acronym
