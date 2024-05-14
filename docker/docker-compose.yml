@@ -69,7 +69,9 @@ services:
 
   mysql:
     image: mysql:5.7.21
-    command: --max_allowed_packet=32505856
+    command: 
+      --max_allowed_packet=32505856
+      --innodb_use_native_aio=0
     ports:
       - 7012:3306
     environment:
