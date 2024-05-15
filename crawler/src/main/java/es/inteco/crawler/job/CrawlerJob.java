@@ -860,7 +860,7 @@ public class CrawlerJob implements InterruptableJob {
 					Logger.putLog("Superado el maximo numero de pdfs:", CrawlerJob.class, Logger.LOG_LEVEL_WARNING);
 					return false;
 				} else {
-					Logger.putLog("Porcentaje de pdfs:" + (float) pdfCount / complexity, CrawlerJob.class, Logger.LOG_LEVEL_WARNING);
+					Logger.putLog("Porcentaje de pdfs: " + (float) pdfCount / complexity + url, CrawlerJob.class, Logger.LOG_LEVEL_WARNING);
 					return true;
 				}
 			} catch (Exception e) {
@@ -915,8 +915,8 @@ public class CrawlerJob implements InterruptableJob {
 						try {
 							final String absoluteUrlLink = CrawlerUtils.getAbsoluteUrl(document, url, CrawlerUtils.encodeUrl(urlLink)).toString().replaceAll("\\.\\./", EMPTY_STRING);
 							if (isValidUrl(rootUrl, domain, absoluteUrlLink, crawlerData)) {
-								if ((crawlerData.getTopN() == unlimitedTopN)
-										|| ((cont < crawlerData.getTopN() || (crawlerData.isRetry() && cont < extendedWidth)) && maxIntentosBuscarTipos < crawlerData.getMaxIntentosBuscarTipos())) {
+								if (absoluteUrlLink.contains(".pdf") || ((crawlerData.getTopN() == unlimitedTopN) // Si es un pdf lo metemos sin importar la profundidad
+										|| ((cont < crawlerData.getTopN() || (crawlerData.isRetry() && cont < extendedWidth)) && maxIntentosBuscarTipos < crawlerData.getMaxIntentosBuscarTipos()))) {
 //								if ((crawlerData.getTopN() == unlimitedTopN) || ((cont < crawlerData.getTopN()) && maxIntentosBuscarTipos < crawlerData.getMaxIntentosBuscarTipos())) {
 									if (isLinkToAdd(rootUrl, domain, absoluteUrlLink, cookie, levelLinks, crawlerData, true, ignoredLinks, crawlerData.isCheckFormPage(),
 											crawlerData.isCheckTablePage())) {
@@ -1063,7 +1063,7 @@ public class CrawlerJob implements InterruptableJob {
 		connection.connect();
 		int responseCode = connection.getResponseCode();
 		if (responseCode == HttpURLConnection.HTTP_OK) {
-			if (connection.getHeaderField("content-type") != null && connection.getHeaderField("content-type").contains("text/html")) {
+			if (connection.getHeaderField("content-type") != null && (connection.getHeaderField("content-type").contains("text/html")|| connection.getHeaderField("content-type").contains("application/pdf"))) {
 				CheckAccessibility checkAccessibility = new CheckAccessibility();
 				checkAccessibility.setUrl(urlLink);
 				CheckerParser parser = new CheckerParser();
@@ -1135,7 +1135,7 @@ public class CrawlerJob implements InterruptableJob {
 					&& (connection.getHeaderField("content-type").contains("text/html") || connection.getHeaderField("content-type").contains("application/pdf"))) {
 				return true;
 			} else {
-				Logger.putLog(String.format("La url %s ha sido rechazada por no ser un documento de tipo text/html", urlLink), CrawlerJob.class, Logger.LOG_LEVEL_INFO);
+				Logger.putLog(String.format("La url %s ha sido rechazada por no ser un documento de tipo text/html o application/pdf", urlLink), CrawlerJob.class, Logger.LOG_LEVEL_INFO);
 				rejectedDomains.add(urlLink);
 			}
 		} else {
