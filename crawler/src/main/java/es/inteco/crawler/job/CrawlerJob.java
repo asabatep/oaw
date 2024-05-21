@@ -915,8 +915,8 @@ public class CrawlerJob implements InterruptableJob {
 						try {
 							final String absoluteUrlLink = CrawlerUtils.getAbsoluteUrl(document, url, CrawlerUtils.encodeUrl(urlLink)).toString().replaceAll("\\.\\./", EMPTY_STRING);
 							if (isValidUrl(rootUrl, domain, absoluteUrlLink, crawlerData)) {
-								if (absoluteUrlLink.contains(".pdf") || ((crawlerData.getTopN() == unlimitedTopN) // Si es un pdf lo metemos sin importar la profundidad
-										|| ((cont < crawlerData.getTopN() || (crawlerData.isRetry() && cont < extendedWidth)) && maxIntentosBuscarTipos < crawlerData.getMaxIntentosBuscarTipos()))) {
+								if((crawlerData.getTopN() == unlimitedTopN)
+										|| ((cont < crawlerData.getTopN() || (crawlerData.isRetry() && cont < extendedWidth)) && maxIntentosBuscarTipos < crawlerData.getMaxIntentosBuscarTipos())) {
 //								if ((crawlerData.getTopN() == unlimitedTopN) || ((cont < crawlerData.getTopN()) && maxIntentosBuscarTipos < crawlerData.getMaxIntentosBuscarTipos())) {
 									if (isLinkToAdd(rootUrl, domain, absoluteUrlLink, cookie, levelLinks, crawlerData, true, ignoredLinks, crawlerData.isCheckFormPage(),
 											crawlerData.isCheckTablePage())) {

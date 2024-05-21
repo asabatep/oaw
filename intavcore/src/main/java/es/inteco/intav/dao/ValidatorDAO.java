@@ -62,7 +62,7 @@ public class ValidatorDAO {
 		try (PreparedStatement ps = c.prepareStatement(query)) {
 			ps.setInt(1, validator.getStatus());
 			ps.setString(2, validator.getUrl());
-			ps.setInt(4,validator.getPdfPercentage());
+			ps.setInt(3,validator.getPdfPercentage());
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			Logger.putLog("SQL Exception: ", ValidatorDAO.class, Logger.LOG_LEVEL_ERROR, e);
