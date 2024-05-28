@@ -223,7 +223,6 @@ public final class BasicServiceUtils {
 			complexityValue = "4";
 		}
 		basicServiceForm.setComplexity(complexityValue);
-		Logger.putLog("COMPLEJIDAD: "+ basicServiceForm.getComplexity(), BasicServiceUtils.class, Logger.LOG_LEVEL_ERROR);
 		basicServiceForm.setDepthReport(request.getParameter(Constants.PARAM_DEPTH_REPORT));
 		return basicServiceForm;
 	}
@@ -311,7 +310,9 @@ public final class BasicServiceUtils {
 					if (!org.apache.commons.lang3.StringUtils.isEmpty(parameterFileName) && parameterFileName.toLowerCase().endsWith(".pdf")) {
 						// Por alguna razón no se codifica correctamente si pasamos un pdf a pelo.
 						content = contentParameter.replaceAll("_", "/").replaceAll("-", "+");
-						basicServiceForm.setName(parameterFileName);
+						//basicServiceForm.setName(parameterFileName);
+						basicServiceForm.setFileName(parameterFileName);
+						Logger.putLog("parameterFileName: " + parameterFileName, BasicServiceUtils.class, Logger.LOG_LEVEL_ERROR);
 					} else {
 						if (decode) {
 							File tmp = File.createTempFile("oaw_basic_service_", ".txt");
