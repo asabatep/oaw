@@ -20,6 +20,7 @@ import java.util.List;
 import org.apache.commons.beanutils.BeanUtils;
 
 import es.inteco.common.Constants;
+import es.inteco.common.logging.Logger;
 import es.inteco.common.properties.PropertiesManager;
 import es.inteco.common.utils.StringUtils;
 import es.inteco.crawler.job.CrawledLink;
@@ -98,7 +99,11 @@ public class BasicServiceCrawlingManager {
 		crawlerData.setCartuchos(cartuchos);
 		crawlerData.setIdCrawling(idCrawling);
 		crawlerData.setIdFulfilledCrawling(idCrawling);
-		crawlerData.setNombreRastreo(basicServiceForm.getName());
+		if (basicServiceForm.getFileName().contains(".pdf") && basicServiceForm.getAnalysisType().equals(BasicServiceAnalysisType.CODIGO_FUENTE)){
+			Logger.putLog("SIIIII", BasicServiceCrawlingManager.class, Logger.LOG_LEVEL_ERROR);
+			crawlerData.setNombreRastreo(basicServiceForm.getFileName());
+		}
+		else crawlerData.setNombreRastreo(basicServiceForm.getName());
 		crawlerData.setLanguage(basicServiceForm.getLanguage());
 		crawlerData.setPseudoaleatorio(true);
 		crawlerData.setUser(basicServiceForm.getUser());

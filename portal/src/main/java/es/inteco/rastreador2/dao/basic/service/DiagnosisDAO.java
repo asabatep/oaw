@@ -180,6 +180,9 @@ public final class DiagnosisDAO {
 					} else if (basicServiceForm.getAnalysisType() == BasicServiceAnalysisType.MIXTO) {
 						basicServiceForm.setDomain(cleanUrls(rs.getString("domain")));
 					}
+					else if (basicServiceForm.getAnalysisType() == BasicServiceAnalysisType.CODIGO_FUENTE) {
+						basicServiceForm.setName(rs.getString("filename"));
+					}
 					basicServiceForm.setComplexity(rs.getString("complexity"));
 					basicServiceForm.setFileName(rs.getString("filename"));
 					basicServiceForm.setDepthReport(rs.getString("depthReport"));
