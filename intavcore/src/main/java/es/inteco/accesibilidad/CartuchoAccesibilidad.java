@@ -79,7 +79,7 @@ public class CartuchoAccesibilidad extends Cartucho {
 			    Connection c = DataBaseManager.getConnection();
 				ValidatorForm validator = ValidatorDAO.getValidator(c);
 				if(validator.getStatus() == 1){
-					if(validator.getPdfActive() == 0 && (checkAccesibility.getUrl().contains(".pdf") || new String(Base64.decodeBase64(checkAccesibility.getContent())).contains("%PDF"))){
+					if(!checkAccesibility.getGuideline().contains("pdf") && (checkAccesibility.getUrl().contains(".pdf") || new String(Base64.decodeBase64(checkAccesibility.getContent())).contains("%PDF"))){
 						DataBaseManager.closeConnection(c);
 					}
 					else{
