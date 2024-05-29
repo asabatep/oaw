@@ -129,13 +129,6 @@ public class BasicServiceForm extends ValidatorForm {
 	 */
 	public void setDomain(String domain) {
 		this.domain = domain;
-		if (analysisType != BasicServiceAnalysisType.MIXTO) {
-			if (domain.contains("\r\n")) {
-				analysisType = BasicServiceAnalysisType.LISTA_URLS;
-			} else {
-				analysisType = BasicServiceAnalysisType.URL;
-			}
-		}
 	}
 
 	/**
@@ -366,6 +359,24 @@ public class BasicServiceForm extends ValidatorForm {
 	 */
 	public void setInDirectory(boolean inDirectory) {
 		this.inDirectory = inDirectory;
+	}
+
+	/**
+	 * Checks if is URL.
+	 *
+	 * @return true, if is url
+	 */
+	public boolean isURL() {
+		return analysisType == BasicServiceAnalysisType.URL;
+	}
+
+	/**
+	 * Checks if is List of URL.
+	 *
+	 * @return true, if is list of url
+	 */
+	public boolean isListofURL() {
+		return analysisType == BasicServiceAnalysisType.LISTA_URLS;
 	}
 
 	/**

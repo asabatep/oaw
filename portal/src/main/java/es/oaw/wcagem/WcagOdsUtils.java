@@ -96,7 +96,7 @@ public final class WcagOdsUtils {
 		for (NoWebpage nowebpage : nowebpageList) {
 			if (resultsProcessed < MAX_PAGES) {
 				resultsProcessed++;
-				sheet.getCellAt("C" + initRow).setValue("PDF", ODValueType.STRING, true, false);
+				sheet.getCellAt("C" + initRow).setValue(nowebpage.getTitle(), ODValueType.STRING, true, false);
 				sheet.getCellAt("D" + initRow).setValue("Documento no web", ODValueType.STRING, true, false);
 				sheet.getCellAt("E" + initRow).setValue("", ODValueType.STRING, true, false);
 				sheet.getCellAt("F" + initRow).setValue(nowebpage.getSource(), ODValueType.STRING, true, false);
