@@ -10,8 +10,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @NoArgsConstructor
 public class ValidationRequestDTO {
-	private String htmlContent;
-	private String url;
+	private String content;
 	private String methodology;
 	private boolean brokenLinks;
 }
