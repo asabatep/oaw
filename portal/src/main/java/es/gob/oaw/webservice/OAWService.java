@@ -68,20 +68,20 @@ public class OAWService {
 		// Metodología por defecto (Plugins de CMS y Navegador)
 		checkAccessibility.setGuidelineFile(defaultGuideline);
 		// Si el usuario fija una metodología, comprobación de enlaces... buscamos en las guidelines (Validación de URL)
-		if (!StringUtils.isBlank(validationRequestDTO.getMethodology())) {
+		if (!StringUtils.isBlank(validationRequestDTO.getGuideline())) {
 			checkAccessibility.setGuidelineFile(getGuidelineFile(validationRequestDTO));
 		}
 		EvaluatorUtility.initialize();
 		Evaluation evaluation = null;
 		// Validación de código fuente (Plugin de CMS, Plugin de Navegador)
-		if (!StringUtils.isBlank(validationRequestDTO.getContent())) {
+		if (!es.inteco.common.utils.StringUtils.isUrl(validationRequestDTO.getContent())) {
 			byte[] decodedBytes = Base64.getDecoder().decode(validationRequestDTO.getContent().trim());
 			String sourceCode = new String(decodedBytes);
 			checkAccessibility.setContent(sourceCode);
 			evaluation = EvaluatorUtils.evaluateContent(checkAccessibility, defaultLanguage);
 			// Validación por url (Validador de URL). Esta opción hace uso del motor-js para renderizar la página web a analizar
-		} else if (!StringUtils.isBlank(validationRequestDTO.getUrl())) {
-			checkAccessibility.setUrl(validationRequestDTO.getUrl());
+		} else {
+			checkAccessibility.setUrl(validationRequestDTO.getContent());
 			evaluation = EvaluatorUtils.evaluate(checkAccessibility, defaultLanguage);
 		}
 		if (Objects.nonNull(evaluation)) {
@@ -234,7 +234,7 @@ public class OAWService {
 	}
 
 	private String getGuidelineFile(ValidationRequestDTO validationRequestDTO) {
-		String guideline = validationRequestDTO.getMethodology();
+		String guideline = validationRequestDTO.getGuideline();
 		if (!validationRequestDTO.isBrokenLinks()) {
 			guideline = guideline.concat("-nobroken");
 		}

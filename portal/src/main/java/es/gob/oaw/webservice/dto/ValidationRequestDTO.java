@@ -11,7 +11,6 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 public class ValidationRequestDTO {
 	private String content;
-	private String url;
-	private String methodology;
+	private String guideline;
 	private boolean brokenLinks;
 }
