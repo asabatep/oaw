@@ -99,7 +99,7 @@ public class WcagOdtUtils {
 		for (String site : sites.keySet()) {
 			errors = sites.get(site);
 			if (checkSpecialCharacters(site)) {
-				createHeader(odtDocument, odfFileContent, reportCode, StringEscapeUtils.escapeHtml(site));
+				createHeader(odtDocument, odfFileContent, reportCode, StringEscapeUtils.escapeJava(site));
 			} else {
 				createHeader(odtDocument, odfFileContent, reportCode, site);
 			}
@@ -166,9 +166,11 @@ public class WcagOdtUtils {
 					else {
 						codeReport = getWCAG2CodeReport(code); 
 					}
+					
 					String title = messageResources.getMessage(subGroup.getDescription());
 					String errorMessage = checkDescriptionsManager.getString(problem.getError());
 					String solution = cleanHtmlLabels(checkDescriptionsManager.getString(problem.getRationale()));
+					Logger.putLog("CHECK: " + problem.getCheck() + ", " + title + ", " + errorMessage + ", " + solution, WcagOdtUtils.class, Logger.LOG_LEVEL_ERROR);
 					if (globalResultsMap.containsKey(codeReport)) {
 						existingCodeReport(codeReport, title, errorMessage, solution, observatoryEvaluationForm, globalResultsMap);
 					} else {
@@ -451,7 +453,7 @@ public class WcagOdtUtils {
 	}
 
 	private static boolean checkSpecialCharacters(String text) {
-		String specialCharactersRegex = "[!@#$%^&*(),.?\":{}|<>]";
+		String specialCharactersRegex = "[!@#$%^&*(),.?\":{}|<>áéíóúÁÉÍÓÚñÑüÜ]";
 		Pattern pattern = Pattern.compile(specialCharactersRegex);
 		Matcher matcher = pattern.matcher(text);
 		return matcher.find();
