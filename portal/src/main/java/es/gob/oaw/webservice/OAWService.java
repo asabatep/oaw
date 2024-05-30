@@ -68,7 +68,7 @@ public class OAWService {
 		// Metodología por defecto (Plugins de CMS y Navegador)
 		checkAccessibility.setGuidelineFile(defaultGuideline);
 		// Si el usuario fija una metodología, comprobación de enlaces... buscamos en las guidelines (Validación de URL)
-		if (!StringUtils.isBlank(validationRequestDTO.getMethodology())) {
+		if (!StringUtils.isBlank(validationRequestDTO.getGuideline())) {
 			checkAccessibility.setGuidelineFile(getGuidelineFile(validationRequestDTO));
 		}
 		EvaluatorUtility.initialize();
@@ -234,7 +234,7 @@ public class OAWService {
 	}
 
 	private String getGuidelineFile(ValidationRequestDTO validationRequestDTO) {
-		String guideline = validationRequestDTO.getMethodology();
+		String guideline = validationRequestDTO.getGuideline();
 		if (!validationRequestDTO.isBrokenLinks()) {
 			guideline = guideline.concat("-nobroken");
 		}
