@@ -175,7 +175,7 @@
                 //Save filename
                 final String postRequest = String.format("content=%s&url=%s&correo=%s&complexity=%s&informe=%s&usuario=%s&inDirectory=%s&registerAnalysis=%s&analysisToDelete=%s&informe-nobroken=%s&urls=%s&type=%s&filename=%s&depthReport=%s",
                         encodedCodigo != null ? encodedCodigo : "",
-                        url != null ? url : "",
+                        url != null ? codec.encode(url) : "",
                         correo,
                         complexity,
                         informe,
@@ -184,7 +184,7 @@
                         registerAnalysis,
                         analysisToDelete,
                         nobroken,
-                        urls,
+                        codec.encode(urls),
                         type,
                         fileName,
                         depthReport

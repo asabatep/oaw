@@ -100,7 +100,6 @@ public class BasicServiceCrawlingManager {
 		crawlerData.setIdCrawling(idCrawling);
 		crawlerData.setIdFulfilledCrawling(idCrawling);
 		if (basicServiceForm.getFileName().contains(".pdf") && basicServiceForm.getAnalysisType().equals(BasicServiceAnalysisType.CODIGO_FUENTE)){
-			Logger.putLog("SIIIII", BasicServiceCrawlingManager.class, Logger.LOG_LEVEL_ERROR);
 			crawlerData.setNombreRastreo(basicServiceForm.getFileName());
 		}
 		else crawlerData.setNombreRastreo(basicServiceForm.getName());
