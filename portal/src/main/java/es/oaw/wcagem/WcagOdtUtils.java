@@ -99,7 +99,7 @@ public class WcagOdtUtils {
 		for (String site : sites.keySet()) {
 			errors = sites.get(site);
 			if (checkSpecialCharacters(site)) {
-				createHeader(odtDocument, odfFileContent, reportCode, StringEscapeUtils.escapeJava(site));
+				createHeader(odtDocument, odfFileContent, reportCode, StringEscapeUtils.escapeXml(site));
 			} else {
 				createHeader(odtDocument, odfFileContent, reportCode, site);
 			}
@@ -170,7 +170,6 @@ public class WcagOdtUtils {
 					String title = messageResources.getMessage(subGroup.getDescription());
 					String errorMessage = checkDescriptionsManager.getString(problem.getError());
 					String solution = cleanHtmlLabels(checkDescriptionsManager.getString(problem.getRationale()));
-					Logger.putLog("CHECK: " + problem.getCheck() + ", " + title + ", " + errorMessage + ", " + solution, WcagOdtUtils.class, Logger.LOG_LEVEL_ERROR);
 					if (globalResultsMap.containsKey(codeReport)) {
 						existingCodeReport(codeReport, title, errorMessage, solution, observatoryEvaluationForm, globalResultsMap);
 					} else {
