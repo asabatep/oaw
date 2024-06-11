@@ -289,12 +289,13 @@ public class BasicServiceObservatoryScorePdfSectionBuilder {
 					Section section1 = PDFUtils.createSection(messageResources.getMessage("observatorio.nivel.cumplimiento.media.verificacion.title.level1"), pdfTocManager.getIndex(),
 							ConstantsFont.CHAPTER_TITLE_MP_FONT_2_L, chapter, pdfTocManager.addSection(), 1);
 					addMidsComparationByVerificationLevelGraphic(pdfBuilder, messageResources, section1, file, currentEvaluationPageList, noDataMess, Constants.OBS_PRIORITY_1);
-					section.add(createObservatoryVerificationScoreTable(messageResources, currentScore, previousScore, Constants.OBS_PRIORITY_1));
+					section1.add(createObservatoryVerificationScoreTable(messageResources, currentScore, previousScore, Constants.OBS_PRIORITY_1));
+					section.add(Chunk.NEWLINE);
 					section.add(Chunk.NEXTPAGE);
 					Section section2 = PDFUtils.createSection(messageResources.getMessage("observatorio.nivel.cumplimiento.media.verificacion.title.level2"), pdfTocManager.getIndex(),
 							ConstantsFont.CHAPTER_TITLE_MP_FONT_2_L, chapter, pdfTocManager.addSection(), 1);
 					addMidsComparationByVerificationLevelGraphic(pdfBuilder, messageResources, section2, file, currentEvaluationPageList, noDataMess, Constants.OBS_PRIORITY_2);
-					section.add(createObservatoryVerificationScoreTable(messageResources, currentScore, previousScore, Constants.OBS_PRIORITY_2));
+					section2.add(createObservatoryVerificationScoreTable(messageResources, currentScore, previousScore, Constants.OBS_PRIORITY_2));
 				}
 			} else if (!(pdfBuilder instanceof AnonymousResultExportPdfAccesibilidad)) {
 				final PdfPTable tablaRankings = new PdfPTable(columnWidths);
