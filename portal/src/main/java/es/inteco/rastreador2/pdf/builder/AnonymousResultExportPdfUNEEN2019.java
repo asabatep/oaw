@@ -1832,10 +1832,13 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 		section2.add(new Paragraph(messageResources.getMessage("observatorio.nivel.cumplimiento.media.verificacion.p2"), ConstantsFont.PARAGRAPH));
 		section2.add(Chunk.NEWLINE);
 		section2.add(Chunk.NEXTPAGE);
+		section2.add(Chunk.NEWLINE);
 		Section section3 = PDFUtils.createSection(messageResources.getMessage("observatorio.nivel.cumplimiento.media.verificacion.title.level1"), pdfTocManager.getIndex(),
 				ConstantsFont.CHAPTER_TITLE_MP_FONT_2_L, chapter, pdfTocManager.addSection(), 1);
 		addMidsComparationByVerificationLevelGraphic(pdfBuilder, messageResources, section3, file, currentEvaluationPageList, noDataMess, Constants.OBS_PRIORITY_1);
 		section3.add(createObservatoryVerificationScoreTable(messageResources, currentScore, rankingPrevio != null ? previousScore : null, Constants.OBS_PRIORITY_1, pdfBuilder.isBasicService()));
+		section2.add(Chunk.NEXTPAGE);
+		section2.add(Chunk.NEWLINE);
 		Section section4 = PDFUtils.createSection(messageResources.getMessage("observatorio.nivel.cumplimiento.media.verificacion.title.level2"), pdfTocManager.getIndex(),
 				ConstantsFont.CHAPTER_TITLE_MP_FONT_2_L, chapter, pdfTocManager.addSection(), 1);
 		addMidsComparationByVerificationLevelGraphic(pdfBuilder, messageResources, section4, file, currentEvaluationPageList, noDataMess, Constants.OBS_PRIORITY_2);
