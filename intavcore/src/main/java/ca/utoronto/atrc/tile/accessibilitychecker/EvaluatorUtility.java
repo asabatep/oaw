@@ -627,6 +627,14 @@ public final class EvaluatorUtility {
 		}
 	}
 
+
+	private static String removeNoscriptTags(String html) {
+		// Regular expression to remove <noscript> tags and their contents
+		Pattern pattern = Pattern.compile("<noscript.*?>.*?</noscript>", Pattern.DOTALL);
+		Matcher matcher = pattern.matcher(html);
+		return matcher.replaceAll("");
+	}
+
 	/**
 	 * Load html file.
 	 *
@@ -646,6 +654,7 @@ public final class EvaluatorUtility {
 			Document doc = null;
 			Element elementRoot = null;
 			String content = StringUtils.getContentAsString(inputStream, charset);
+			content = removeNoscriptTags(content);
 			for (int i = 0; i < 2 && (doc == null || elementRoot == null); i++) {
 				content = addFinalTags(content);
 				final InputStream newInputStream = new ByteArrayInputStream(content.getBytes(charset));
