@@ -5045,8 +5045,8 @@
 		<machine>
 			<trigger element="dl" />
 			<condition type="and">
-				<function call="element-count-equals" node="." value="dt" number="0" attribute1="0" />
-				<function call="element-count-equals" node="." value="dd" number="0" attribute1="0" />
+				<function call="element-count-equals" node="." value="dt" number="0" attribute1="1" />
+				<function call="element-count-equals" node="." value="dd" number="0" attribute1="1" />
 			</condition>
 		</machine>
 	</check>
