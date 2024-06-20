@@ -315,7 +315,6 @@ public class CheckerParser extends DOMParser {
         }
 
         else if ("iframe".equalsIgnoreCase(node.getNodeName())) {
-            parseImg(node);
             if (!((Element) node).getAttribute("title").trim().isEmpty()) {
                 if (nodePreviousHeader != null) {
                     nodePreviousHeader.setUserData("headerHasContents", true, null);
