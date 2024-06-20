@@ -137,6 +137,7 @@ public class BasicServiceManager {
 	 */
 	public void executeCrawling(final BasicServiceForm basicServiceForm, final MessageResources messageResources) {
 		Logger.putLog("executeCrawling", BasicServiceManager.class, Logger.LOG_LEVEL_WARNING);
+		Logger.putLog("BasicServiceName: " + basicServiceForm.getFileName(), BasicServiceManager.class, Logger.LOG_LEVEL_WARNING);
 		String pdfPath = null;
 		try {
 			// Lanzamos el rastreo de INTAV
@@ -217,7 +218,7 @@ public class BasicServiceManager {
 					try {
 			    	Connection c = DataBaseManager.getConnection();
 					ValidatorForm validator = ValidatorDAO.getValidator(c);
-					if(validator.getStatus() == 1 && validator.getPdfActive() == 1){
+					if(validator.getStatus() == 1 && basicServiceForm.getReport().contains("pdf")){
 						pdfActive = true;
 						DataBaseManager.closeConnection(c);
 					}

@@ -56,14 +56,16 @@ public class SourceFilesManager {
 		boolean notEmpty = false;
 		int index = 1;
 		for (Long evaluationId : evaluationIds) {
+			final Analysis analysis = AnalisisDatos.getAnalisisFromId(c, evaluationId);
+			if(!analysis.getSource().startsWith("%PDF") && !analysis.getSource().endsWith("%%EOF")) { // Si el documento es un pdf no lo generamos
 			final File pageSourcesDirectory = new File(parentDir, "paginas/" + index);
 			if (!pageSourcesDirectory.mkdirs()) {
 				Logger.putLog("No se ha podido crear el directorio sources - " + pageSourcesDirectory.getAbsolutePath(), PdfGeneratorThread.class, Logger.LOG_LEVEL_ERROR);
 			}
 			
 			try (PrintWriter fw = new PrintWriter(new FileWriter(new File(pageSourcesDirectory, "references.txt"), true))) {
-				final Analysis analysis = AnalisisDatos.getAnalisisFromId(c, evaluationId);
-				if(!analysis.getSource().startsWith("%PDF") && !analysis.getSource().endsWith("%%EOF")) { // Si el documento es un pdf no lo generamos
+				
+				
 					final File htmlTempFile = File.createTempFile("oaw_", "_html.html", pageSourcesDirectory);
 					notEmpty = true;
 					fw.println(writeTempFile(htmlTempFile, analysis.getSource(), analysis.getUrl()));
@@ -72,8 +74,7 @@ public class SourceFilesManager {
 					final File stylesheetTempFile = createCSSTempFile(cssdto.getUrl(), pageSourcesDirectory);
 					fw.println(writeTempFile(stylesheetTempFile, cssdto.getCodigo(), cssdto.getUrl()));
 					}
-					index++;
-				}
+						
 				
 				fw.flush();
 			} catch (IOException e) {
@@ -81,6 +82,8 @@ public class SourceFilesManager {
 				
 			}
 		}
+		index++;
+	}
 		return notEmpty;
 	}
 

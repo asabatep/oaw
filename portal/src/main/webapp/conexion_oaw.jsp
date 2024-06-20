@@ -30,7 +30,7 @@
 
     // Path de los servicios que se invocarán. Se mantienen invariables entre entornos y solo hará falta modificarlos como consecuencia de cambios en la aplicación.
     private final static String BASIC_SERVICE_ENDPOINT = "basicServiceAction.do";
-    private final static String HISTORICO_ENDPOINT = "checkHistorico.do";
+    private final static String HISTORICO_ENDPOINT = "checkHistorico.do"; 
  
     // Clase para manejar las solicitudes al servicio de diagnóstico y realizar peticiones a los servicios que manejan el historico/evolutivo del servicio de diagnóstico.
     class RequestManager {
@@ -175,7 +175,7 @@
                 //Save filename
                 final String postRequest = String.format("content=%s&url=%s&correo=%s&complexity=%s&informe=%s&usuario=%s&inDirectory=%s&registerAnalysis=%s&analysisToDelete=%s&informe-nobroken=%s&urls=%s&type=%s&filename=%s&depthReport=%s",
                         encodedCodigo != null ? encodedCodigo : "",
-                        url != null ? url : "",
+                        url != null ? codec.encode(url) : "",
                         correo,
                         complexity,
                         informe,
@@ -184,7 +184,7 @@
                         registerAnalysis,
                         analysisToDelete,
                         nobroken,
-                        urls,
+                        codec.encode(urls),
                         type,
                         fileName,
                         depthReport

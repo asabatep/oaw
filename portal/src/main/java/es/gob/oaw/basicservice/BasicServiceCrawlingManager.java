@@ -99,7 +99,10 @@ public class BasicServiceCrawlingManager {
 		crawlerData.setCartuchos(cartuchos);
 		crawlerData.setIdCrawling(idCrawling);
 		crawlerData.setIdFulfilledCrawling(idCrawling);
-		crawlerData.setNombreRastreo(basicServiceForm.getName());
+		if (basicServiceForm.getFileName().contains(".pdf") && basicServiceForm.getAnalysisType().equals(BasicServiceAnalysisType.CODIGO_FUENTE)){
+			crawlerData.setNombreRastreo(basicServiceForm.getFileName());
+		}
+		else crawlerData.setNombreRastreo(basicServiceForm.getName());
 		crawlerData.setLanguage(basicServiceForm.getLanguage());
 		crawlerData.setPseudoaleatorio(true);
 		crawlerData.setUser(basicServiceForm.getUser());

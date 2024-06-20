@@ -359,7 +359,7 @@ public class TestCrawl {
 		connection.connect();
 		int responseCode = connection.getResponseCode();
 		if (responseCode == HttpURLConnection.HTTP_OK) {
-			if (connection.getHeaderField("content-type") != null && connection.getHeaderField("content-type").contains("text/html")) {
+			if (connection.getHeaderField("content-type") != null && connection.getHeaderField("content-type").contains("text/html") || connection.getHeaderField("content-type").contains("application/pdf")) {
 				return true;
 			} else {
 				LOG.info("La url " + urlLink + " ha sido rechazada por no ser un documento de tipo text/html");

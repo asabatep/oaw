@@ -94,17 +94,7 @@ public class ExecuteScheduledObservatory implements StatefulJob, InterruptableJo
 		String url = "";
 		try {
 			Connection c = DataBaseManager.getConnection();
-			int guidelineId = CartuchoDAO.getGuideline(c, cartridgeId);
-			long guidelineLong = guidelineId;
-			String guideline = RastreoDAO.getNombreNorma(c, guidelineLong);
-			ValidatorForm validatorForm = ValidatorDAO.getValidator(c);
-			Logger.putLog("GUIDELINE: " + guideline, ExecuteScheduledObservatory.class, Logger.LOG_LEVEL_WARNING);
-			if (guideline.contains("_pdf")){
-				validatorForm.setStatus(1);
-				validatorForm.setPdfActive(1);
-			}
-			else validatorForm.setPdfActive(0);
-			
+		
 			// Si se ha editado la categoría de semillas para añadir más, se
 			// añaden ahora.
 			createNewCrawlings(c, observatoryId);
