@@ -890,6 +890,7 @@ public final class WcagEmUtils {
 		checks.add("522");
 		checks.add("523");
 		checks.add("524");
+		checks.add("525");
 		
 		checkWcagRelationMap.put(WcagEmPointKey.WCAG_1_3_1.getWcagEmId(), checks);
 		// 1.3.4
