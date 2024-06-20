@@ -401,7 +401,11 @@ public class CrawlerJob implements InterruptableJob {
 		String cookie = null;
 		int depth = crawlerData.getProfundidad();
 		int width = crawlerData.getTopN();
-		complexity = depth * width + 1;
+		if (depth != 1 && width != 1) {
+			complexity = depth * width + 1;
+		} else {
+			complexity = 1;
+		}
 		// Force to 1 page in this case
 		if (crawlerData.getIdCartridge() == 10) {
 			crawlerData.setTopN(1);
@@ -426,8 +430,8 @@ public class CrawlerJob implements InterruptableJob {
 						if (s != null) {
 							depth = s.getDepth();
 							width = s.getWidth();
-							Logger.putLog("PROFUNDIDAD: " + depth ,CrawlerJob.class, Logger.LOG_LEVEL_WARNING);
-							Logger.putLog("TOPN: " + width ,CrawlerJob.class, Logger.LOG_LEVEL_WARNING);
+							Logger.putLog("PROFUNDIDAD: " + depth, CrawlerJob.class, Logger.LOG_LEVEL_WARNING);
+							Logger.putLog("TOPN: " + width, CrawlerJob.class, Logger.LOG_LEVEL_WARNING);
 							complexity = depth * width + 1;
 							// Set to recursive calls
 							crawlerData.setTopN(width);
@@ -841,35 +845,31 @@ public class CrawlerJob implements InterruptableJob {
 		return false;
 	}
 
-	private boolean addPdf(String url, String guideline){
-		if(url.contains(".pdf")){
-		try {
-			Connection c = DataBaseManager.getConnection();
-			ValidatorForm validator = ValidatorDAO.getValidator(c);
-			
-			if(validator.getStatus() == 0 || validator.getPdfActive() == 0 || !guideline.contains("_pdf")){
+	private boolean addPdf(String url, String guideline) {
+		if (url.contains(".pdf")) {
+			try {
+				Connection c = DataBaseManager.getConnection();
+				ValidatorForm validator = ValidatorDAO.getValidator(c);
+				if (validator.getStatus() == 0 || !guideline.contains("_pdf")) {
+					DataBaseManager.closeConnection(c);
+					return false;
+				}
 				DataBaseManager.closeConnection(c);
+				float pdfPercentage = validator.getPdfPercentage() / 100.0f;
+				if ((float) (pdfCount + 1) / complexity > pdfPercentage) {
+					Logger.putLog("Superado el maximo numero de pdfs:", CrawlerJob.class, Logger.LOG_LEVEL_WARNING);
+					return false;
+				} else {
+					Logger.putLog("Porcentaje de pdfs: " + (float) pdfCount / complexity + url, CrawlerJob.class, Logger.LOG_LEVEL_WARNING);
+					return true;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 				return false;
 			}
-			DataBaseManager.closeConnection(c);
-			float pdfPercentage = validator.getPdfPercentage() / 100.0f;
-			if ((float) (pdfCount + 1) / complexity > pdfPercentage){
-			Logger.putLog("Superado el maximo numero de pdfs:",CrawlerJob.class, Logger.LOG_LEVEL_WARNING);
-			return false;
-			}
-			else{
-				Logger.putLog("Porcentaje de pdfs:" + (float) pdfCount / complexity, CrawlerJob.class, Logger.LOG_LEVEL_WARNING);
-				return true;
-				}
-		
+		} else
+			return true;
 	}
-	catch (Exception e){
-		e.printStackTrace();
-		return false;
-	}
-	}
-		else return true;
-}
 
 	/**
 	 * Realiza el rastreo completo de una URL.
@@ -915,7 +915,7 @@ public class CrawlerJob implements InterruptableJob {
 						try {
 							final String absoluteUrlLink = CrawlerUtils.getAbsoluteUrl(document, url, CrawlerUtils.encodeUrl(urlLink)).toString().replaceAll("\\.\\./", EMPTY_STRING);
 							if (isValidUrl(rootUrl, domain, absoluteUrlLink, crawlerData)) {
-								if ((crawlerData.getTopN() == unlimitedTopN)
+								if((crawlerData.getTopN() == unlimitedTopN)
 										|| ((cont < crawlerData.getTopN() || (crawlerData.isRetry() && cont < extendedWidth)) && maxIntentosBuscarTipos < crawlerData.getMaxIntentosBuscarTipos())) {
 //								if ((crawlerData.getTopN() == unlimitedTopN) || ((cont < crawlerData.getTopN()) && maxIntentosBuscarTipos < crawlerData.getMaxIntentosBuscarTipos())) {
 									if (isLinkToAdd(rootUrl, domain, absoluteUrlLink, cookie, levelLinks, crawlerData, true, ignoredLinks, crawlerData.isCheckFormPage(),
@@ -1063,7 +1063,7 @@ public class CrawlerJob implements InterruptableJob {
 		connection.connect();
 		int responseCode = connection.getResponseCode();
 		if (responseCode == HttpURLConnection.HTTP_OK) {
-			if (connection.getHeaderField("content-type") != null && connection.getHeaderField("content-type").contains("text/html")) {
+			if (connection.getHeaderField("content-type") != null && (connection.getHeaderField("content-type").contains("text/html")|| connection.getHeaderField("content-type").contains("application/pdf"))) {
 				CheckAccessibility checkAccessibility = new CheckAccessibility();
 				checkAccessibility.setUrl(urlLink);
 				CheckerParser parser = new CheckerParser();
@@ -1131,10 +1131,11 @@ public class CrawlerJob implements InterruptableJob {
 		connection.connect();
 		int responseCode = connection.getResponseCode();
 		if (responseCode == HttpURLConnection.HTTP_OK) {
-			if (connection.getHeaderField("content-type") != null && (connection.getHeaderField("content-type").contains("text/html") || connection.getHeaderField("content-type").contains("application/pdf"))) {
+			if (connection.getHeaderField("content-type") != null
+					&& (connection.getHeaderField("content-type").contains("text/html") || connection.getHeaderField("content-type").contains("application/pdf"))) {
 				return true;
 			} else {
-				Logger.putLog(String.format("La url %s ha sido rechazada por no ser un documento de tipo text/html", urlLink), CrawlerJob.class, Logger.LOG_LEVEL_INFO);
+				Logger.putLog(String.format("La url %s ha sido rechazada por no ser un documento de tipo text/html o application/pdf", urlLink), CrawlerJob.class, Logger.LOG_LEVEL_INFO);
 				rejectedDomains.add(urlLink);
 			}
 		} else {
@@ -1195,7 +1196,7 @@ public class CrawlerJob implements InterruptableJob {
 						if (isValidUrl(rootUrl, domain, connectedURL, crawlerData)) {
 							if (!md5Content.contains(remoteContentHash)) {
 								final CrawledLink crawledLink = new CrawledLink(connectedURL, remoteContent, numRetries, numRedirections);
-								if(crawledLink.getUrl().contains(".pdf")){
+								if (crawledLink.getUrl().contains(".pdf")) {
 									pdfCount++;
 								}
 								if (levelLinks != null) {

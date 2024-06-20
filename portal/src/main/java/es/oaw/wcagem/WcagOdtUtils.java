@@ -52,7 +52,10 @@ public class WcagOdtUtils {
 	private static final String[] reportCodes = { "9.1.1.1", "9.1.2.1", "9.1.2.2", "9.1.2.3", "9.1.2.5", "9.1.3.1", "9.1.3.2", "9.1.3.3", "9.1.3.4", "9.1.3.5", "9.1.4.1", "9.1.4.2", "9.1.4.3",
 			"9.1.4.4", "9.1.4.5", "9.1.4.10", "9.1.4.11", "9.1.4.12", "9.1.4.13", "9.2.1.1", "9.2.1.2", "9.2.1.4", "9.2.2.1", "9.2.2.2", "9.2.3.1", "9.2.4.1", "9.2.4.2", "9.2.4.3", "9.2.4.4",
 			"9.2.4.5", "9.2.4.6", "9.2.4.7", "9.2.5.1", "9.2.5.2", "9.2.5.3", "9.2.5.4", "9.3.1.1", "9.3.1.2", "9.3.2.1", "9.3.2.2", "9.3.2.4", "9.3.3.1", "9.3.3.2", "9.3.2.3", "9.3.3.2", "9.3.3.3",
-			"9.3.3.4", "9.4.1.1", "9.4.1.2", "9.4.1.3" , "10.1.1.1" , "10.1.3.1" , "10.2.4.2" , "10.3.1.1" , "10.4.1.1" , "10.4.1.2"};
+			"9.3.3.4", "9.4.1.1", "9.4.1.2", "9.4.1.3" , "10.1.1.1", "10.1.2.1", "10.1.2.2", "10.1.2.3", "10.1.2.5", "10.1.3.1", "10.1.3.2", "10.1.3.3", "10.1.3.4", "10.1.3.5", "10.1.4.1", "10.1.4.2", 
+			"10.1.4.3", "10.1.4.4", "10.1.4.5", "10.1.4.10", "10.1.4.11", "10.1.4.12", "10.1.4.13", "10.2.1.1", "10.2.1.2", "10.2.1.4", "10.2.2.1", "10.2.2.2", "10.2.3.1", "10.2.4.2", "10.2.4.3", "10.2.4.4", 
+			"10.2.4.6", "10.2.4.7", "10.2.5.1", "10.2.5.2", "10.2.5.3", "10.2.5.4", "10.3.1.1", "10.3.1.2", "10.3.2.1", "10.3.2.2", "10.3.3.1", "10.3.3.2", "10.3.3.3", "10.3.3.4", "10.4.1.1", "10.4.1.2", "10.4.1.3"
+};
 	private static final MessageResources messageResources = MessageResources.getMessageResources(Constants.MESSAGE_RESOURCES_UNE_EN2019);
 	private static final CheckDescriptionsManager checkDescriptionsManager = new CheckDescriptionsManager();
 	private static final String templateName = "hallazgos";
@@ -99,7 +102,7 @@ public class WcagOdtUtils {
 		for (String site : sites.keySet()) {
 			errors = sites.get(site);
 			if (checkSpecialCharacters(site)) {
-				createHeader(odtDocument, odfFileContent, reportCode, StringEscapeUtils.escapeHtml(site));
+				createHeader(odtDocument, odfFileContent, reportCode, StringEscapeUtils.escapeXml(site));
 			} else {
 				createHeader(odtDocument, odfFileContent, reportCode, site);
 			}
@@ -166,6 +169,7 @@ public class WcagOdtUtils {
 					else {
 						codeReport = getWCAG2CodeReport(code); 
 					}
+					
 					String title = messageResources.getMessage(subGroup.getDescription());
 					String errorMessage = checkDescriptionsManager.getString(problem.getError());
 					String solution = cleanHtmlLabels(checkDescriptionsManager.getString(problem.getRationale()));
@@ -451,7 +455,7 @@ public class WcagOdtUtils {
 	}
 
 	private static boolean checkSpecialCharacters(String text) {
-		String specialCharactersRegex = "[!@#$%^&*(),.?\":{}|<>]";
+		String specialCharactersRegex = "[!@#$%^&*(),.?\":{}|<>áéíóúÁÉÍÓÚñÑüÜ]";
 		Pattern pattern = Pattern.compile(specialCharactersRegex);
 		Matcher matcher = pattern.matcher(text);
 		return matcher.find();
