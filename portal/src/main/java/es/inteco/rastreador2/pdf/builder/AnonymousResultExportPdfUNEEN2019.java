@@ -712,7 +712,7 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 			}
 			if ((countC + countNA) == result.getValue().size()) {
 				resultCompilance.put(result.getKey(), Constants.OBS_COMPILANCE_FULL);
-			} else if ((countC + countNA) > countNC) {
+			} else if ((countC) > countNC) {
 				resultCompilance.put(result.getKey(), Constants.OBS_COMPILANCE_PARTIAL);
 			} else {
 				resultCompilance.put(result.getKey(), Constants.OBS_COMPILANCE_NONE);
@@ -2140,7 +2140,7 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 				table.addCell(PDFUtils.createTableCell(actualLabelValueBean.getValue(), Color.WHITE, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
 			}
 			table.addCell(PDFUtils.createTableCell(messageResources.getMessage("observatorio.puntuacion.nivel.2"), Color.WHITE, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
-			table.addCell(PDFUtils.createTableCell(actualScore.getScoreLevel2().toString(), Constants.GRIS_MUY_CLARO, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+			table.addCell(PDFUtils.createTableCell(!actualScore.getScoreLevel2().toString().equals("-1") ? actualScore.getScoreLevel2().toString() : "No aplica", Constants.GRIS_MUY_CLARO, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
 		}
 		table.setSpacingBefore(ConstantsFont.LINE_SPACE);
 		table.setSpacingAfter(0);
@@ -2190,7 +2190,7 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 				table.addCell(createEvolutionDifferenceCellValue(actualLabelValueBean.getValue(), previousLabelValueBean.getValue(), Color.WHITE));
 			}
 			table.addCell(PDFUtils.createTableCell(messageResources.getMessage("observatorio.puntuacion.nivel.2"), Color.WHITE, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
-			table.addCell(PDFUtils.createTableCell(actualScore.getScoreLevel2().toString(), Constants.GRIS_MUY_CLARO, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+			table.addCell(PDFUtils.createTableCell(!actualScore.getScoreLevel2().toString().equals("-1") ? actualScore.getScoreLevel2().toString() : "No aplica", Constants.GRIS_MUY_CLARO, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
 			table.addCell(createEvolutionDifferenceCellValue(actualScore.getScoreLevel2(), previousScore.getScoreLevel2(), Color.WHITE));
 		}
 		table.setSpacingBefore(ConstantsFont.LINE_SPACE);
@@ -2389,8 +2389,8 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 			}
 			// If there were no applicable level 2 checks we set the score to 0 to avoid dividing by 0
 			if(resultL2.size() - countNA == 0){
-				scoreForm.setScoreLevel2(new BigDecimal(0));
-				scoreForm.setScoreLevelAA(new BigDecimal(0));
+				scoreForm.setScoreLevel2(new BigDecimal(-1));
+				scoreForm.setScoreLevelAA(new BigDecimal(-1));
 			}
 			else{
 			scoreForm.setScoreLevel2(sumL2.divide(new BigDecimal(resultL2.size() - countNA), 2, BigDecimal.ROUND_HALF_UP));
