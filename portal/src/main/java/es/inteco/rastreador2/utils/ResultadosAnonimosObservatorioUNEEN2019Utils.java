@@ -3114,7 +3114,7 @@ public final class ResultadosAnonimosObservatorioUNEEN2019Utils {
 				}
 				if ((countC + countNA) == result.getValue().size()) {
 					totalC++;
-				} else if ((countC + countNA) > countNC) {
+				} else if ((countC) > countNC) {
 					totalPC++;
 				} else {
 					totalNC++;

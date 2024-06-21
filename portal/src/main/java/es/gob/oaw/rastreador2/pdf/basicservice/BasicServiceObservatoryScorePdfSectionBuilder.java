@@ -733,7 +733,7 @@ public class BasicServiceObservatoryScorePdfSectionBuilder {
 			table.addCell(PDFUtils.createTableCell(actualLabelValueBean.getValue(), Color.WHITE, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
 		}
 		table.addCell(PDFUtils.createTableCell(scoreLabel, Color.WHITE, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
-		table.addCell(PDFUtils.createTableCell(scoreValue.toString(), Constants.GRIS_MUY_CLARO, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+		table.addCell(PDFUtils.createTableCell(scoreValue.toString().equals("-1") ? "No aplica" : scoreValue.toString(), Constants.GRIS_MUY_CLARO, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
 		table.setSpacingBefore(ConstantsFont.LINE_SPACE);
 		table.setSpacingAfter(0);
 		return table;
@@ -789,7 +789,7 @@ public class BasicServiceObservatoryScorePdfSectionBuilder {
 			table.addCell(createEvolutionDifferenceCellValue(actualLabelValueBean.getValue(), previousLabelValueBean.getValue(), Color.WHITE));
 		}
 		table.addCell(PDFUtils.createTableCell(averageResultLabel, Color.WHITE, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
-		table.addCell(PDFUtils.createTableCell(actualScoreLevel.toString(), Constants.GRIS_MUY_CLARO, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+		table.addCell(PDFUtils.createTableCell(actualScoreLevel.toString().equals("-1") ? "No aplica" : actualScoreLevel.toString(), Constants.GRIS_MUY_CLARO, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
 		table.addCell(createEvolutionDifferenceCellValue(actualScoreLevel, previousScoreLevel, Color.WHITE));
 		table.setSpacingBefore(ConstantsFont.LINE_SPACE);
 		table.setSpacingAfter(0);
