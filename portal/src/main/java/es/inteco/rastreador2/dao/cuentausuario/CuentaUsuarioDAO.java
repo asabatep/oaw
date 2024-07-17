@@ -583,6 +583,42 @@ public final class CuentaUsuarioDAO {
 		}
 	}
 
+
+	/**
+	 * Gets the fulfilled crawlings.
+	 *
+	 * @param connection the connection
+	 * @param idCrawling the id crawling
+	 * @param page       the page
+	 * @return the fulfilled crawlings
+	 * @throws SQLException the SQL exception
+	 */
+	public static List<FulFilledCrawling> getExecutedCrawlings(Connection connection, Long idExecutedObs, int page) throws SQLException {
+		final List<FulFilledCrawling> crawlings = new ArrayList<>();
+		final PropertiesManager pmgr = new PropertiesManager();
+		final int pagSize = Integer.parseInt(pmgr.getValue(CRAWLER_PROPERTIES, "pagination.size"));
+		final int resultFrom = pagSize * page;
+		try (PreparedStatement ps = connection.prepareStatement("SELECT rr.* FROM rastreos_realizados rr " + "WHERE id_obs_realizado = ? ORDER BY fecha DESC LIMIT ? OFFSET ?")) {
+			ps.setLong(1, idExecutedObs);
+			ps.setInt(2, pagSize);
+			ps.setInt(3, resultFrom);
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					FulFilledCrawling fulfilledCrawling = new FulFilledCrawling();
+					fulfilledCrawling.setId(rs.getLong("id"));
+					fulfilledCrawling.setIdCrawling(rs.getLong("id_rastreo"));
+					fulfilledCrawling.setDate(rs.getTimestamp("fecha"));
+					fulfilledCrawling.setIdCartridge(rs.getLong("id_cartucho"));
+					crawlings.add(fulfilledCrawling);
+				}
+			}
+			return crawlings;
+		} catch (SQLException e) {
+			Logger.putLog("Exception: ", RastreoDAO.class, Logger.LOG_LEVEL_ERROR, e);
+			throw e;
+		}
+	}
+
 	/**
 	 * Gets the num client fulfilled crawlings.
 	 *

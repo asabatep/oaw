@@ -1441,6 +1441,29 @@ public final class ObservatorioDAO extends DataBaseDAO {
 		return semillasFormList;
 	}
 
+	public static ResultadoSemillaForm getResultFromObservatoryAndSeed(Connection c, final Long idObservatorioRealizado, final Long idLista) throws Exception{
+		c = reOpenConnectionIfIsNecessary(c);
+		try (PreparedStatement ps = c.prepareStatement("SELECT * FROM rastreos_realizados rr WHERE rr.id_obs_realizado = ? and id_lista = ?")) {
+			ps.setLong(1, idObservatorioRealizado);
+			ps.setLong(2, idLista);
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					final ResultadoSemillaForm resultadoSemillaForm = new ResultadoSemillaForm();
+					resultadoSemillaForm.setId(rs.getString("rr.id_lista"));
+					resultadoSemillaForm.setScore(rs.getString("rr.score"));
+					resultadoSemillaForm.setScorePdf(rs.getString("rr.score_pdf"));
+					resultadoSemillaForm.setScoreHtml(rs.getString("rr.score_html"));
+					return resultadoSemillaForm;
+				}
+			}
+		} catch (SQLException e) {
+			Logger.putLog("Exception: ", ObservatorioDAO.class, Logger.LOG_LEVEL_ERROR, e);
+			return null;
+		}
+		return null;
+
+	}
+
 	/**
 	 * Devuelve toda la información de la semilla para que se pueda editar en un grid.
 	 *
