@@ -416,7 +416,7 @@ public class WcagOdtUtils {
 		case "WCAG2:language-of-page":
 			code = "10.3.1.1";
 			break;
-		case "WCAG2:parsing":
+		case "WCAG2:parsing_Pdf":
 			code = "10.4.1.1";
 			break;
 		case "WCAG2:name-role-value":

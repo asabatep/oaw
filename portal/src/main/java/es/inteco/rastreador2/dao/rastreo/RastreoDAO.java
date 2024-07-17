@@ -2096,6 +2096,39 @@ public final class RastreoDAO {
 	}
 
 	/**
+	 * Gets the executed crawling.
+	 *
+	 * @param c          the c
+	 * @param idCrawling the id crawling
+	 * @param idSeed     the id seed
+	 * @return the executed crawling
+	 * @throws SQLException the SQL exception
+	 */
+	public static FulfilledCrawlingForm getExecutedObs(Connection c, Long idObservatory) throws SQLException {
+		try (PreparedStatement ps = c.prepareStatement("SELECT rr.id, rr.fecha, rr.id_rastreo, rr.id_cartucho, rr.score, rr.score_html, rr.score_pdf FROM rastreos_realizados rr WHERE id_obs_realizado = ? ORDER BY id DESC")) {
+			ps.setLong(1, idObservatory);
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					final FulfilledCrawlingForm form = new FulfilledCrawlingForm();
+					form.setId(rs.getString("id"));
+					form.setDate(CrawlerUtils.formatDate(rs.getDate("fecha")));
+					form.setIdCrawling(String.valueOf(rs.getLong("id_rastreo")));
+					form.setIdCartridge(String.valueOf(rs.getLong("id_cartucho")));
+					form.setScore(rs.getDouble("score"));
+					form.setScoreHtml(rs.getDouble("score_html"));
+					form.setScorePdf(rs.getDouble("score_pdf"));
+					return form;
+				} else {
+					return null;
+				}
+			}
+		} catch (SQLException e) {
+			Logger.putLog("Exception: ", RastreoDAO.class, Logger.LOG_LEVEL_ERROR, e);
+			throw e;
+		}
+	}
+
+	/**
 	 * Recuperamos los rastreos que no estén marcados como finalizados.
 	 *
 	 * @param c              the c
