@@ -978,7 +978,6 @@ public final class AnnexUtils {
 													}
 													// if it is a pdf we put the other criteria as 'No aplica'
 													if(isPDF(analysis)){
-														Logger.putLog("AQUI: " + validationDetails.getResult(), AnnexUtils.class, Logger.LOG_LEVEL_WARNING);
 														if (sWcagEmPoint.length() <= 2 || !sWcagEmPoint.substring(0, 2).equals("10")) 
 															compliance = "No aplica";
 													}
@@ -1277,6 +1276,7 @@ public final class AnnexUtils {
 						final List<ObservatoryEvaluationForm> currentEvaluationPageList = observatoryManager.getObservatoryEvaluationsFromObservatoryExecution(0, analysisIdsByTracking);
 						Map<String, Map<String, ValidationDetails>> wcagCompliance = WcagEmUtils.generateEquivalenceMap(currentEvaluationPageList);
 						for (ObservatoryEvaluationForm eval : currentEvaluationPageList) {
+							Analysis analysis = AnalisisDatos.getAnalisisFromId(c, eval.getIdAnalysis());
 							String [] points = ALL_WCAG_EM_POINTS;
 							for (String sWcagEmPoint : points) {
 							String compliance = "";
@@ -1308,12 +1308,29 @@ public final class AnnexUtils {
 									if (countNA == currentEvaluationPageList.size()) {
 										compliance = messageResources.getMessage("observatory.graphic.compilance.gray");
 									}
+									if(isPDF(analysis)){
+										if (sWcagEmPoint.length() <= 2 || !sWcagEmPoint.substring(0, 2).equals("10")) 
+											compliance = "No aplica";
+									}
+									else {
+										if (sWcagEmPoint.length() > 2 && sWcagEmPoint.substring(0, 2).equals("10"))
+											compliance = "No aplica";
+									}
 								} else {
-									// We set "No aplica" to no-web documents (as PDFs)
-									if (sWcagEmPoint.length() > 2 && sWcagEmPoint.substring(0, 2).equals("10"))
-										compliance = "No aplica";
-									else
-										compliance = "N/T";
+									if (isPDF(analysis)){
+										// We set "No aplica" to no-web documents (as PDFs)
+										if (sWcagEmPoint.length() > 2 && sWcagEmPoint.substring(0, 2).equals("10"))
+											compliance = "N/T";
+										else
+											compliance = "No aplica";
+									}
+									else {
+										if (sWcagEmPoint.length() > 2 && sWcagEmPoint.substring(0, 2).equals("10"))
+											compliance = "No aplica";
+										else
+											compliance = "N/T";
+									}
+									
 								}
 								writeTag(hd, "R_" + sWcagEmPoint.replace(".", "_"), compliance);
 							}

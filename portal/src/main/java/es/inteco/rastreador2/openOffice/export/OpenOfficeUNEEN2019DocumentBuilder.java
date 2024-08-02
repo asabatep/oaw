@@ -1136,7 +1136,6 @@ public class OpenOfficeUNEEN2019DocumentBuilder extends OpenOfficeDocumentBuilde
 	private void replaceSectionGlobalAccesibilityScore(final MessageResources messageResources, final OdfTextDocument odt, final OdfFileDom odfFileContent, final String graphicPath,
 			final List<ObservatoryEvaluationForm> pageExecutionList) throws Exception {
 		try {
-		Logger.putLog("HA ENTRADO", OpenOfficeUNEEN2019DocumentBuilder.class, Logger.LOG_LEVEL_ERROR);	
 		FulfilledCrawlingForm formResult = RastreoDAO.getExecutedObs(DataBaseManager.getConnection(), pageExecutionList.get(0).getObservatoryExecutionId());
 		//String grpahicName = messageResources.getMessage(OBSERVATORY_GRAPHIC_ACCESSIBILITY_LEVEL_ALLOCATION_NAME);
 		//replaceImageGeneric(odt, graphicPath + grpahicName + JPG_EXTENSION, grpahicName, IMAGE_JPEG);
