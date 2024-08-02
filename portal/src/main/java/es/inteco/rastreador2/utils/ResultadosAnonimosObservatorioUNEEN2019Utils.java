@@ -3340,6 +3340,7 @@ public final class ResultadosAnonimosObservatorioUNEEN2019Utils {
 	 */
 	public static Map<String, Integer> getResultsBySiteLevel(final List<ObservatoryEvaluationForm> observatoryEvaluationList) throws IOException {
 		final Map<String, Integer> globalResult = new HashMap<>();
+		//TODO: Si hay que hacer los informes como pide Guillermo. En todos estos metodos, sacar la puntuación de pdf y de html, comprobar cual existe para saber el tipo del sitio web.
 		globalResult.put(Constants.OBS_NV, 0);
 		globalResult.put(Constants.OBS_A, 0);
 		globalResult.put(Constants.OBS_AA, 0);
