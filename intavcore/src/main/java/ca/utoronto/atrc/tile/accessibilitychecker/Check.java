@@ -48,6 +48,7 @@ import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -1457,25 +1458,33 @@ public class Check {
 	 * @return the dimension
 	 */
 	private Dimension loadImage(final Element elementRoot, final String srcImg) {
-		try {
-			final String baseUrl = CheckUtils.getBaseUrl(elementRoot);
-			final URL url = baseUrl != null ? new URL(baseUrl) : new URL((String) elementRoot.getUserData("url"));
-			final URL urlImage = new URL(url, srcImg);
-			final BufferedImage image = ImageIO.read(urlImage);
-			if (image != null) {
-				return new Dimension(image.getWidth(), image.getHeight());
-			} else {
-				Logger.putLog("Unknown image format: " + urlImage, CheckerParser.class, Logger.LOG_LEVEL_INFO);
-				return null;
-			}
-		} catch (IOException e) {
-			Logger.putLog("Exception loading image", CheckerParser.class, Logger.LOG_LEVEL_INFO, e);
-			return null;
-		} catch (Throwable t) {
-			Logger.putLog(String.format("Throwable %s", t.getMessage()), CheckerParser.class, Logger.LOG_LEVEL_INFO);
-			return null;
-		}
-	}
+    try {
+      final String baseUrl = CheckUtils.getBaseUrl(elementRoot);
+      final URL url =
+          baseUrl != null ? new URL(baseUrl) : new URL((String) elementRoot.getUserData("url"));
+      final URL urlImage = new URL(url, srcImg);
+      URLConnection connection = urlImage.openConnection();
+      connection.setConnectTimeout(2000);
+      connection.setReadTimeout(2000);
+      final BufferedImage image = ImageIO.read(connection.getInputStream());
+      if (image != null) {
+        return new Dimension(image.getWidth(), image.getHeight());
+      } else {
+        Logger.putLog(
+            "Unknown image format: " + urlImage, CheckerParser.class, Logger.LOG_LEVEL_INFO);
+        return null;
+      }
+    } catch (IOException e) {
+      Logger.putLog("Exception loading image", CheckerParser.class, Logger.LOG_LEVEL_INFO, e);
+      return null;
+    } catch (Exception t) {
+      Logger.putLog(
+          String.format("Throwable %s", t.getMessage()),
+          CheckerParser.class,
+          Logger.LOG_LEVEL_INFO);
+      return null;
+    }
+  }
 
 	/**
 	 * Extract image dimension.
