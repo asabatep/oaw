@@ -27,6 +27,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Clase para comprobar si la etiqueta (elemento label) de un control de formulario está oculta mediante CSS y es el único elemento que proporciona el "name" del control (no dispone de title ni
@@ -58,7 +65,9 @@ public class CSSLabelHiddenStyleParser implements CSSAnalyzer {
         final List<CSSProblem> cssProblems = new ArrayList<>();
         try {
             CSSFactory.setAutoImportMedia(new MediaSpecNone());
-            final StyleSheet styleSheet = CSSFactory.getUsedStyles(document, "utf-8", new URL(String.valueOf(document.getDocumentElement().getUserData("url"))), new MediaSpecAll());
+            final StyleSheet styleSheet = getStyleSheetWithTimeout(
+                document,
+                15, TimeUnit.SECONDS);
             final Analyzer analyzer = new Analyzer(styleSheet);
             final StyleMap styleMap = analyzer.evaluateDOM(document, new MediaSpecAll(), true);
             final NodeList labels = document.getElementsByTagName("label");
@@ -89,6 +98,30 @@ public class CSSLabelHiddenStyleParser implements CSSAnalyzer {
         }
 
         return cssProblems;
+    }
+
+
+    private static StyleSheet getStyleSheetWithTimeout(Document document, long timeout, TimeUnit timeUnit) throws TimeoutException, ExecutionException, InterruptedException {
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+
+        Callable<StyleSheet> task = () -> {
+            return CSSFactory.getUsedStyles(
+                document,
+                "utf-8",
+                new URL(String.valueOf(document.getDocumentElement().getUserData("url"))),
+                new MediaSpecAll());
+        };
+
+        Future<StyleSheet> future = executor.submit(task);
+
+        try {
+            return future.get(timeout, timeUnit);
+        } catch (TimeoutException | ExecutionException | InterruptedException e) {
+            future.cancel(true);
+            throw e;
+        } finally {
+            executor.shutdown();
+        }
     }
 
     /**

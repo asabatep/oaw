@@ -3860,7 +3860,7 @@ public final class ResultadosAnonimosObservatorioUNEEN2019Utils {
 									numZeroRed = numZeroRed + 1;
 								}
 							}
-							if (numZeroRed > maxFails) {
+							if (numZeroRed >= maxFails) {
 								isAA = false;
 							}
 						}
