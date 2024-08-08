@@ -2104,12 +2104,15 @@ public final class RastreoDAO {
 	 * @return the executed crawling
 	 * @throws SQLException the SQL exception
 	 */
-	public static FulfilledCrawlingForm getExecutedObs(Connection c, Long idObservatory) throws SQLException {
-		try (PreparedStatement ps = c.prepareStatement("SELECT rr.id, rr.fecha, rr.id_rastreo, rr.id_cartucho, rr.score, rr.score_html, rr.score_pdf FROM rastreos_realizados rr WHERE id_obs_realizado = ? ORDER BY id DESC")) {
+	public static List<FulfilledCrawlingForm> getExecutedObs(Connection c, Long idObservatory) throws SQLException {
+		List<FulfilledCrawlingForm> forms = new ArrayList<>();
+		String query = "SELECT rr.id, rr.fecha, rr.id_rastreo, rr.id_cartucho, rr.score, rr.score_html, rr.score_pdf FROM rastreos_realizados rr WHERE id_obs_realizado = ? ORDER BY id DESC";
+		
+		try (PreparedStatement ps = c.prepareStatement(query)) {
 			ps.setLong(1, idObservatory);
 			try (ResultSet rs = ps.executeQuery()) {
-				if (rs.next()) {
-					final FulfilledCrawlingForm form = new FulfilledCrawlingForm();
+				while (rs.next()) {
+					FulfilledCrawlingForm form = new FulfilledCrawlingForm();
 					form.setId(rs.getString("id"));
 					form.setDate(CrawlerUtils.formatDate(rs.getDate("fecha")));
 					form.setIdCrawling(String.valueOf(rs.getLong("id_rastreo")));
@@ -2117,15 +2120,14 @@ public final class RastreoDAO {
 					form.setScore(rs.getDouble("score"));
 					form.setScoreHtml(rs.getDouble("score_html"));
 					form.setScorePdf(rs.getDouble("score_pdf"));
-					return form;
-				} else {
-					return null;
+					forms.add(form);
 				}
 			}
 		} catch (SQLException e) {
 			Logger.putLog("Exception: ", RastreoDAO.class, Logger.LOG_LEVEL_ERROR, e);
 			throw e;
 		}
+		return forms;
 	}
 
 	/**

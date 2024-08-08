@@ -476,7 +476,6 @@ public final class WcagEmUtils {
 			verifications.add(tmp.get(_1_1));
 			verifications.add(tmp.get(_1_14));
 			processMultipleVerification(tmpWcag, verifications, WcagEmPointKey.WCAG_1_1_1.getWcagEmId(), true);
-			Logger.putLog("ENTRANDO: ", WcagEmUtils.class, Logger.LOG_LEVEL_WARNING);
 			processMultipleVerification(tmpWcag, verifications, WcagEmPointKey.WCAG_10_1_1_1.getWcagEmId(), true);
 			// Check 1.3.1
 			verifications = new ArrayList<ObservatorySubgroupForm>();
