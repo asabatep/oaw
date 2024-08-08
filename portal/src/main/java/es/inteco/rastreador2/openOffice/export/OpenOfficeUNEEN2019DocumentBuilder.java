@@ -1136,13 +1136,41 @@ public class OpenOfficeUNEEN2019DocumentBuilder extends OpenOfficeDocumentBuilde
 	private void replaceSectionGlobalAccesibilityScore(final MessageResources messageResources, final OdfTextDocument odt, final OdfFileDom odfFileContent, final String graphicPath,
 			final List<ObservatoryEvaluationForm> pageExecutionList) throws Exception {
 		try {
-		FulfilledCrawlingForm formResult = RastreoDAO.getExecutedObs(DataBaseManager.getConnection(), pageExecutionList.get(0).getObservatoryExecutionId());
+		List<FulfilledCrawlingForm> formResults = RastreoDAO.getExecutedObs(DataBaseManager.getConnection(), pageExecutionList.get(0).getObservatoryExecutionId());
 		//String grpahicName = messageResources.getMessage(OBSERVATORY_GRAPHIC_ACCESSIBILITY_LEVEL_ALLOCATION_NAME);
 		//replaceImageGeneric(odt, graphicPath + grpahicName + JPG_EXTENSION, grpahicName, IMAGE_JPEG);
-		Double score = formResult.getScore();
-		Double scoreHtml = formResult.getScoreHtml();
-		Double scorePdf = formResult.getScorePdf();
-		replaceText(odt, odfFileContent, "-pmg.t1.b2-", score == null ? "Valor no existe" : String.valueOf(score));
+		Double score = 0.0;
+		int seedCount = 0;
+		int htmlSeedCount = 0;
+		int pdfSeedCount = 0;
+		Double scoreHtml = - 1.0;
+		Double scorePdf = -1.0;
+		for (FulfilledCrawlingForm formResult : formResults) {
+			if (formResult.getScore() != null && formResult.getScore() >= 0){
+				score+=formResult.getScore();
+				seedCount++;
+			}
+			if (formResult.getScoreHtml() != null && formResult.getScoreHtml() >=0){
+				scoreHtml+=formResult.getScoreHtml();
+				htmlSeedCount++;
+			}
+			if (formResult.getScorePdf() != null && formResult.getScorePdf() >=0){
+				scorePdf+=formResult.getScorePdf();
+				pdfSeedCount++;
+			}
+		}
+		if (seedCount > 0){
+			score = score / seedCount;
+		}
+		if (htmlSeedCount > 0){
+			scoreHtml = (scoreHtml + 1) / htmlSeedCount;
+		}
+		if (pdfSeedCount > 0){
+			scorePdf = (scorePdf + 1) / pdfSeedCount;
+		}
+
+
+		replaceText(odt, odfFileContent, "-pmg.t1.b2-", score == null ? "Valor no existe" : score < 0 ? "No aplica" : String.valueOf(score));
 		replaceText(odt, odfFileContent, "-pmg.t1.b3-", scoreHtml == null ? "Valor no existe" : scoreHtml < 0 ? "No aplica" : String.valueOf(scoreHtml));
 		}
 		 catch (Exception e) {

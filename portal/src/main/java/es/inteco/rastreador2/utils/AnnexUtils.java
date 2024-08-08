@@ -38,6 +38,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -47,6 +48,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.NavigableMap;
 import java.util.Objects;
+import java.util.Set;
 import java.util.TreeMap;
 
 import javax.script.ScriptEngine;
@@ -799,10 +801,16 @@ public final class AnnexUtils {
 		final ContentHandler hd = getContentHandler(writer);
 		hd.startDocument();
 		hd.startElement(EMPTY_STRING, EMPTY_STRING, RESULTADOS_ELEMENT, null);
-		final ObservatoryForm observatoryForm = ObservatoryExportManager.getObservatory(idObsExecution);
-
+		final ObservatoryForm observatoryForm = ObservatoryExportManager.getObservatory(idObsExecution);			
+		Set<String> keys = new HashSet<>();
+		Logger.putLog("Tamaño categoria: " + observatoryForm.getCategoryFormList().size(), AnnexUtils.class, Logger.LOG_LEVEL_ERROR);
 		for (CategoryForm categoryForm : observatoryForm.getCategoryFormList()) {
 			if (categoryForm != null) {
+				String idCrawler = categoryForm.getIdCrawlerCategory();
+				String key = idCrawler + observatoryForm.getIdExecution();
+				if (!keys.contains(key)){
+					keys.add(key);
+				Logger.putLog("Tamaño site: " + categoryForm.getSiteFormList().size(), AnnexUtils.class, Logger.LOG_LEVEL_ERROR);
 				for (SiteForm siteForm : categoryForm.getSiteFormList()) {
 					if (siteForm != null) {
 						final SemillaForm semillaForm = SemillaDAO.getSeedById(c, Long.parseLong(siteForm.getIdCrawlerSeed()));
@@ -965,7 +973,6 @@ public final class AnnexUtils {
 											WcagEmPointKey wcagEmPoint = WcagEmPointKey.findByPoint(sWcagEmPoint);
 											if (wcagEmPoint != null) {
 												// do what you want
-												Logger.putLog("ALLi: ", AnnexUtils.class, Logger.LOG_LEVEL_WARNING);
 												compliance = messageResources.getMessage("modality.pass");
 												final ValidationDetails validationDetails = details.get(wcagEmPoint.getWcagEmId());
 												
@@ -1032,6 +1039,7 @@ public final class AnnexUtils {
 						}
 					}
 				}
+			}
 			}
 		}
 		hd.endElement(EMPTY_STRING, EMPTY_STRING, RESULTADOS_ELEMENT);
@@ -1275,7 +1283,7 @@ public final class AnnexUtils {
 						final List<Long> analysisIdsByTracking = AnalisisDatos.getEvaluationIdsFromExecutedObservatoryAndIdSeed(idObsExecution, semillaForm.getId());
 						final List<ObservatoryEvaluationForm> currentEvaluationPageList = observatoryManager.getObservatoryEvaluationsFromObservatoryExecution(0, analysisIdsByTracking);
 						Map<String, Map<String, ValidationDetails>> wcagCompliance = WcagEmUtils.generateEquivalenceMap(currentEvaluationPageList);
-						for (ObservatoryEvaluationForm eval : currentEvaluationPageList) {
+						for (ObservatoryEvaluationForm eval : currentEvaluationPageList) {	
 							Analysis analysis = AnalisisDatos.getAnalisisFromId(c, eval.getIdAnalysis());
 							String [] points = ALL_WCAG_EM_POINTS;
 							for (String sWcagEmPoint : points) {
@@ -1386,30 +1394,35 @@ public final class AnnexUtils {
 			// The sheet already has headers, so we start in the second row.
 			rowIndex++;
 			int categoryStarts;
+			Set<String> keys = new HashSet<>();
 			for (CategoryForm categoryForm : observatoryForm.getCategoryFormList()) {
 				categoryStarts = rowIndex;
 				if (categoryForm != null) {
-					for (Map.Entry<SemillaForm, TreeMap<String, ScoreForm>> semillaEntry : annexmap.entrySet()) {
-						final SemillaForm semillaForm = semillaEntry.getKey();
-						if (categoryForm.getName().equals(semillaForm.getCategoria().getName()) && hasTags(semillaForm, tagsToFilter)) {
-							// Multidependence
-							StringBuilder dependencias = new StringBuilder();
-							if (semillaForm.getDependencias() != null) {
-								for (int i = 0; i < semillaForm.getDependencias().size(); i++) {
-									dependencias.append(semillaForm.getDependencias().get(i).getName());
-									if (i < semillaForm.getDependencias().size() - 1) {
-										dependencias.append(BREAK_LINE);
+					String idCrawler = categoryForm.getIdCrawlerCategory();
+					String key = idCrawler + observatoryForm.getIdExecution();
+					if (!keys.contains(key)){
+						keys.add(key);
+						for (Map.Entry<SemillaForm, TreeMap<String, ScoreForm>> semillaEntry : annexmap.entrySet()) {
+							final SemillaForm semillaForm = semillaEntry.getKey();
+							if (categoryForm.getName().equals(semillaForm.getCategoria().getName()) && hasTags(semillaForm, tagsToFilter)) {
+								// Multidependence
+								StringBuilder dependencias = new StringBuilder();
+								if (semillaForm.getDependencias() != null) {
+									for (int i = 0; i < semillaForm.getDependencias().size(); i++) {
+										dependencias.append(semillaForm.getDependencias().get(i).getName());
+										if (i < semillaForm.getDependencias().size() - 1) {
+											dependencias.append(BREAK_LINE);
+										}
 									}
 								}
-							}
-							row = sheet.createRow(rowIndex);
-							int excelRowNumber = rowIndex + 1;
-							// "id"
-							cell = row.createCell(0);
-							cell.setCellValue(String.valueOf(semillaForm.getId()));
-							cell.setCellStyle(shadowStyle);
-							// "nombre"
-							cell = row.createCell(1);
+								row = sheet.createRow(rowIndex);
+								int excelRowNumber = rowIndex + 1;
+								// "id"
+								cell = row.createCell(0);
+								cell.setCellValue(String.valueOf(semillaForm.getId()));
+								cell.setCellStyle(shadowStyle);
+								// "nombre"
+								cell = row.createCell(1);
 							cell.setCellValue(semillaForm.getNombre());
 							cell.setCellStyle(shadowStyle);
 							// "namecat"
@@ -1602,7 +1615,10 @@ public final class AnnexUtils {
 							InsertGraphIntoSheetByCategory(wb, wb.getSheet(currentCategory), categoryStarts, rowIndex, false);
 						}
 					}
+					}
 				}
+				
+				
 			}
 			XSSFFormulaEvaluator.evaluateAllFormulaCells(wb);
 			wb.write(writer);
