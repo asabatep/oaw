@@ -863,7 +863,7 @@ public final class BasicServiceExport {
 				subSubSection.add(p);
 			}
 			if (maxNumErrors <= 0) {
-				if (specificProblems.size() > Integer.parseInt(PMGR.getValue(Constants.PDF_PROPERTIES, "pdf.intav.specific.problems.number"))) {
+				if (specificProblems.size() >= Integer.parseInt(PMGR.getValue(Constants.PDF_PROPERTIES, "pdf.intav.specific.problems.number"))) {
 					final String[] arguments = new String[2];
 					arguments[0] = PMGR.getValue(Constants.PDF_PROPERTIES, "pdf.intav.specific.problems.number");
 					arguments[1] = String.valueOf(specificProblems.size());
