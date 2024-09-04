@@ -540,7 +540,7 @@ public final class CrawlerUtils {
 		final PropertiesManager pmgr = new PropertiesManager();
 		return "true".equals(proxyActive) && proxyHttpHost != null && proxyHttpPort != null && !"BASIC_SERVICE_URL".equals(refererUrl) && url != null && !url.isEmpty()
 				&& !url.toLowerCase().startsWith("javascript") && !url.toLowerCase().startsWith("mailto") && !url.toLowerCase().startsWith("tel")
-				&& !url.toLowerCase().endsWith(".doc") && !url.toLowerCase().endsWith(".epub") && !url.toLowerCase().endsWith(".xml") && !url.toLowerCase().endsWith(".xls")
+				&& !url.toLowerCase().endsWith(".doc") && !url.toLowerCase().endsWith(".pdf") && !url.toLowerCase().endsWith(".epub") && !url.toLowerCase().endsWith(".xml") && !url.toLowerCase().endsWith(".xls")
 				&& !url.toLowerCase().endsWith(".wsdl") && !url.toLowerCase().endsWith(".css") && !url.toLowerCase().endsWith(".png") && !url.toLowerCase().endsWith(".jpeg")
 				&& !url.toLowerCase().endsWith(".jpg") && !url.toLowerCase().endsWith(".bmp") && !url.toLowerCase().endsWith(".gif") && !url.toLowerCase().endsWith(".svg")
 				&& !url.toLowerCase().endsWith(".7z") && !url.toLowerCase().endsWith(".rar") && !url.toLowerCase().endsWith(".tar.gz") && !url.toLowerCase().endsWith(".zip")
