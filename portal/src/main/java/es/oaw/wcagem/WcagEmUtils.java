@@ -322,7 +322,7 @@ public final class WcagEmUtils {
 			int randCounterNoWeb = 0;
 			// Iterate currentEvaluationPageList to preserve order
 			for (ObservatoryEvaluationForm eval : currentEvaluationPageList) {
-				if(!eval.getUrl().endsWith(".pdf")){
+				if(!eval.getUrl().toLowerCase().endsWith(".pdf")){
 				Webpage webpage = new Webpage();
 				webpage.setType(Arrays.asList(new String[] { "TestSubject", "WebPage" }));
 				webpage.setId("_:struct_" + randCounter);
