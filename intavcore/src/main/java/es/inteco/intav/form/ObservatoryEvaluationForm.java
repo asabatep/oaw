@@ -49,6 +49,16 @@ public class ObservatoryEvaluationForm implements Serializable {
 	/** The id analysis. */
 	private Long idAnalysis;
 
+	private boolean isHtml;
+
+	public boolean isHtml() {
+		return isHtml;
+	}
+
+	public void setHtml(boolean isHtml) {
+		this.isHtml = isHtml;
+	}
+
 	/**
 	 * Instantiates a new observatory evaluation form.
 	 */
