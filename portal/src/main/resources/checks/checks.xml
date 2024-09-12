@@ -6409,4 +6409,10 @@
 		<rationale>check.524.rationale</rationale>
 	</check>
 
+	<check id ="525" key="pdf" confidence="high">
+		<name> [PDF] Se verifica que existe una estructura de encabedados en el documento </name>
+		<error>check.525.error</error>
+		<rationale>check.525.rationale</rationale>
+	</check>
+
 </checks>

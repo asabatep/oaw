@@ -89,6 +89,7 @@
 					<!-- Más de un encabezad WAI si hay más de 15 párrafos -->
 					<check id="472" />
 					<check id="519" />
+					<check id="525" />
 
 
 				</checks>

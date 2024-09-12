@@ -25,6 +25,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -36,13 +38,17 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.NavigableMap;
 import java.util.Objects;
+import java.util.Set;
 import java.util.TreeMap;
 
 import javax.script.ScriptEngine;
@@ -135,13 +141,16 @@ import es.inteco.intav.datos.AnalisisDatos;
 import es.inteco.intav.form.ObservatoryEvaluationForm;
 import es.inteco.intav.form.ObservatorySubgroupForm;
 import es.inteco.intav.form.ObservatorySuitabilityForm;
+import es.inteco.intav.persistence.Analysis;
 import es.inteco.plugin.dao.DataBaseManager;
 import es.inteco.rastreador2.actionform.etiquetas.EtiquetaForm;
 import es.inteco.rastreador2.actionform.observatorio.ObservatorioForm;
 import es.inteco.rastreador2.actionform.observatorio.ObservatorioRealizadoForm;
 import es.inteco.rastreador2.actionform.observatorio.RangeForm;
+import es.inteco.rastreador2.actionform.observatorio.ResultadoSemillaForm;
 import es.inteco.rastreador2.actionform.observatorio.TemplateRangeForm;
 import es.inteco.rastreador2.actionform.observatorio.UraSendResultForm;
+import es.inteco.rastreador2.actionform.rastreo.RastreoEjecutadoForm;
 import es.inteco.rastreador2.actionform.semillas.CategoriaForm;
 import es.inteco.rastreador2.actionform.semillas.DependenciaForm;
 import es.inteco.rastreador2.actionform.semillas.SemillaForm;
@@ -149,6 +158,7 @@ import es.inteco.rastreador2.dao.observatorio.ObservatorioDAO;
 import es.inteco.rastreador2.dao.observatorio.RangeDAO;
 import es.inteco.rastreador2.dao.observatorio.TemplateRangeDAO;
 import es.inteco.rastreador2.dao.observatorio.UraSendResultDAO;
+import es.inteco.rastreador2.dao.rastreo.FulFilledCrawling;
 import es.inteco.rastreador2.dao.rastreo.RastreoDAO;
 import es.inteco.rastreador2.dao.semilla.SemillaDAO;
 import es.inteco.rastreador2.export.database.form.CategoryForm;
@@ -226,6 +236,20 @@ public final class AnnexUtils {
 			"10.1.4.12", "10.1.4.13", "10.2.1.1", "10.2.1.2", "10.2.1.4", "10.2.2.1", "10.2.2.2", "10.2.3.1", "10.2.4.2", "10.2.4.3", "10.2.4.4", "10.2.4.6", "10.2.4.7", "10.2.5.1", "10.2.5.2",
 			"10.2.5.3", "10.2.5.4", "10.3.1.1", "10.3.1.2", "10.3.2.1", "10.3.2.2", "10.3.3.1", "10.3.3.2", "10.3.3.3", "10.3.3.4", "10.4.1.1", "10.4.1.2", "10.4.1.3", "11.7", "11.8.1", "11.8.2",
 			"11.8.3", "11.8.4", "11.8.5", "12.1.1", "12.1.2", "12.2.2", "12.2.3", "12.2.4" };
+
+	private static final String[] ALL_WCAG_EM_POINTS_HTML = new String[] { "5.2", "5.3", "5.4", "6.1", "6.2.1.1", "6.2.1.2", "6.2.2.1", "6.2.2.2", "6.2.2.3", "6.2.2.4", "6.2.3a", "6.2.3b", "6.2.3c",
+			"6.2.3d", "6.2.4", "6.3", "6.4", "6.5.2", "6.5.3", "6.5.4", "6.5.5", "6.5.6", "7.1.1", "7.1.2", "7.1.3", "7.1.4", "7.1.5", "7.2.1", "7.2.2", "7.2.3", "7.3", "9.1.1.1", "9.1.2.1",
+			"9.1.2.2", "9.1.2.3", "9.1.2.5", "9.1.3.1", "9.1.3.2", "9.1.3.3", "9.1.3.4", "9.1.3.5", "9.1.4.1", "9.1.4.2", "9.1.4.3", "9.1.4.4", "9.1.4.5", "9.1.4.10", "9.1.4.11", "9.1.4.12",
+			"9.1.4.13", "9.2.1.1", "9.2.1.2", "9.2.1.4", "9.2.2.1", "9.2.2.2", "9.2.3.1", "9.2.4.1", "9.2.4.2", "9.2.4.3", "9.2.4.4", "9.2.4.5", "9.2.4.6", "9.2.4.7", "9.2.5.1", "9.2.5.2", "9.2.5.3",
+			"9.2.5.4", "9.3.1.1", "9.3.1.2", "9.3.2.1", "9.3.2.2", "9.3.2.3", "9.3.2.4", "9.3.3.1", "9.3.3.2", "9.3.3.3", "9.3.3.4", "9.4.1.1", "9.4.1.2", "9.4.1.3", "9.6" };
+
+	private static final String[] ALL_WCAG_EM_POINTS_PDF = new String []  {
+		"10.1.1.1", "10.1.2.1",
+			"10.1.2.2", "10.1.2.3", "10.1.2.5", "10.1.3.1", "10.1.3.2", "10.1.3.3", "10.1.3.4", "10.1.3.5", "10.1.4.1", "10.1.4.2", "10.1.4.3", "10.1.4.4", "10.1.4.5", "10.1.4.10", "10.1.4.11",
+			"10.1.4.12", "10.1.4.13", "10.2.1.1", "10.2.1.2", "10.2.1.4", "10.2.2.1", "10.2.2.2", "10.2.3.1", "10.2.4.2", "10.2.4.3", "10.2.4.4", "10.2.4.6", "10.2.4.7", "10.2.5.1", "10.2.5.2",
+			"10.2.5.3", "10.2.5.4", "10.3.1.1", "10.3.1.2", "10.3.2.1", "10.3.2.2", "10.3.3.1", "10.3.3.2", "10.3.3.3", "10.3.3.4", "10.4.1.1", "10.4.1.2", "10.4.1.3", "11.7", "11.8.1", "11.8.2",
+			"11.8.3", "11.8.4", "11.8.5", "12.1.1", "12.1.2", "12.2.2", "12.2.3", "12.2.4"
+	};
 	/** The Constant EVOL_CUMPLIMIENTO_ANT. */
 	private static final String EVOL_CUMPLIMIENTO_ANT = "evol_cumplimiento_ant";
 	/** The Constant EVOL_CUMPLIMIENTO_PRIMER. */
@@ -777,206 +801,255 @@ public final class AnnexUtils {
 		final ContentHandler hd = getContentHandler(writer);
 		hd.startDocument();
 		hd.startElement(EMPTY_STRING, EMPTY_STRING, RESULTADOS_ELEMENT, null);
-		final ObservatoryForm observatoryForm = ObservatoryExportManager.getObservatory(idObsExecution);
+		final ObservatoryForm observatoryForm = ObservatoryExportManager.getObservatory(idObsExecution);			
+		Logger.putLog("Tamaño categoria: " + observatoryForm.getCategoryFormList().size(), AnnexUtils.class, Logger.LOG_LEVEL_ERROR);
 		for (CategoryForm categoryForm : observatoryForm.getCategoryFormList()) {
 			if (categoryForm != null) {
-				for (SiteForm siteForm : categoryForm.getSiteFormList()) {
-					if (siteForm != null) {
-						final SemillaForm semillaForm = SemillaDAO.getSeedById(c, Long.parseLong(siteForm.getIdCrawlerSeed()));
-						// Filter by tags
-						List<String> tagList = null;
-						if (tagsToFilter != null) {
-							tagList = Arrays.asList(tagsToFilter);
-						}
-						boolean hasTags = tagList != null ? false : true;
-						if (semillaForm.getEtiquetas() != null && !semillaForm.getEtiquetas().isEmpty() && tagList != null) {
-							for (EtiquetaForm tag : semillaForm.getEtiquetas()) {
-								if (tagList.contains(String.valueOf(tag.getId()))) {
-									hasTags = true;
-									break;
-								}
+					for (SiteForm siteForm : categoryForm.getSiteFormList()) {
+						if (siteForm != null) {
+							final SemillaForm semillaForm = SemillaDAO.getSeedById(c, Long.parseLong(siteForm.getIdCrawlerSeed()));
+							// Filter by tags
+							List<String> tagList = null;
+							if (tagsToFilter != null) {
+								tagList = Arrays.asList(tagsToFilter);
 							}
-						}
-						if (hasTags) {
-							hd.startElement(EMPTY_STRING, EMPTY_STRING, PORTAL_ELEMENT, null);
-							writeTag(hd, Constants.XML_ID, String.valueOf(semillaForm.getId()));
-							writeTag(hd, NOMBRE_ELEMENT, siteForm.getName());
-							writeTag(hd, CATEGORIA_ELEMENT, semillaForm.getCategoria().getName());
-							// Multidependencia
-							StringBuilder dependencias = new StringBuilder();
-							if (semillaForm.getDependencias() != null) {
-								for (int i = 0; i < semillaForm.getDependencias().size(); i++) {
-									dependencias.append(semillaForm.getDependencias().get(i).getName());
-									if (i < semillaForm.getDependencias().size() - 1) {
-										dependencias.append(BREAK_LINE);
+							boolean hasTags = tagList != null ? false : true;
+							if (semillaForm.getEtiquetas() != null && !semillaForm.getEtiquetas().isEmpty() && tagList != null) {
+								for (EtiquetaForm tag : semillaForm.getEtiquetas()) {
+									if (tagList.contains(String.valueOf(tag.getId()))) {
+										hasTags = true;
+										break;
 									}
 								}
 							}
-							writeTag(hd, Constants.XML_AMBITO, semillaForm.getAmbito().getName());
-							writeTag(hd, Constants.XML_COMPLEJIDAD, semillaForm.getComplejidad().getName());
-							writeTag(hd, DEPENDE_DE_ELEMENT, dependencias.toString());
-							writeTag(hd, SEMILLA2, semillaForm.getListaUrls().get(0));
-							// Seed tags
-							List<EtiquetaForm> etiquetas = semillaForm.getEtiquetas();
-							List<EtiquetaForm> tagsDistribucion = new ArrayList<>(); // id=2
-							List<EtiquetaForm> tagsTematica = new ArrayList<>();// id=1
-							List<EtiquetaForm> tagsRecurrencia = new ArrayList<>();// id=3
-							List<EtiquetaForm> tagsOtros = new ArrayList<>();// id=4
-							if (etiquetas != null && !etiquetas.isEmpty()) {
-								for (EtiquetaForm tmp : etiquetas) {
-									if (tmp.getClasificacion() != null) {
-										switch (tmp.getClasificacion().getId()) {
-										case "1":
-											tagsTematica.add(tmp);
-											break;
-										case "2":
-											tagsDistribucion.add(tmp);
-											break;
-										case "3":
-											tagsRecurrencia.add(tmp);
-											break;
-										case "4":
-											tagsOtros.add(tmp);
-											break;
-										default:
-											break;
+							if (hasTags) {
+								hd.startElement(EMPTY_STRING, EMPTY_STRING, PORTAL_ELEMENT, null);
+								writeTag(hd, Constants.XML_ID, String.valueOf(semillaForm.getId()));
+								writeTag(hd, NOMBRE_ELEMENT, siteForm.getName());
+								writeTag(hd, CATEGORIA_ELEMENT, semillaForm.getCategoria().getName());
+								// Multidependencia
+								StringBuilder dependencias = new StringBuilder();
+								if (semillaForm.getDependencias() != null) {
+									for (int i = 0; i < semillaForm.getDependencias().size(); i++) {
+										dependencias.append(semillaForm.getDependencias().get(i).getName());
+										if (i < semillaForm.getDependencias().size() - 1) {
+											dependencias.append(BREAK_LINE);
 										}
 									}
 								}
-							}
-							// 1
-							hd.startElement("", "", Constants.XML_ETIQUETAS_TEMATICA, null);
-							if (!tagsTematica.isEmpty()) {
-								for (int i = 0; i < tagsTematica.size(); i++) {
-									hd.characters(tagsTematica.get(i).getName().toCharArray(), 0, tagsTematica.get(i).getName().length());
-									if (i < tagsTematica.size() - 1) {
-										hd.characters(BREAK_LINE.toCharArray(), 0, BREAK_LINE.length());
-									}
-								}
-							}
-							hd.endElement("", "", Constants.XML_ETIQUETAS_TEMATICA);
-							// 2
-							hd.startElement("", "", Constants.XML_ETIQUETAS_DISTRIBUCCION, null);
-							if (!tagsDistribucion.isEmpty()) {
-								for (int i = 0; i < tagsDistribucion.size(); i++) {
-									hd.characters(tagsDistribucion.get(i).getName().toCharArray(), 0, tagsDistribucion.get(i).getName().length());
-									if (i < tagsDistribucion.size() - 1) {
-										hd.characters(BREAK_LINE.toCharArray(), 0, BREAK_LINE.length());
-									}
-								}
-							}
-							hd.endElement("", "", Constants.XML_ETIQUETAS_DISTRIBUCCION);
-							// 3
-							hd.startElement("", "", Constants.XML_ETIQUETAS_RECURRENCIA, null);
-							if (!tagsRecurrencia.isEmpty()) {
-								for (int i = 0; i < tagsRecurrencia.size(); i++) {
-									hd.characters(tagsRecurrencia.get(i).getName().toCharArray(), 0, tagsRecurrencia.get(i).getName().length());
-									if (i < tagsRecurrencia.size() - 1) {
-										hd.characters(BREAK_LINE.toCharArray(), 0, BREAK_LINE.length());
-									}
-								}
-							}
-							hd.endElement("", "", Constants.XML_ETIQUETAS_RECURRENCIA);
-							// 4
-							hd.startElement("", "", Constants.XML_ETIQUETAS_OTROS, null);
-							if (!tagsOtros.isEmpty()) {
-								for (int i = 0; i < tagsOtros.size(); i++) {
-									hd.characters(tagsOtros.get(i).getName().toCharArray(), 0, tagsOtros.get(i).getName().length());
-									if (i < tagsOtros.size() - 1) {
-										hd.characters(BREAK_LINE.toCharArray(), 0, BREAK_LINE.length());
-									}
-								}
-							}
-							hd.endElement("", "", Constants.XML_ETIQUETAS_OTROS);
-							// Num crawls
-							writeTag(hd, PAGINAS, String.valueOf(ObservatorioDAO.getNumCrawls(c, idObsExecution, semillaForm.getId())));
-							hd.startElement(EMPTY_STRING, EMPTY_STRING, PAGINAS, null);
-							Map<String, Map<String, ValidationDetails>> wcagCompliance = null;
-							// Only generate this info once
-							if (criterias) {
-								final List<Long> analysisIdsByTracking = AnalisisDatos.getEvaluationIdsFromExecutedObservatoryAndIdSeed(idObsExecution, Long.valueOf(siteForm.getIdCrawlerSeed()));
-								final List<ObservatoryEvaluationForm> currentEvaluationPageList = observatoryManager.getObservatoryEvaluationsFromObservatoryExecution(0, analysisIdsByTracking);
-								// This map store, the url and a map with everi wcag automatic validation an result
-								wcagCompliance = WcagEmUtils.generateEquivalenceMap(currentEvaluationPageList);
-							}
-							for (PageForm pageForm : siteForm.getPageList()) {
-								if (pageForm != null) {
-									hd.startElement(EMPTY_STRING, EMPTY_STRING, "pagina", null);
-									writeTag(hd, "url", pageForm.getUrl());
-									writeTag(hd, PUNTUACION, pageForm.getScore());
-									writeTag(hd, ADECUACION, ObservatoryUtils.getValidationLevel(messageResources, pageForm.getLevel()));
-									// OAW Verifications
-									if (verifications) {
-										ObservatoryEvaluationForm evaluationForm = currentEvaluationPageList.stream()
-												.filter(evaluation -> pageForm.getUrl().equals(evaluation.getUrl()) && evaluation.getSeed().getId().equals(String.valueOf(semillaForm.getId())))
-												.findFirst().orElse(null);
-										if (evaluationForm != null) {
-											for (ObservatorySuitabilityForm suitabilityForm : evaluationForm.getGroups().get(0).getSuitabilityGroups()) {
-												int i = 1;
-												for (ObservatorySubgroupForm subgroupForm : suitabilityForm.getSubgroups()) {
-													writeTag(hd, "V_1_" + i, getModality(subgroupForm.getValue(), messageResources));
-													i++;
-												}
-											}
-											for (ObservatorySuitabilityForm suitabilityForm : evaluationForm.getGroups().get(1).getSuitabilityGroups()) {
-												int i = 1;
-												for (ObservatorySubgroupForm subgroupForm : suitabilityForm.getSubgroups()) {
-													writeTag(hd, "V_2_" + i, getModality(subgroupForm.getValue(), messageResources));
-													i++;
-												}
+								writeTag(hd, Constants.XML_AMBITO, semillaForm.getAmbito().getName());
+								writeTag(hd, Constants.XML_COMPLEJIDAD, semillaForm.getComplejidad().getName());
+								writeTag(hd, DEPENDE_DE_ELEMENT, dependencias.toString());
+								writeTag(hd, SEMILLA2, semillaForm.getListaUrls().get(0));
+								// Seed tags
+								List<EtiquetaForm> etiquetas = semillaForm.getEtiquetas();
+								List<EtiquetaForm> tagsDistribucion = new ArrayList<>(); // id=2
+								List<EtiquetaForm> tagsTematica = new ArrayList<>();// id=1
+								List<EtiquetaForm> tagsRecurrencia = new ArrayList<>();// id=3
+								List<EtiquetaForm> tagsOtros = new ArrayList<>();// id=4
+								if (etiquetas != null && !etiquetas.isEmpty()) {
+									for (EtiquetaForm tmp : etiquetas) {
+										if (tmp.getClasificacion() != null) {
+											switch (tmp.getClasificacion().getId()) {
+											case "1":
+												tagsTematica.add(tmp);
+												break;
+											case "2":
+												tagsDistribucion.add(tmp);
+												break;
+											case "3":
+												tagsRecurrencia.add(tmp);
+												break;
+											case "4":
+												tagsOtros.add(tmp);
+												break;
+											default:
+												break;
 											}
 										}
 									}
-									// WCAG Criterias
-									if (criterias) {
-										Map<String, ValidationDetails> details = wcagCompliance.get(pageForm.getUrl());
-										for (String sWcagEmPoint : ALL_WCAG_EM_POINTS) {
-											String compliance = "";
-											WcagEmPointKey wcagEmPoint = WcagEmPointKey.findByPoint(sWcagEmPoint);
-											if (wcagEmPoint != null) {
-												// do what you want
-												compliance = messageResources.getMessage("modality.pass");
-												final ValidationDetails validationDetails = details.get(wcagEmPoint.getWcagEmId());
-												if (validationDetails != null) {
-													if (EARL_FAILED.equalsIgnoreCase(validationDetails.getResult())) {
-														compliance = messageResources.getMessage("modality.fail");
-													} else if (EARL_INAPPLICABLE.equalsIgnoreCase(validationDetails.getResult())) {
-														compliance = messageResources.getMessage("resultados.anonimos.porc.portales.na");
+								}
+								// 1
+								hd.startElement("", "", Constants.XML_ETIQUETAS_TEMATICA, null);
+								if (!tagsTematica.isEmpty()) {
+									for (int i = 0; i < tagsTematica.size(); i++) {
+										hd.characters(tagsTematica.get(i).getName().toCharArray(), 0, tagsTematica.get(i).getName().length());
+										if (i < tagsTematica.size() - 1) {
+											hd.characters(BREAK_LINE.toCharArray(), 0, BREAK_LINE.length());
+										}
+									}
+								}
+								hd.endElement("", "", Constants.XML_ETIQUETAS_TEMATICA);
+								// 2
+								hd.startElement("", "", Constants.XML_ETIQUETAS_DISTRIBUCCION, null);
+								if (!tagsDistribucion.isEmpty()) {
+									for (int i = 0; i < tagsDistribucion.size(); i++) {
+										hd.characters(tagsDistribucion.get(i).getName().toCharArray(), 0, tagsDistribucion.get(i).getName().length());
+										if (i < tagsDistribucion.size() - 1) {
+											hd.characters(BREAK_LINE.toCharArray(), 0, BREAK_LINE.length());
+										}
+									}
+								}
+								hd.endElement("", "", Constants.XML_ETIQUETAS_DISTRIBUCCION);
+								// 3
+								hd.startElement("", "", Constants.XML_ETIQUETAS_RECURRENCIA, null);
+								if (!tagsRecurrencia.isEmpty()) {
+									for (int i = 0; i < tagsRecurrencia.size(); i++) {
+										hd.characters(tagsRecurrencia.get(i).getName().toCharArray(), 0, tagsRecurrencia.get(i).getName().length());
+										if (i < tagsRecurrencia.size() - 1) {
+											hd.characters(BREAK_LINE.toCharArray(), 0, BREAK_LINE.length());
+										}
+									}
+								}
+								hd.endElement("", "", Constants.XML_ETIQUETAS_RECURRENCIA);
+								// 4
+								hd.startElement("", "", Constants.XML_ETIQUETAS_OTROS, null);
+								if (!tagsOtros.isEmpty()) {
+									for (int i = 0; i < tagsOtros.size(); i++) {
+										hd.characters(tagsOtros.get(i).getName().toCharArray(), 0, tagsOtros.get(i).getName().length());
+										if (i < tagsOtros.size() - 1) {
+											hd.characters(BREAK_LINE.toCharArray(), 0, BREAK_LINE.length());
+										}
+									}
+								}
+								hd.endElement("", "", Constants.XML_ETIQUETAS_OTROS);
+								// Num crawls
+								writeTag(hd, PAGINAS, String.valueOf(ObservatorioDAO.getNumCrawls(c, idObsExecution, semillaForm.getId())));
+								hd.startElement(EMPTY_STRING, EMPTY_STRING, PAGINAS, null);
+								Map<String, Map<String, ValidationDetails>> wcagCompliance = null;
+								// Only generate this info once
+								if (criterias) {
+									final List<Long> analysisIdsByTracking = AnalisisDatos.getEvaluationIdsFromExecutedObservatoryAndIdSeed(idObsExecution, Long.valueOf(siteForm.getIdCrawlerSeed()));
+									final List<ObservatoryEvaluationForm> currentEvaluationPageList = observatoryManager.getObservatoryEvaluationsFromObservatoryExecution(0, analysisIdsByTracking);
+									// This map store, the url and a map with everi wcag automatic validation an result
+									wcagCompliance = WcagEmUtils.generateEquivalenceMap(currentEvaluationPageList);
+								}
+								for (PageForm pageForm : siteForm.getPageList()) {
+									if (pageForm != null) {
+										hd.startElement(EMPTY_STRING, EMPTY_STRING, "pagina", null);
+										writeTag(hd, "url", pageForm.getUrl());
+										writeTag(hd, PUNTUACION, pageForm.getScore());
+										writeTag(hd, ADECUACION, ObservatoryUtils.getValidationLevel(messageResources, pageForm.getLevel()));
+										// OAW Verifications
+										if (verifications) {
+											ObservatoryEvaluationForm evaluationForm = currentEvaluationPageList.stream()
+													.filter(evaluation -> pageForm.getUrl().equals(evaluation.getUrl()) && evaluation.getSeed().getId().equals(String.valueOf(semillaForm.getId())))
+													.findFirst().orElse(null);
+											if (evaluationForm != null) {
+												for (ObservatorySuitabilityForm suitabilityForm : evaluationForm.getGroups().get(0).getSuitabilityGroups()) {
+													int i = 1;
+													for (ObservatorySubgroupForm subgroupForm : suitabilityForm.getSubgroups()) {
+														writeTag(hd, "V_1_" + i, getModality(subgroupForm.getValue(), messageResources));
+														i++;
+													}
+												}
+												for (ObservatorySuitabilityForm suitabilityForm : evaluationForm.getGroups().get(1).getSuitabilityGroups()) {
+													int i = 1;
+													for (ObservatorySubgroupForm subgroupForm : suitabilityForm.getSubgroups()) {
+														writeTag(hd, "V_2_" + i, getModality(subgroupForm.getValue(), messageResources));
+														i++;
+													}
+												}
+											}
+										}
+										// WCAG Criterias
+										if (criterias) {
+											ObservatoryEvaluationForm evaluationForm = currentEvaluationPageList.stream()
+													.filter(evaluation -> pageForm.getUrl().equals(evaluation.getUrl()) && evaluation.getSeed().getId().equals(String.valueOf(semillaForm.getId())))
+													.findFirst().orElse(null);
+
+											Analysis analysis = AnalisisDatos.getAnalisisFromId(c, evaluationForm.getIdAnalysis());
+											Map<String, ValidationDetails> details = wcagCompliance.get(pageForm.getUrl());
+											String [] points = ALL_WCAG_EM_POINTS;
+
+											for (String sWcagEmPoint : points) {
+												String compliance = "";
+												WcagEmPointKey wcagEmPoint = WcagEmPointKey.findByPoint(sWcagEmPoint);
+												if (wcagEmPoint != null) {
+													// do what you want
+													compliance = messageResources.getMessage("modality.pass");
+													final ValidationDetails validationDetails = details.get(wcagEmPoint.getWcagEmId());
+
+													if (validationDetails != null) {
+														if (EARL_FAILED.equalsIgnoreCase(validationDetails.getResult())) {
+															compliance = messageResources.getMessage("modality.fail");
+														} else if (EARL_INAPPLICABLE.equalsIgnoreCase(validationDetails.getResult())) {
+															compliance = messageResources.getMessage("resultados.anonimos.porc.portales.na");
+														
+														}
+														// if it is a pdf we put the other criteria as 'No aplica'
+														if(isPDF(analysis)){
+															if (sWcagEmPoint.length() <= 2 || !sWcagEmPoint.substring(0, 2).equals("10")) 
+																compliance = "No aplica";
+														}
+														else {
+															if (sWcagEmPoint.length() > 2 && sWcagEmPoint.substring(0, 2).equals("10"))
+																compliance = "No aplica";
+														}
+													} else {
+														if (isPDF(analysis)){
+															// We set "No aplica" to no-web documents (as PDFs)
+															if (sWcagEmPoint.length() > 2 && sWcagEmPoint.substring(0, 2).equals("10"))
+																compliance = "N/T";
+															else
+																compliance = "No aplica";
+														}
+														else {
+															if (sWcagEmPoint.length() > 2 && sWcagEmPoint.substring(0, 2).equals("10"))
+																compliance = "No aplica";
+															else
+																compliance = "N/T";
+														}
+
 													}
 												} else {
-													// We set "No aplica" to no-web documents (as PDFs)
-													if (sWcagEmPoint.length() > 2 && sWcagEmPoint.substring(0, 2).equals("10"))
-														compliance = "No aplica";
-													else
-														compliance = "N/T";
+													if (isPDF(analysis)){
+														// We set "No aplica" to no-web documents (as PDFs)
+														if (sWcagEmPoint.length() > 2 && sWcagEmPoint.substring(0, 2).equals("10"))
+															compliance = "N/T";
+														else
+															compliance = "No aplica";
+													}
+													else {
+														if (sWcagEmPoint.length() > 2 && sWcagEmPoint.substring(0, 2).equals("10"))
+															compliance = "No aplica";
+														else
+															compliance = "N/T";
+													}
 												}
-											} else {
-												// We set "No aplica" to no-web documents (as PDFs)
-												if (sWcagEmPoint.length() > 2 && sWcagEmPoint.substring(0, 2).equals("10"))
-													compliance = "No aplica";
-												else
-													compliance = "N/T";
+												writeTag(hd, "R_" + sWcagEmPoint.replace(".", "_"), compliance);
 											}
-											writeTag(hd, "R_" + sWcagEmPoint.replace(".", "_"), compliance);
 										}
+										hd.endElement(EMPTY_STRING, EMPTY_STRING, "pagina");
 									}
-									hd.endElement(EMPTY_STRING, EMPTY_STRING, "pagina");
 								}
-							}
-							if (criterias) {
-								// Try to clean memory
-								wcagCompliance = null;
-								System.gc();
-							}
-							hd.endElement(EMPTY_STRING, EMPTY_STRING, PAGINAS);
-							hd.endElement(EMPTY_STRING, EMPTY_STRING, PORTAL_ELEMENT);
-						}
+								if (criterias) {
+									// Try to clean memory
+									wcagCompliance = null;
+									System.gc();
+								}
+								hd.endElement(EMPTY_STRING, EMPTY_STRING, PAGINAS);
+								hd.endElement(EMPTY_STRING, EMPTY_STRING, PORTAL_ELEMENT);
+						}	
 					}
 				}
 			}
 		}
 		hd.endElement(EMPTY_STRING, EMPTY_STRING, RESULTADOS_ELEMENT);
 		hd.endDocument();
+	}
+
+	public static boolean isPDF(Analysis analysis) {
+		String regex = "\\b5[0-9]{2}\\b";
+        // if the checks contain a number in the 500s it's a pdf
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(analysis.getChecksExecutedStr());
+        boolean found = false;
+        while (matcher.find()) {
+            found = true;
+        }
+		return found;
+		
 	}
 
 	/**
@@ -1179,12 +1252,16 @@ public final class AnnexUtils {
 						Map.Entry<String, ScoreForm> entry = semillaEntry.getValue().lastEntry();
 						final String executionDateAux = entry.getKey().substring(0, entry.getKey().indexOf(" ")).replace("/", "_");
 						writeTag(hd, "puntuacion_" + executionDateAux, entry.getValue().getTotalScore().toString());
+						writeTag(hd, "puntuacion_html_" + executionDateAux, entry.getValue().getTotalScoreHtml().doubleValue() < 0 ? "No aplica" : entry.getValue().getTotalScoreHtml().toString());
+						writeTag(hd, "puntuacion_pdf_" + executionDateAux, entry.getValue().getTotalScorePdf().doubleValue() < 0 ? "No aplica" : entry.getValue().getTotalScorePdf().toString());
 						writeTag(hd, "adecuacion_" + executionDateAux, changeLevelName(entry.getValue().getLevel(), messageResources));
 						writeTag(hd, "cumplimiento_" + executionDateAux, entry.getValue().getCompliance());
 					} else {
 						for (Map.Entry<String, ScoreForm> entry : semillaEntry.getValue().entrySet()) {
 							final String executionDateAux = entry.getKey().substring(0, entry.getKey().indexOf(" ")).replace("/", "_");
 							writeTag(hd, "puntuacion_" + executionDateAux, entry.getValue().getTotalScore().toString());
+							writeTag(hd, "puntuacion_html_" + executionDateAux, entry.getValue().getTotalScoreHtml().doubleValue() < 0 ? "No aplica" : entry.getValue().getTotalScoreHtml().toString());
+							writeTag(hd, "puntuacion_pdf_" + executionDateAux, entry.getValue().getTotalScorePdf().doubleValue() < 0 ? "No aplica" : entry.getValue().getTotalScorePdf().toString());
 							writeTag(hd, "adecuacion_" + executionDateAux, changeLevelName(entry.getValue().getLevel(), messageResources));
 							writeTag(hd, "cumplimiento_" + executionDateAux, entry.getValue().getCompliance());
 						}
@@ -1199,7 +1276,10 @@ public final class AnnexUtils {
 						final List<Long> analysisIdsByTracking = AnalisisDatos.getEvaluationIdsFromExecutedObservatoryAndIdSeed(idObsExecution, semillaForm.getId());
 						final List<ObservatoryEvaluationForm> currentEvaluationPageList = observatoryManager.getObservatoryEvaluationsFromObservatoryExecution(0, analysisIdsByTracking);
 						Map<String, Map<String, ValidationDetails>> wcagCompliance = WcagEmUtils.generateEquivalenceMap(currentEvaluationPageList);
-						for (String sWcagEmPoint : ALL_WCAG_EM_POINTS) {
+						for (ObservatoryEvaluationForm eval : currentEvaluationPageList) {	
+							Analysis analysis = AnalisisDatos.getAnalisisFromId(c, eval.getIdAnalysis());
+							String [] points = ALL_WCAG_EM_POINTS;
+							for (String sWcagEmPoint : points) {
 							String compliance = "";
 							WcagEmPointKey wcagEmPointKey = WcagEmPointKey.findByPoint(sWcagEmPoint);
 							// Iterate WCAG Points
@@ -1209,7 +1289,7 @@ public final class AnnexUtils {
 									compliance = messageResources.getMessage("observatory.graphic.compilance.green");
 									int countFailed = 0;
 									int countNA = 0;
-									for (ObservatoryEvaluationForm eval : currentEvaluationPageList) {
+		
 										Map<String, ValidationDetails> result = wcagCompliance.get(eval.getUrl());
 										// if cointain current wcag rule
 										if (result.containsKey(wcagEmPointKey.getWcagEmId())) {
@@ -1222,23 +1302,41 @@ public final class AnnexUtils {
 												countNA++;
 											}
 										}
-									}
+									
 									if (countFailed > currentEvaluationPageList.size() / 10) {
 										compliance = messageResources.getMessage("observatory.graphic.compilance.red");
 									}
 									if (countNA == currentEvaluationPageList.size()) {
 										compliance = messageResources.getMessage("observatory.graphic.compilance.gray");
 									}
+									if(isPDF(analysis)){
+										if (sWcagEmPoint.length() <= 2 || !sWcagEmPoint.substring(0, 2).equals("10")) 
+											compliance = "No aplica";
+									}
+									else {
+										if (sWcagEmPoint.length() > 2 && sWcagEmPoint.substring(0, 2).equals("10"))
+											compliance = "No aplica";
+									}
 								} else {
-									// We set "No aplica" to no-web documents (as PDFs)
-									if (sWcagEmPoint.length() > 2 && sWcagEmPoint.substring(0, 2).equals("10"))
-										compliance = "No aplica";
-									else
-										compliance = "N/T";
+									if (isPDF(analysis)){
+										// We set "No aplica" to no-web documents (as PDFs)
+										if (sWcagEmPoint.length() > 2 && sWcagEmPoint.substring(0, 2).equals("10"))
+											compliance = "N/T";
+										else
+											compliance = "No aplica";
+									}
+									else {
+										if (sWcagEmPoint.length() > 2 && sWcagEmPoint.substring(0, 2).equals("10"))
+											compliance = "No aplica";
+										else
+											compliance = "N/T";
+									}
+									
 								}
 								writeTag(hd, "R_" + sWcagEmPoint.replace(".", "_"), compliance);
 							}
 						}
+					}
 						// Try to free memory
 						wcagCompliance = null;
 						System.gc();
@@ -1267,7 +1365,7 @@ public final class AnnexUtils {
 			final ObservatoryForm observatoryForm = ObservatoryExportManager.getObservatory(idObsExecution);
 			final String ObservatoryFormDate = observatoryForm.getDate().substring(0, 10);
 			final String[] ColumnNames = new String[] { ID, NOMBRE, "namecat", AMBITO2, COMPLEJIDAD, DEPENDE_DE, SEMILLA2, TEMATICA, DISTRIBUCION, RECURRENCIA, OTROS, PAGINAS,
-					"puntuacion_" + ObservatoryFormDate, "adecuacion_" + ObservatoryFormDate, "cumplimiento_" + ObservatoryFormDate, NV_PREFFIX + ObservatoryFormDate, A_PREFFIX + ObservatoryFormDate,
+					"puntuacion_" + ObservatoryFormDate, "puntuacion_html_" + ObservatoryFormDate, "puntuacion_pdf_" + ObservatoryFormDate, "adecuacion_" + ObservatoryFormDate, "cumplimiento_" + ObservatoryFormDate, NV_PREFFIX + ObservatoryFormDate, A_PREFFIX + ObservatoryFormDate,
 					AA_PREFFIX + ObservatoryFormDate, NC_PREFFIX + ObservatoryFormDate, PC_PREFFIX + ObservatoryFormDate, TC_PREFFIX + ObservatoryFormDate };
 			XSSFWorkbook wb = new XSSFWorkbook();
 			XSSFSheet sheet = wb.createSheet(SHEET_RESULTS_NAME);
@@ -1291,28 +1389,32 @@ public final class AnnexUtils {
 			int categoryStarts;
 			for (CategoryForm categoryForm : observatoryForm.getCategoryFormList()) {
 				categoryStarts = rowIndex;
+				
+				
 				if (categoryForm != null) {
-					for (Map.Entry<SemillaForm, TreeMap<String, ScoreForm>> semillaEntry : annexmap.entrySet()) {
-						final SemillaForm semillaForm = semillaEntry.getKey();
-						if (categoryForm.getName().equals(semillaForm.getCategoria().getName()) && hasTags(semillaForm, tagsToFilter)) {
-							// Multidependence
-							StringBuilder dependencias = new StringBuilder();
-							if (semillaForm.getDependencias() != null) {
-								for (int i = 0; i < semillaForm.getDependencias().size(); i++) {
-									dependencias.append(semillaForm.getDependencias().get(i).getName());
-									if (i < semillaForm.getDependencias().size() - 1) {
-										dependencias.append(BREAK_LINE);
+						for (Map.Entry<SemillaForm, TreeMap<String, ScoreForm>> semillaEntry : annexmap.entrySet()) {
+							final SemillaForm semillaForm = semillaEntry.getKey();
+							Logger.putLog("NAME1: " + categoryForm.getName(), AnnexUtils.class, Logger.LOG_LEVEL_ERROR);
+							Logger.putLog("NAME2: " + semillaForm.getCategoria().getName(), AnnexUtils.class, Logger.LOG_LEVEL_ERROR);
+							if (categoryForm.getName().equals(semillaForm.getCategoria().getName()) && hasTags(semillaForm, tagsToFilter)) {
+								// Multidependence
+								StringBuilder dependencias = new StringBuilder();
+								if (semillaForm.getDependencias() != null) {
+									for (int i = 0; i < semillaForm.getDependencias().size(); i++) {
+										dependencias.append(semillaForm.getDependencias().get(i).getName());
+										if (i < semillaForm.getDependencias().size() - 1) {
+											dependencias.append(BREAK_LINE);
+										}
 									}
 								}
-							}
-							row = sheet.createRow(rowIndex);
-							int excelRowNumber = rowIndex + 1;
-							// "id"
-							cell = row.createCell(0);
-							cell.setCellValue(String.valueOf(semillaForm.getId()));
-							cell.setCellStyle(shadowStyle);
-							// "nombre"
-							cell = row.createCell(1);
+								row = sheet.createRow(rowIndex);
+								int excelRowNumber = rowIndex + 1;
+								// "id"
+								cell = row.createCell(0);
+								cell.setCellValue(String.valueOf(semillaForm.getId()));
+								cell.setCellStyle(shadowStyle);
+								// "nombre"
+								cell = row.createCell(1);
 							cell.setCellValue(semillaForm.getNombre());
 							cell.setCellStyle(shadowStyle);
 							// "namecat"
@@ -1425,41 +1527,63 @@ public final class AnnexUtils {
 							cell.setCellType(CellType.NUMERIC);
 							cell.setCellValue(Double.parseDouble(entry.getValue().getTotalScore().toString()));
 							cell.setCellStyle(shadowStyle);
-							// "adecuacion_" + date
+							// "puntuacion_html_" + date
 							cell = row.createCell(13);
+							if(entry.getValue().getTotalScoreHtml().doubleValue() < 0){
+								cell.setCellType(CellType.STRING);
+								cell.setCellValue("No aplica");
+							}
+							else {
+							cell.setCellType(CellType.NUMERIC);
+							cell.setCellValue(Double.parseDouble(entry.getValue().getTotalScoreHtml().toString()));
+							}
+							cell.setCellStyle(shadowStyle);
+							// "puntuacion_pdf_" + date
+							cell = row.createCell(14);
+							if(entry.getValue().getTotalScorePdf().doubleValue() < 0){
+								cell.setCellType(CellType.STRING);
+								cell.setCellValue("No aplica");
+							}
+							else {
+							cell.setCellType(CellType.NUMERIC);
+							cell.setCellValue(Double.parseDouble(entry.getValue().getTotalScorePdf().toString()));
+							}
+							cell.setCellStyle(shadowStyle);
+							// "adecuacion_" + date
+							cell = row.createCell(15);
 							cell.setCellValue(changeLevelName(entry.getValue().getLevel(), messageResources));
 							cell.setCellStyle(shadowStyle);
 							// "cumplimiento_" + date
-							cell = row.createCell(14);
+							cell = row.createCell(16);
 							cell.setCellValue(entry.getValue().getCompliance());
 							cell.setCellStyle(shadowStyle);
 							// "NV_" + date
-							cell = row.createCell(15);
+							cell = row.createCell(17);
 							cell.setCellType(CellType.NUMERIC);
 							cell.setCellFormula("IF($N" + excelRowNumber + "=\"No Válido\",$M" + excelRowNumber + ",0)");
 							cell.setCellStyle(shadowStyle);
 							// "A_" + date
-							cell = row.createCell(16);
+							cell = row.createCell(18);
 							cell.setCellType(CellType.NUMERIC);
 							cell.setCellFormula("IF($N" + excelRowNumber + "=\"A\",$M" + excelRowNumber + ",0)");
 							cell.setCellStyle(shadowStyle);
 							// "AA_" + date
-							cell = row.createCell(17);
+							cell = row.createCell(19);
 							cell.setCellType(CellType.NUMERIC);
 							cell.setCellFormula("IF($N" + excelRowNumber + "=\"AA\",$M" + excelRowNumber + ",0)");
 							cell.setCellStyle(shadowStyle);
 							// "NC_" + date
-							cell = row.createCell(18);
+							cell = row.createCell(20);
 							cell.setCellType(CellType.NUMERIC);
 							cell.setCellFormula("IF($O" + excelRowNumber + "=\"No conforme\",$M" + excelRowNumber + ",0)");
 							cell.setCellStyle(shadowStyle);
 							// "PC_" + date
-							cell = row.createCell(19);
+							cell = row.createCell(21);
 							cell.setCellType(CellType.NUMERIC);
 							cell.setCellFormula("IF($O" + excelRowNumber + "=\"Parcialmente conforme\",$M" + excelRowNumber + ",0)");
 							cell.setCellStyle(shadowStyle);
 							// "TC_" + date
-							cell = row.createCell(20);
+							cell = row.createCell(22);
 							cell.setCellType(CellType.NUMERIC);
 							cell.setCellFormula("IF($O" + excelRowNumber + "=\"Plenamente conforme\",$M" + excelRowNumber + ",0)");
 							cell.setCellStyle(shadowStyle);
@@ -1471,7 +1595,7 @@ public final class AnnexUtils {
 						sheet.autoSizeColumn(i);
 					}
 					// Create graph into the Category sheet
-					if (categoryForm.getSiteFormList().size() > 0) {
+					if (categoryForm.getSiteFormList().size() > 0 && rowIndex > 1) {
 						/*
 						 * Excel allows sheet names up to 31 chars in length but other applications (such as OpenOffice) allow more. Some versions of Excel crash with names longer than 31 chars,
 						 * others - truncate such names to 31 character.
@@ -1479,11 +1603,14 @@ public final class AnnexUtils {
 						String currentCategory = categoryForm.getName().substring(0, Math.min(categoryForm.getName().length(), 31));
 						if (wb.getSheet(currentCategory) == null) {
 							wb.createSheet(currentCategory);
+							Logger.putLog("CATEGORY: " + (rowIndex - categoryStarts), AnnexUtils.class, Logger.LOG_LEVEL_ERROR);
 							InsertGraphIntoSheetByCategory(wb, wb.getSheet(currentCategory), categoryStarts, rowIndex, true);
 							InsertGraphIntoSheetByCategory(wb, wb.getSheet(currentCategory), categoryStarts, rowIndex, false);
 						}
 					}
-				}
+					}
+				
+				
 			}
 			XSSFFormulaEvaluator.evaluateAllFormulaCells(wb);
 			wb.write(writer);
@@ -5279,17 +5406,17 @@ public final class AnnexUtils {
 			XDDFDataSource<String> agencies = XDDFDataSourcesFactory.fromStringCellRange(wb.getSheetAt(0), new CellRangeAddress(categoryFirstRow, categoryLastRow - 1, 1, 1));
 			// First serie ("No válido" / "No Conforme")
 			XDDFNumericalDataSource<Double> values1 = XDDFDataSourcesFactory.fromNumericCellRange(wb.getSheetAt(0),
-					new CellRangeAddress(categoryFirstRow, categoryLastRow - 1, isFirst ? 15 : 18, isFirst ? 15 : 18));
+					new CellRangeAddress(categoryFirstRow, categoryLastRow - 1, isFirst ? 17 : 20, isFirst ? 17 : 20));
 			XDDFChartData.Series series1 = data.addSeries(agencies, values1);
 			series1.setTitle(isFirst ? ALLOCATION_NOT_VALID_LITERAL : COMPLIANCE_NOT_LITERAL, null);
 			// Second serie ("A" / "Parcialmente conforme")
 			XDDFNumericalDataSource<Double> values2 = XDDFDataSourcesFactory.fromNumericCellRange(wb.getSheetAt(0),
-					new CellRangeAddress(categoryFirstRow, categoryLastRow - 1, isFirst ? 16 : 19, isFirst ? 16 : 19));
+					new CellRangeAddress(categoryFirstRow, categoryLastRow - 1, isFirst ? 18 : 21, isFirst ? 18 : 21));
 			XDDFChartData.Series series2 = data.addSeries(agencies, values2);
 			series2.setTitle(isFirst ? ALLOCATION_A_LITERAL : COMPLIANCE_PARTIAL_LITERAL, null);
 			// Third serie ("AA" / "Plenamente conforme")
 			XDDFNumericalDataSource<Double> values3 = XDDFDataSourcesFactory.fromNumericCellRange(wb.getSheetAt(0),
-					new CellRangeAddress(categoryFirstRow, categoryLastRow - 1, isFirst ? 17 : 20, isFirst ? 17 : 20));
+					new CellRangeAddress(categoryFirstRow, categoryLastRow - 1, isFirst ? 19 : 22, isFirst ? 19 : 22));
 			XDDFChartData.Series series3 = data.addSeries(agencies, values3);
 			series3.setTitle(isFirst ? ALLOCATION_AA_LITERAL : COMPLIANCE_TOTAL_LITERAL, null);
 			chart.plot(data);
@@ -5845,6 +5972,9 @@ public final class AnnexUtils {
 							final ScoreForm scoreForm = new ScoreForm();
 							scoreForm.setLevel(siteForm.getLevel());
 							scoreForm.setTotalScore(new BigDecimal(siteForm.getScore()));
+							ResultadoSemillaForm form = ObservatorioDAO.getResultFromObservatoryAndSeed(c, idObsExecution, Long.parseLong(siteForm.getIdCrawlerSeed()));
+							scoreForm.setTotalScoreHtml(new BigDecimal(form.getScoreHtml()));
+							scoreForm.setTotalScorePdf(new BigDecimal(form.getScorePdf()));
 							TreeMap<String, ScoreForm> seedInfo = new TreeMap<>();
 							if (seedMap.get(Long.valueOf(siteForm.getIdCrawlerSeed())) != null) {
 								seedInfo = seedMap.get(Long.valueOf(siteForm.getIdCrawlerSeed()));
@@ -5956,6 +6086,9 @@ public final class AnnexUtils {
 		private Integer rowIndex;
 		/** The executions. */
 		private List<ExcelExecution> executions = new ArrayList<>();
+
+
+
 
 		/**
 		 * Gets the id.

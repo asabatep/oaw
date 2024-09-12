@@ -1,6 +1,22 @@
+5.8.4
+------------------------------------------------------------------------------------------------------------------------------------
+
+5.8.3
+------------------------------------------------------------------------------------------------------------------------------------
+
 5.8.2
 ------------------------------------------------------------------------------------------------------------------------------------
--
+- Eliminar análisis de parseo CSS + arreglo de media queries
+- Servicio básico, contenido, corregir mensaje
+- Arreglar la indexación de las carpetas de código fuente
+- Eliminar pdfActiveCheck + arreglar la coherencia de complejidad
+- Recoger siempre PDFs en el rastreo
+- Limpiar validatorDAO
+- Agregar título de PDF y nombre de archivo a los informes
+- Arreglar el escape de caracteres en español en el informe de Hallazgos
+- Escapar & en las URLs
+- Permitir elementos <div> en <dl>
+- Arreglar el problema de indexación del informe en PDF
 
 5.8.1
 ------------------------------------------------------------------------------------------------------------------------------------

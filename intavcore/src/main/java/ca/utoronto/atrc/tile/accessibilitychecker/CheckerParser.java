@@ -314,6 +314,14 @@ public class CheckerParser extends DOMParser {
             }
         }
 
+        else if ("iframe".equalsIgnoreCase(node.getNodeName())) {
+            if (!((Element) node).getAttribute("title").trim().isEmpty()) {
+                if (nodePreviousHeader != null) {
+                    nodePreviousHeader.setUserData("headerHasContents", true, null);
+                }
+            }
+        }
+
         // is this an SCRIPT (and requires a NOSCRIPT)?
         else if ("script".equalsIgnoreCase(node.getNodeName())) {
             noscriptCounter = 5; // noscript must occur within the next 5 elements

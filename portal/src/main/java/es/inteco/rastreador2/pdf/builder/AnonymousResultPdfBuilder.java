@@ -920,7 +920,7 @@ public abstract class AnonymousResultPdfBuilder {
 				table.addCell(PDFUtils.createTableCell(label.getValue(), Color.WHITE, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, 0));
 			}
 			table.addCell(PDFUtils.createTableCell(messageResources.getMessage("observatorio.puntuacion.nivel.2"), Color.WHITE, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, 0));
-			table.addCell(PDFUtils.createTableCell(scoreForm.getScoreLevel2().toString(), Constants.NARANJA_MP, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, 0));
+			table.addCell(PDFUtils.createTableCell(!scoreForm.getScoreLevel2().toString().equals("-1") ? scoreForm.getScoreLevel2().toString() : "No aplica", Constants.NARANJA_MP, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, 0));
 		}
 		table.setSpacingBefore(ConstantsFont.LINE_SPACE);
 		table.setSpacingAfter(2 * ConstantsFont.LINE_SPACE);

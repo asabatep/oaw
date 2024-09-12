@@ -257,7 +257,7 @@ public final class BasicServiceUtils {
 									try {
 										BasicServiceFile file = new BasicServiceFile();
 										String content = "";
-										if (name.endsWith(".pdf")) {
+										if (name.toLowerCase().endsWith(".pdf")) {
 											InputStream inputStream = zipFile.getInputStream(entry);
 											ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 											byte[] buffer = new byte[1024];

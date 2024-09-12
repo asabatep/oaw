@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -75,6 +76,7 @@ import es.inteco.intav.form.ObservatoryEvaluationForm;
 import es.inteco.plugin.dao.DataBaseManager;
 import es.inteco.rastreador2.actionform.observatorio.ComplianceComparisonForm;
 import es.inteco.rastreador2.actionform.observatorio.ModalityComparisonForm;
+import es.inteco.rastreador2.actionform.rastreo.FulfilledCrawlingForm;
 import es.inteco.rastreador2.actionform.semillas.CategoriaForm;
 import es.inteco.rastreador2.actionform.semillas.ComplejidadForm;
 import es.inteco.rastreador2.actionform.semillas.PlantillaForm;
@@ -82,6 +84,7 @@ import es.inteco.rastreador2.dao.complejidad.ComplejidadDAO;
 import es.inteco.rastreador2.dao.login.DatosForm;
 import es.inteco.rastreador2.dao.login.LoginDAO;
 import es.inteco.rastreador2.dao.plantilla.PlantillaDAO;
+import es.inteco.rastreador2.dao.rastreo.RastreoDAO;
 import es.inteco.rastreador2.utils.GraphicData;
 import es.inteco.rastreador2.utils.ResultadosAnonimosObservatorioUNEEN2019Utils;
 
@@ -215,6 +218,8 @@ public class OpenOfficeUNEEN2019DocumentBuilder extends OpenOfficeDocumentBuilde
 	private static final String TABLE_GLOBAL_COMPLIANCE_DISTRIBUTION_CELL_ROW_1_CELL_1 = "-4c1.t1.b3-";
 	/** The Constant OBSERVATORY_GRAPHIC_COMPILANCE_LEVEL_ALLOCATION_NAME. */
 	private static final String OBSERVATORY_GRAPHIC_COMPILANCE_LEVEL_ALLOCATION_NAME = "observatory.graphic.compilance.level.allocation.name";
+	private static final String OBSERVATORY_GRAPHIC_COMPILANCE_LEVEL_ALLOCATION_HTML_NAME = "observatory.graphic.compilance.level.allocation.html.name";
+	private static final String OBSERVATORY_GRAPHIC_COMPILANCE_LEVEL_ALLOCATION_PDF_NAME = "observatory.graphic.compilance.level.allocation.pdf.name";
 	/** The Constant TABLE_GLOBAL_ACCESIBILITY_DISTRIBUTION_CELL_ROW_3_CELL_2. */
 	private static final String TABLE_GLOBAL_ACCESIBILITY_DISTRIBUTION_CELL_ROW_3_CELL_2 = "-41.t1.c4-";
 	/** The Constant TABLE_GLOBAL_ACCESIBILITY_DISTRIBUTION_CELL_ROW_2_CELL_2. */
@@ -229,6 +234,8 @@ public class OpenOfficeUNEEN2019DocumentBuilder extends OpenOfficeDocumentBuilde
 	private static final String TABLE_GLOBAL_ACCESIBILITY_DISTRIBUTION_CELL_ROW_1_CELL_1 = "-41.t1.b2-";
 	/** The Constant OBSERVATORY_GRAPHIC_ACCESSIBILITY_LEVEL_ALLOCATION_NAME. */
 	private static final String OBSERVATORY_GRAPHIC_ACCESSIBILITY_LEVEL_ALLOCATION_NAME = "observatory.graphic.accessibility.level.allocation.name";
+	private static final String OBSERVATORY_GRAPHIC_ACCESSIBILITY_LEVEL_ALLOCATION_HTML_NAME = "observatory.graphic.accessibility.level.allocation.html.name";
+	private static final String OBSERVATORY_GRAPHIC_ACCESSIBILITY_LEVEL_ALLOCATION_PDF_NAME = "observatory.graphic.accessibility.level.allocation.pdf.name";
 	/** The Constant DOT. */
 	private static final String DOT = ".";
 	/** The Constant MIME_TYPE_JPG. */
@@ -929,8 +936,15 @@ public class OpenOfficeUNEEN2019DocumentBuilder extends OpenOfficeDocumentBuilde
 	 */
 	private void replaceGlobalSection(final String graphicPath, final List<ObservatoryEvaluationForm> pageExecutionList, final List<CategoriaForm> categories, final MessageResources messageResources,
 			final OdfTextDocument odt, final OdfFileDom odfFileContent, List<ComplejidadForm> complexitivities, String[] tagsFilter, Map<String, Boolean> grpahicConditional) throws Exception {
+		replaceSectionGlobalAccesibilityScore(messageResources,odt,odfFileContent,graphicPath,pageExecutionList);
+		List<ObservatoryEvaluationForm> htmlList = pageExecutionList.stream().filter(ObservatoryEvaluationForm::isHtml).collect(Collectors.toList());
+		List<ObservatoryEvaluationForm> pdfList = pageExecutionList.stream().filter(form -> !form.isHtml()).collect(Collectors.toList());	
 		replaceSectionGlobalAccesibilityDistribution(messageResources, odt, odfFileContent, graphicPath, pageExecutionList);
+		replaceSectionGlobalAccesibilityDistributionHtml(messageResources, odt, odfFileContent, graphicPath, htmlList);
+		replaceSectionGlobalAccesibilityDistributionPdf(messageResources, odt, odfFileContent, graphicPath, pdfList);
 		replaceSectionGlobalCompilanceDistribution(messageResources, odt, odfFileContent, graphicPath, pageExecutionList);
+		replaceSectionGlobalCompilanceDistributionHtml(messageResources, odt, odfFileContent, graphicPath, htmlList);
+		replaceSectionGlobalCompilanceDistributionPdf(messageResources, odt, odfFileContent, graphicPath, pdfList);
 		replaceSectionComparisionPuntuactionAllocationSegment(messageResources, odt, odfFileContent, graphicPath, categories, pageExecutionList, tagsFilter);
 		replaceSectionComparisionPuntuactionAllocationComplexity(messageResources, odt, odfFileContent, graphicPath, complexitivities, pageExecutionList, tagsFilter);
 		replaceSectionComparisionPercentajeCompilanceSegment(messageResources, odt, odfFileContent, graphicPath, categories, pageExecutionList, tagsFilter);
@@ -1118,6 +1132,65 @@ public class OpenOfficeUNEEN2019DocumentBuilder extends OpenOfficeDocumentBuilde
 		return OpenOfficeUNEEN2019ImageUtils.getEmbededIdImage(tipoObservatorio, name);
 	}
 
+
+	/**
+	 * Replace global score section.
+	 *
+	 * @param messageResources  the message resources
+	 * @param odt               the odt
+	 * @param odfFileContent    the odf file content
+	 * @param graphicPath       the graphic path
+	 * @param pageExecutionList the page execution list
+	 * @return the int
+	 * @throws Exception the exception
+	 */
+	private void replaceSectionGlobalAccesibilityScore(final MessageResources messageResources, final OdfTextDocument odt, final OdfFileDom odfFileContent, final String graphicPath,
+			final List<ObservatoryEvaluationForm> pageExecutionList) throws Exception {
+		try {
+		List<FulfilledCrawlingForm> formResults = RastreoDAO.getExecutedObs(DataBaseManager.getConnection(), pageExecutionList.get(0).getObservatoryExecutionId());
+		String grpahicName = "PuntuacionMediaGlobal";
+		replaceImageGeneric(odt, graphicPath + grpahicName + JPG_EXTENSION, grpahicName, IMAGE_JPEG);
+		Double score = 0.0;
+		int seedCount = 0;
+		int htmlSeedCount = 0;
+		int pdfSeedCount = 0;
+		Double scoreHtml = - 1.0;
+		Double scorePdf = -1.0;
+		for (FulfilledCrawlingForm formResult : formResults) {
+			if (formResult.getScore() != null && formResult.getScore() >= 0){
+				score+=formResult.getScore();
+				seedCount++;
+			}
+			if (formResult.getScoreHtml() != null && formResult.getScoreHtml() >=0){
+				scoreHtml+=formResult.getScoreHtml();
+				htmlSeedCount++;
+			}
+			if (formResult.getScorePdf() != null && formResult.getScorePdf() >=0){
+				scorePdf+=formResult.getScorePdf();
+				pdfSeedCount++;
+			}
+		}
+		if (seedCount > 0){
+			score = score / seedCount;
+		}
+		if (htmlSeedCount > 0){
+			scoreHtml = (scoreHtml + 1) / htmlSeedCount;
+		}
+		if (pdfSeedCount > 0){
+			scorePdf = (scorePdf + 1) / pdfSeedCount;
+		}
+
+
+		replaceText(odt, odfFileContent, "-pmg.t1.b2-", score == null ? "Valor no existe" : score < 0 ? "No aplica" : String.valueOf(Math.round(score * 10.0) / 10.0));
+		replaceText(odt, odfFileContent, "-pmg.t1.b3-", scoreHtml == null ? "Valor no existe" : scoreHtml < 0 ? "No aplica" : String.valueOf(Math.round(scoreHtml * 10.0) / 10.0));
+		replaceText(odt, odfFileContent, "-pmg.t1.b4-", scorePdf == null ? "Valor no existe" : scorePdf < 0 ? "No aplica" : String.valueOf(Math.round(scorePdf * 10.0) / 10.0));
+		}
+		 catch (Exception e) {
+			Logger.putLog("Error al obtener la puntuación del observatorio", OpenOfficeUNEEN2019DocumentBuilder.class, Logger.LOG_LEVEL_ERROR);
+					}
+	}
+
+
 	/**
 	 * Replace global section for allocation distribution.
 	 *
@@ -1141,6 +1214,56 @@ public class OpenOfficeUNEEN2019DocumentBuilder extends OpenOfficeDocumentBuilde
 		replaceText(odt, odfFileContent, TABLE_GLOBAL_ACCESIBILITY_DISTRIBUTION_CELL_ROW_1_CELL_2, labelValueBean.get(0).getNumberP());
 		replaceText(odt, odfFileContent, TABLE_GLOBAL_ACCESIBILITY_DISTRIBUTION_CELL_ROW_2_CELL_2, labelValueBean.get(1).getNumberP());
 		replaceText(odt, odfFileContent, TABLE_GLOBAL_ACCESIBILITY_DISTRIBUTION_CELL_ROW_3_CELL_2, labelValueBean.get(2).getNumberP());
+	}
+
+	/**
+	 * Replace global section for allocation distribution.
+	 *
+	 * @param messageResources  the message resources
+	 * @param odt               the odt
+	 * @param odfFileContent    the odf file content
+	 * @param graphicPath       the graphic path
+	 * @param pageExecutionList the page execution list
+	 * @return the int
+	 * @throws Exception the exception
+	 */
+	private void replaceSectionGlobalAccesibilityDistributionHtml(final MessageResources messageResources, final OdfTextDocument odt, final OdfFileDom odfFileContent, final String graphicPath,
+			final List<ObservatoryEvaluationForm> pageExecutionList) throws Exception {
+		String grpahicName = messageResources.getMessage(OBSERVATORY_GRAPHIC_ACCESSIBILITY_LEVEL_ALLOCATION_HTML_NAME);
+		replaceImageGeneric(odt, graphicPath + grpahicName + JPG_EXTENSION, grpahicName, IMAGE_JPEG);
+		Map<String, Integer> result = ResultadosAnonimosObservatorioUNEEN2019Utils.getResultsBySiteLevel(pageExecutionList);
+		List<GraphicData> labelValueBean = ResultadosAnonimosObservatorioUNEEN2019Utils.infoGlobalAccessibilityLevel(messageResources, result);
+		replaceText(odt, odfFileContent, "-42.t1.b2-", labelValueBean.get(0).getPercentageP());
+		replaceText(odt, odfFileContent, "-42.t1.b3-", labelValueBean.get(1).getPercentageP());
+		replaceText(odt, odfFileContent, "-42.t1.b4-", labelValueBean.get(2).getPercentageP());
+		replaceText(odt, odfFileContent, "-42.t1.c2-", labelValueBean.get(0).getNumberP());
+		replaceText(odt, odfFileContent, "-42.t1.c3-", labelValueBean.get(1).getNumberP());
+		replaceText(odt, odfFileContent, "-42.t1.c4-", labelValueBean.get(2).getNumberP());
+	}
+
+	/**
+	 * Replace global section for allocation distribution.
+	 *
+	 * @param messageResources  the message resources
+	 * @param odt               the odt
+	 * @param odfFileContent    the odf file content
+	 * @param graphicPath       the graphic path
+	 * @param pageExecutionList the page execution list
+	 * @return the int
+	 * @throws Exception the exception
+	 */
+	private void replaceSectionGlobalAccesibilityDistributionPdf(final MessageResources messageResources, final OdfTextDocument odt, final OdfFileDom odfFileContent, final String graphicPath,
+			final List<ObservatoryEvaluationForm> pageExecutionList) throws Exception {
+		String grpahicName = messageResources.getMessage(OBSERVATORY_GRAPHIC_ACCESSIBILITY_LEVEL_ALLOCATION_PDF_NAME);
+		replaceImageGeneric(odt, graphicPath + grpahicName + JPG_EXTENSION, grpahicName, IMAGE_JPEG);
+		Map<String, Integer> result = ResultadosAnonimosObservatorioUNEEN2019Utils.getResultsBySiteLevel(pageExecutionList);
+		List<GraphicData> labelValueBean = ResultadosAnonimosObservatorioUNEEN2019Utils.infoGlobalAccessibilityLevel(messageResources, result);
+		replaceText(odt, odfFileContent, "-43.t1.b2-", labelValueBean.get(0).getPercentageP());
+		replaceText(odt, odfFileContent, "-43.t1.b3-", labelValueBean.get(1).getPercentageP());
+		replaceText(odt, odfFileContent, "-43.t1.b4-", labelValueBean.get(2).getPercentageP());
+		replaceText(odt, odfFileContent, "-43.t1.c2-", labelValueBean.get(0).getNumberP());
+		replaceText(odt, odfFileContent, "-43.t1.c3-", labelValueBean.get(1).getNumberP());
+		replaceText(odt, odfFileContent, "-43.t1.c4-", labelValueBean.get(2).getNumberP());
 	}
 
 	/**
@@ -1170,6 +1293,65 @@ public class OpenOfficeUNEEN2019DocumentBuilder extends OpenOfficeDocumentBuilde
 		replaceText(odt, odfFileContent, TABLE_GLOBAL_COMPLIANCE_DISTRIBUTION_CELL_ROW_3_CELL_2, labelValueBean.get(2).getNumberP());
 		return numImg;
 	}
+
+	/**
+	 * Replace global section for compliance distribution html.
+	 *
+	 * @param messageResources  the message resources
+	 * @param odt               the odt
+	 * @param odfFileContent    the odf file content
+	 * @param graphicPath       the graphic path
+	 * @param pageExecutionList the page execution list
+	 * @return the int
+	 * @throws Exception the exception
+	 */
+	private int replaceSectionGlobalCompilanceDistributionHtml(final MessageResources messageResources, final OdfTextDocument odt, final OdfFileDom odfFileContent, final String graphicPath,
+			final List<ObservatoryEvaluationForm> pageExecutionList) throws Exception {
+		String grpahicName = messageResources.getMessage(OBSERVATORY_GRAPHIC_COMPILANCE_LEVEL_ALLOCATION_HTML_NAME);
+		replaceImageGeneric(odt, graphicPath + grpahicName + JPG_EXTENSION, grpahicName, IMAGE_JPEG);
+		numImg++;
+		Map<Long, Map<String, BigDecimal>> results = ResultadosAnonimosObservatorioUNEEN2019Utils.getVerificationResultsByPointAndCrawl(pageExecutionList, Constants.OBS_PRIORITY_NONE);
+		final Map<String, Integer> resultCompilance = ResultadosAnonimosObservatorioUNEEN2019Utils.getSityesByCompliance(results);
+		List<GraphicData> labelValueBean = ResultadosAnonimosObservatorioUNEEN2019Utils.infoGlobalCompilanceLevel(messageResources, resultCompilance);
+		replaceText(odt, odfFileContent, "-4c2.t1.b2-", labelValueBean.get(0).getPercentageP());
+		replaceText(odt, odfFileContent, "-4c2.t1.b3-", labelValueBean.get(1).getPercentageP());
+		replaceText(odt, odfFileContent, "-4c2.t1.b4-", labelValueBean.get(2).getPercentageP());
+		replaceText(odt, odfFileContent, "-4c2.t1.c2-", labelValueBean.get(0).getNumberP());
+		replaceText(odt, odfFileContent, "-4c2.t1.c3-", labelValueBean.get(1).getNumberP());
+		replaceText(odt, odfFileContent, "-4c2.t1.c4-", labelValueBean.get(2).getNumberP());
+		return numImg;
+	}
+
+
+	/**
+	 * Replace global section for compliance distribution pdf.
+	 *
+	 * @param messageResources  the message resources
+	 * @param odt               the odt
+	 * @param odfFileContent    the odf file content
+	 * @param graphicPath       the graphic path
+	 * @param pageExecutionList the page execution list
+	 * @return the int
+	 * @throws Exception the exception
+	 */
+	private int replaceSectionGlobalCompilanceDistributionPdf(final MessageResources messageResources, final OdfTextDocument odt, final OdfFileDom odfFileContent, final String graphicPath,
+			final List<ObservatoryEvaluationForm> pageExecutionList) throws Exception {
+		String grpahicName = messageResources.getMessage(OBSERVATORY_GRAPHIC_COMPILANCE_LEVEL_ALLOCATION_PDF_NAME);
+		replaceImageGeneric(odt, graphicPath + grpahicName + JPG_EXTENSION, grpahicName, IMAGE_JPEG);
+		numImg++;
+		Map<Long, Map<String, BigDecimal>> results = ResultadosAnonimosObservatorioUNEEN2019Utils.getVerificationResultsByPointAndCrawl(pageExecutionList, Constants.OBS_PRIORITY_NONE);
+		final Map<String, Integer> resultCompilance = ResultadosAnonimosObservatorioUNEEN2019Utils.getSityesByCompliance(results);
+		List<GraphicData> labelValueBean = ResultadosAnonimosObservatorioUNEEN2019Utils.infoGlobalCompilanceLevel(messageResources, resultCompilance);
+		replaceText(odt, odfFileContent, "-4c3.t1.b2-", labelValueBean.get(0).getPercentageP());
+		replaceText(odt, odfFileContent, "-4c3.t1.b3-", labelValueBean.get(1).getPercentageP());
+		replaceText(odt, odfFileContent, "-4c3.t1.b4-", labelValueBean.get(2).getPercentageP());
+		replaceText(odt, odfFileContent, "-4c3.t1.c2-", labelValueBean.get(0).getNumberP());
+		replaceText(odt, odfFileContent, "-4c3.t1.c3-", labelValueBean.get(1).getNumberP());
+		replaceText(odt, odfFileContent, "-4c3.t1.c4-", labelValueBean.get(2).getNumberP());
+		return numImg;
+	}
+
+
 
 	/**
 	 * Generate table segment (rows) percentaje and portals (columns).
