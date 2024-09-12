@@ -712,7 +712,7 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 			}
 			if ((countC + countNA) == result.getValue().size()) {
 				resultCompilance.put(result.getKey(), Constants.OBS_COMPILANCE_FULL);
-			} else if ((countC + countNA) > countNC) {
+			} else if ((countC) > countNC) {
 				resultCompilance.put(result.getKey(), Constants.OBS_COMPILANCE_PARTIAL);
 			} else {
 				resultCompilance.put(result.getKey(), Constants.OBS_COMPILANCE_NONE);
@@ -1753,11 +1753,23 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 		tablaRankings.addCell(PDFUtils.createTableCell("Puntuación Media de páginas html", Constants.GRIS_MINIMO, ConstantsFont.labelCellFont, Element.ALIGN_LEFT,
 				DEFAULT_PADDING, -1));
 		tablaRankings.addCell(PDFUtils.createTableCell(currentScore.getTotalScoreHtml().compareTo(BigDecimal.ZERO) < 0 ? "No aplica": currentScore.getTotalScoreHtml().toPlainString(), Color.WHITE, ConstantsFont.strongNoteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+		if (previousScore != null) {
+			tablaRankings.addCell(PDFUtils.createTableCell(previousScore.getTotalScoreHtml().toPlainString(), Color.WHITE, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+			tablaRankings.addCell(PDFUtils.createTableCell(getEvolutionImage(currentScore.getTotalScoreHtml(), previousScore.getTotalScoreHtml()),
+					String.valueOf(currentScore.getTotalScoreHtml().subtract(previousScore.getTotalScoreHtml()).toPlainString()), Color.WHITE, ConstantsFont.noteCellFont, Element.ALIGN_LEFT,
+					DEFAULT_PADDING, -1));
+		}
 		tablaRankings.completeRow();
 
 		tablaRankings.addCell(PDFUtils.createTableCell("Puntuación Media de documentos pdf", Constants.GRIS_MINIMO, ConstantsFont.labelCellFont, Element.ALIGN_LEFT,
 				DEFAULT_PADDING, -1));
 		tablaRankings.addCell(PDFUtils.createTableCell(currentScore.getTotalScorePdf().compareTo(BigDecimal.ZERO) < 0 ? "No aplica": currentScore.getTotalScorePdf().toPlainString(), Color.WHITE, ConstantsFont.strongNoteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+		if (previousScore != null) {
+			tablaRankings.addCell(PDFUtils.createTableCell(previousScore.getTotalScorePdf().toPlainString(), Color.WHITE, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+			tablaRankings.addCell(PDFUtils.createTableCell(getEvolutionImage(currentScore.getTotalScorePdf(), previousScore.getTotalScorePdf()),
+					String.valueOf(currentScore.getTotalScorePdf().subtract(previousScore.getTotalScorePdf()).toPlainString()), Color.WHITE, ConstantsFont.noteCellFont, Element.ALIGN_LEFT,
+					DEFAULT_PADDING, -1));
+		}
 		tablaRankings.completeRow();
 
 
@@ -2140,7 +2152,7 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 				table.addCell(PDFUtils.createTableCell(actualLabelValueBean.getValue(), Color.WHITE, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
 			}
 			table.addCell(PDFUtils.createTableCell(messageResources.getMessage("observatorio.puntuacion.nivel.2"), Color.WHITE, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
-			table.addCell(PDFUtils.createTableCell(actualScore.getScoreLevel2().toString(), Constants.GRIS_MUY_CLARO, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+			table.addCell(PDFUtils.createTableCell(!actualScore.getScoreLevel2().toString().equals("-1") ? actualScore.getScoreLevel2().toString() : "No aplica", Constants.GRIS_MUY_CLARO, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
 		}
 		table.setSpacingBefore(ConstantsFont.LINE_SPACE);
 		table.setSpacingAfter(0);
@@ -2190,7 +2202,7 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 				table.addCell(createEvolutionDifferenceCellValue(actualLabelValueBean.getValue(), previousLabelValueBean.getValue(), Color.WHITE));
 			}
 			table.addCell(PDFUtils.createTableCell(messageResources.getMessage("observatorio.puntuacion.nivel.2"), Color.WHITE, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
-			table.addCell(PDFUtils.createTableCell(actualScore.getScoreLevel2().toString(), Constants.GRIS_MUY_CLARO, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+			table.addCell(PDFUtils.createTableCell(!actualScore.getScoreLevel2().toString().equals("-1") ? actualScore.getScoreLevel2().toString() : "No aplica", Constants.GRIS_MUY_CLARO, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
 			table.addCell(createEvolutionDifferenceCellValue(actualScore.getScoreLevel2(), previousScore.getScoreLevel2(), Color.WHITE));
 		}
 		table.setSpacingBefore(ConstantsFont.LINE_SPACE);
@@ -2389,8 +2401,8 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 			}
 			// If there were no applicable level 2 checks we set the score to 0 to avoid dividing by 0
 			if(resultL2.size() - countNA == 0){
-				scoreForm.setScoreLevel2(new BigDecimal(0));
-				scoreForm.setScoreLevelAA(new BigDecimal(0));
+				scoreForm.setScoreLevel2(new BigDecimal(-1));
+				scoreForm.setScoreLevelAA(new BigDecimal(-1));
 			}
 			else{
 			scoreForm.setScoreLevel2(sumL2.divide(new BigDecimal(resultL2.size() - countNA), 2, BigDecimal.ROUND_HALF_UP));

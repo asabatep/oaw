@@ -1810,7 +1810,7 @@ public class AnonymousResultExportPdfAccesibilidad extends AnonymousResultExport
 				table.addCell(PDFUtils.createTableCell(actualLabelValueBean.getValue(), Color.WHITE, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
 			}
 			table.addCell(PDFUtils.createTableCell(messageResources.getMessage("observatorio.puntuacion.nivel.2"), Color.WHITE, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
-			table.addCell(PDFUtils.createTableCell(actualScore.getScoreLevel2().toString(), Constants.GRIS_MUY_CLARO, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+			table.addCell(PDFUtils.createTableCell(!actualScore.getScoreLevel2().toString().equals("-1") ? actualScore.getScoreLevel2().toString() : "No aplica", Constants.GRIS_MUY_CLARO, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
 		}
 		table.setSpacingBefore(ConstantsFont.LINE_SPACE);
 		table.setSpacingAfter(0);
@@ -1860,7 +1860,7 @@ public class AnonymousResultExportPdfAccesibilidad extends AnonymousResultExport
 				table.addCell(createEvolutionDifferenceCellValue(actualLabelValueBean.getValue(), previousLabelValueBean.getValue(), Color.WHITE));
 			}
 			table.addCell(PDFUtils.createTableCell(messageResources.getMessage("observatorio.puntuacion.nivel.2"), Color.WHITE, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
-			table.addCell(PDFUtils.createTableCell(actualScore.getScoreLevel2().toString(), Constants.GRIS_MUY_CLARO, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+			table.addCell(PDFUtils.createTableCell(!actualScore.getScoreLevel2().toString().equals("-1") ? actualScore.getScoreLevel2().toString() : "No aplica", Constants.GRIS_MUY_CLARO, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
 			table.addCell(createEvolutionDifferenceCellValue(actualScore.getScoreLevel2(), previousScore.getScoreLevel2(), Color.WHITE));
 		}
 		table.setSpacingBefore(ConstantsFont.LINE_SPACE);

@@ -38,6 +38,36 @@ public class FulfilledCrawlingForm {
 	/** The selected. */
 	private boolean selected;
 
+	private Double score;
+
+	private Double scoreHtml;
+
+	private Double scorePdf;
+
+	public Double getScore() {
+		return score;
+	}
+
+	public void setScore(Double score) {
+		this.score = score;
+	}
+
+	public Double getScoreHtml() {
+		return scoreHtml;
+	}
+
+	public void setScoreHtml(Double scoreHtml) {
+		this.scoreHtml = scoreHtml;
+	}
+
+	public Double getScorePdf() {
+		return scorePdf;
+	}
+
+	public void setScorePdf(Double scorePdf) {
+		this.scorePdf = scorePdf;
+	}
+
 	/**
 	 * Checks if is selected.
 	 *

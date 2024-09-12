@@ -319,6 +319,15 @@
                 if (urls.isEmpty()) {
                   errores.add("Indique al menos una URL para an&aacutelisis de tipo 'Conjunto de URLs'");
                 } else {
+                    try {
+                        this.urls = java.net.URLEncoder.encode(urls, "ISO-8859-1");
+                    } catch (Exception e) {
+                        try {
+                            this.urls = java.net.URLEncoder.encode(urls, "UTF-8");
+                        } catch (Exception eutf8) {
+                            errores.add("Las URL tienen caracteres que no se pueden codificar");
+                        }
+                    }
                     for (String domain: urls.split("\r\n")) {
                         if (!domain.startsWith("http") && !domain.startsWith("https")) {
                             errores.add("La URL " + domain + " debe comenzar por http:// o https://");

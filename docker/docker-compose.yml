@@ -95,8 +95,8 @@ services:
       - ./tmp:/tmp
     container_name: oaw-dev-tomcat
     dns:
-      - 192.168.4.9
-      - 192.168.4.10
+      - 192.168.4.7
+      - 192.168.4.8
     links:
       - mysql
     restart: always

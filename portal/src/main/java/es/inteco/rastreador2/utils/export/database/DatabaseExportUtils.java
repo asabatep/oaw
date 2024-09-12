@@ -399,7 +399,7 @@ public final class DatabaseExportUtils {
 	public static Page getPageInfo(final MessageResources messageResources, ObservatoryEvaluationForm observatoryEvaluationForm, Site site) {
 		Page page = new Page();
 		page.setScoreLevel1(BigDecimal.ZERO);
-		page.setScoreLevel2(BigDecimal.ZERO);
+		page.setScoreLevel2(new BigDecimal(-1));
 		page.setSite(site);
 		page.setUrl(observatoryEvaluationForm.getUrl());
 		page.setScore(observatoryEvaluationForm.getScore());
@@ -491,7 +491,7 @@ public final class DatabaseExportUtils {
 			}
 			if ((countC + countNA) == result.getValue().size()) {
 				resultCompilance.put(result.getKey(), Constants.OBS_COMPILANCE_FULL);
-			} else if ((countC + countNA) > countNC) {
+			} else if ((countC) > countNC) {
 				resultCompilance.put(result.getKey(), Constants.OBS_COMPILANCE_PARTIAL);
 			} else {
 				resultCompilance.put(result.getKey(), Constants.OBS_COMPILANCE_NONE);
