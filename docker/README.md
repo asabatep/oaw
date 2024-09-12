@@ -118,6 +118,6 @@ To reset the database, simply delete the `/docker/volumes/mysql` folder.
 
 ### 6. Checks
 
-Tomcat is running at [http://localhost:18081](http://localhost:18081/)
+Tomcat is running at [http://localhost:18081](http://localhost:7010/)
 
-If all the steps have been executed correctly, you should find the deployed application at [http://localhost:18081/oaw](http://localhost:18081/oaw)
+If all the steps have been executed correctly, you should find the deployed application at [http://localhost:18081/oaw](http://localhost:7010/oaw)
