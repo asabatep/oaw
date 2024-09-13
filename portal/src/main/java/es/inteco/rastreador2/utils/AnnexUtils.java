@@ -801,10 +801,15 @@ public final class AnnexUtils {
 		final ContentHandler hd = getContentHandler(writer);
 		hd.startDocument();
 		hd.startElement(EMPTY_STRING, EMPTY_STRING, RESULTADOS_ELEMENT, null);
-		final ObservatoryForm observatoryForm = ObservatoryExportManager.getObservatory(idObsExecution);			
+		final ObservatoryForm observatoryForm = ObservatoryExportManager.getObservatory(idObsExecution);	
+		Set<String> keys = new HashSet<>();		
 		Logger.putLog("Tamaño categoria: " + observatoryForm.getCategoryFormList().size(), AnnexUtils.class, Logger.LOG_LEVEL_ERROR);
 		for (CategoryForm categoryForm : observatoryForm.getCategoryFormList()) {
 			if (categoryForm != null) {
+				String idCrawler = categoryForm.getIdCrawlerCategory();
+				String key = idCrawler + observatoryForm.getIdExecution();
+				if (!keys.contains(key)){
+					keys.add(key);
 					for (SiteForm siteForm : categoryForm.getSiteFormList()) {
 						if (siteForm != null) {
 							final SemillaForm semillaForm = SemillaDAO.getSeedById(c, Long.parseLong(siteForm.getIdCrawlerSeed()));
@@ -1035,6 +1040,7 @@ public final class AnnexUtils {
 				}
 			}
 		}
+	}
 		hd.endElement(EMPTY_STRING, EMPTY_STRING, RESULTADOS_ELEMENT);
 		hd.endDocument();
 	}
@@ -1387,11 +1393,14 @@ public final class AnnexUtils {
 			// The sheet already has headers, so we start in the second row.
 			rowIndex++;
 			int categoryStarts;
-			for (CategoryForm categoryForm : observatoryForm.getCategoryFormList()) {
-				categoryStarts = rowIndex;
-				
-				
-				if (categoryForm != null) {
+			Set<String> keys = new HashSet<>();
+					for (CategoryForm categoryForm : observatoryForm.getCategoryFormList()) {
+					categoryStarts = rowIndex;
+					if (categoryForm != null) {
+						String idCrawler = categoryForm.getIdCrawlerCategory();
+						String key = idCrawler + observatoryForm.getIdExecution();
+						if (!keys.contains(key)){
+							keys.add(key);
 						for (Map.Entry<SemillaForm, TreeMap<String, ScoreForm>> semillaEntry : annexmap.entrySet()) {
 							final SemillaForm semillaForm = semillaEntry.getKey();
 							Logger.putLog("NAME1: " + categoryForm.getName(), AnnexUtils.class, Logger.LOG_LEVEL_ERROR);
@@ -1407,6 +1416,7 @@ public final class AnnexUtils {
 										}
 									}
 								}
+								
 								row = sheet.createRow(rowIndex);
 								int excelRowNumber = rowIndex + 1;
 								// "id"
@@ -1560,32 +1570,32 @@ public final class AnnexUtils {
 							// "NV_" + date
 							cell = row.createCell(17);
 							cell.setCellType(CellType.NUMERIC);
-							cell.setCellFormula("IF($N" + excelRowNumber + "=\"No Válido\",$M" + excelRowNumber + ",0)");
+							cell.setCellFormula("IF($P" + excelRowNumber + "=\"No Válido\",$M" + excelRowNumber + ",0)");
 							cell.setCellStyle(shadowStyle);
 							// "A_" + date
 							cell = row.createCell(18);
 							cell.setCellType(CellType.NUMERIC);
-							cell.setCellFormula("IF($N" + excelRowNumber + "=\"A\",$M" + excelRowNumber + ",0)");
+							cell.setCellFormula("IF($P" + excelRowNumber + "=\"A\",$M" + excelRowNumber + ",0)");
 							cell.setCellStyle(shadowStyle);
 							// "AA_" + date
 							cell = row.createCell(19);
 							cell.setCellType(CellType.NUMERIC);
-							cell.setCellFormula("IF($N" + excelRowNumber + "=\"AA\",$M" + excelRowNumber + ",0)");
+							cell.setCellFormula("IF($P" + excelRowNumber + "=\"AA\",$M" + excelRowNumber + ",0)");
 							cell.setCellStyle(shadowStyle);
 							// "NC_" + date
 							cell = row.createCell(20);
 							cell.setCellType(CellType.NUMERIC);
-							cell.setCellFormula("IF($O" + excelRowNumber + "=\"No conforme\",$M" + excelRowNumber + ",0)");
+							cell.setCellFormula("IF($Q" + excelRowNumber + "=\"No conforme\",$M" + excelRowNumber + ",0)");
 							cell.setCellStyle(shadowStyle);
 							// "PC_" + date
 							cell = row.createCell(21);
 							cell.setCellType(CellType.NUMERIC);
-							cell.setCellFormula("IF($O" + excelRowNumber + "=\"Parcialmente conforme\",$M" + excelRowNumber + ",0)");
+							cell.setCellFormula("IF($Q" + excelRowNumber + "=\"Parcialmente conforme\",$M" + excelRowNumber + ",0)");
 							cell.setCellStyle(shadowStyle);
 							// "TC_" + date
 							cell = row.createCell(22);
 							cell.setCellType(CellType.NUMERIC);
-							cell.setCellFormula("IF($O" + excelRowNumber + "=\"Plenamente conforme\",$M" + excelRowNumber + ",0)");
+							cell.setCellFormula("IF($Q" + excelRowNumber + "=\"Plenamente conforme\",$M" + excelRowNumber + ",0)");
 							cell.setCellStyle(shadowStyle);
 							rowIndex++;
 						}
@@ -1609,7 +1619,7 @@ public final class AnnexUtils {
 						}
 					}
 					}
-				
+					}
 				
 			}
 			XSSFFormulaEvaluator.evaluateAllFormulaCells(wb);
@@ -3255,8 +3265,8 @@ public final class AnnexUtils {
 					COLUMN_TITLE_PERCENT_A, COLUMN_TITLE_NOTA_MEDIA_A, COLUMN_TITLE_TOTAL_PORTALES_NV, COLUMN_TITLE_NV, COLUMN_TITLE_NOTA_MEDIA_NV, COLUMN_TITLE_NO_CUMPLEN,
 					COLUMN_TITLE_TOTAL_PORTALES };
 			// In order left to right
-			final String[] columnResultsAllocation = new String[] { "R", "Q", "P" };
-			final String[] columnResultsCompliance = new String[] { "U", "T", "S" };
+			final String[] columnResultsAllocation = new String[] { "T", "S", "R" };
+			final String[] columnResultsCompliance = new String[] { "W", "V", "U" };
 			final String[] columnNamesCompliance = new String[] { COLUMN_TITLE_ORGANISMO, COLUMN_TITLE_TOTAL_PORTALES_TC, COLUMN_TITLE_PERCENT_TC, COLUMN_TITLE_NOTA_MEDIA_TC,
 					COLUMN_TITLE_TOTAL_PORTALES_PC, COLUMN_TITLE_PERCENT_PC, COLUMN_TITLE_NOTA_MEDIA_PC, COLUMN_TITLE_TOTAL_PORTALES_NC, COLUMN_TITLE_PERCENT_NC, COLUMN_TITLE_NOTA_MEDIA_NC,
 					COLUMN_TITLE_NO_CONFORMES, COLUMN_TITLE_TOTAL_PORTALES };
