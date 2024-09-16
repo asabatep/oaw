@@ -449,6 +449,7 @@ public final class WcagEmUtils {
 			processSimpleVerification(tmpWcag, tmp.get(_1_9), WcagEmPointKey.WCAG_2_5_3.getWcagEmId(), true);
 			// Check 2.4.1
 			processSimpleVerification(tmpWcag, tmp.get(_1_11), WcagEmPointKey.WCAG_2_4_1.getWcagEmId(), true);
+
 			// Check 3.2.1
 			processSimpleVerification(tmpWcag, tmp.get(_1_13), WcagEmPointKey.WCAG_3_2_1.getWcagEmId(), true);
 			// Check 3.2.2
@@ -1009,6 +1010,7 @@ public final class WcagEmUtils {
 		checks.add("507");
 		checks.add("501");
 		checks.add("505");
+		checks.add("504");
 		checkWcagRelationMap.put(WcagEmPointKey.WCAG_10_4_1_2.getWcagEmId(), checks);
 		return checkWcagRelationMap;
 	}
