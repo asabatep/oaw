@@ -1753,11 +1753,23 @@ public class AnonymousResultExportPdfUNEEN2019 extends AnonymousResultExportPdf 
 		tablaRankings.addCell(PDFUtils.createTableCell("Puntuación Media de páginas html", Constants.GRIS_MINIMO, ConstantsFont.labelCellFont, Element.ALIGN_LEFT,
 				DEFAULT_PADDING, -1));
 		tablaRankings.addCell(PDFUtils.createTableCell(currentScore.getTotalScoreHtml().compareTo(BigDecimal.ZERO) < 0 ? "No aplica": currentScore.getTotalScoreHtml().toPlainString(), Color.WHITE, ConstantsFont.strongNoteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+		if (previousScore != null) {
+			tablaRankings.addCell(PDFUtils.createTableCell(previousScore.getTotalScoreHtml().toPlainString(), Color.WHITE, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+			tablaRankings.addCell(PDFUtils.createTableCell(getEvolutionImage(currentScore.getTotalScoreHtml(), previousScore.getTotalScoreHtml()),
+					String.valueOf(currentScore.getTotalScoreHtml().subtract(previousScore.getTotalScoreHtml()).toPlainString()), Color.WHITE, ConstantsFont.noteCellFont, Element.ALIGN_LEFT,
+					DEFAULT_PADDING, -1));
+		}
 		tablaRankings.completeRow();
 
 		tablaRankings.addCell(PDFUtils.createTableCell("Puntuación Media de documentos pdf", Constants.GRIS_MINIMO, ConstantsFont.labelCellFont, Element.ALIGN_LEFT,
 				DEFAULT_PADDING, -1));
 		tablaRankings.addCell(PDFUtils.createTableCell(currentScore.getTotalScorePdf().compareTo(BigDecimal.ZERO) < 0 ? "No aplica": currentScore.getTotalScorePdf().toPlainString(), Color.WHITE, ConstantsFont.strongNoteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+		if (previousScore != null) {
+			tablaRankings.addCell(PDFUtils.createTableCell(previousScore.getTotalScorePdf().toPlainString(), Color.WHITE, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+			tablaRankings.addCell(PDFUtils.createTableCell(getEvolutionImage(currentScore.getTotalScorePdf(), previousScore.getTotalScorePdf()),
+					String.valueOf(currentScore.getTotalScorePdf().subtract(previousScore.getTotalScorePdf()).toPlainString()), Color.WHITE, ConstantsFont.noteCellFont, Element.ALIGN_LEFT,
+					DEFAULT_PADDING, -1));
+		}
 		tablaRankings.completeRow();
 
 
