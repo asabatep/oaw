@@ -86,12 +86,6 @@ int-stop-and-clean.sh
 server.crt
 server.key
 
-oaw_2017_2018/motor-js/instalacion/docker-ce-17.03.2.ce-1.el7.centos.x86_64.rpm
-oaw_2017_2018/motor-js/instalacion/imagenes/nginx:1.13.8-alpine.tar
-oaw_2017_2018/motor-js/instalacion/imagenes/oawjs_proxy.tar
-oaw_2017_2018/portal/src/main/webapp/WEB-INF/templatesODT/Plantilla_CCAA_UNE_2012_embed.odt
-
-
 ### Otros
 **/oaw_2017_2018/**
 **/portal/src/main/webapp/WEB-INF/templatesODT/**
