@@ -49,6 +49,13 @@ public class ApiKeyDAO extends BaseDAO {
 		return aKey;
 	}
 
+	public static ApiKey getApiKeybyName(Session session, String name) {
+		Criteria criteria = session.createCriteria(ApiKey.class);
+		criteria.add(Restrictions.eq("nombre", name));
+		ApiKey aKey = (ApiKey) criteria.uniqueResult();
+		return aKey;
+	}
+
 	public static List<ApiKey> getApiKeys(Session session) {
 		Criteria criteria = session.createCriteria(ApiKey.class).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
 		return (List<ApiKey>) criteria.list();

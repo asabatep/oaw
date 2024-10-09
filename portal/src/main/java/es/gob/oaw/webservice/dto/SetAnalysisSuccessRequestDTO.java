@@ -13,4 +13,5 @@ public class SetAnalysisSuccessRequestDTO {
 	public long tAnalisis;
 	public String checksExecuted;
 	public long idAnalisis;
+	public String apiKey;
 }

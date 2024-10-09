@@ -25,6 +25,8 @@ import es.inteco.intav.dao.TAnalisisAccesibilidadDAO;
 import es.inteco.intav.datos.AnalisisDatos;
 import es.inteco.intav.datos.IncidenciaDatos;
 import es.inteco.plugin.dao.DataBaseManager;
+import es.inteco.rastreador2.dao.apikey.ApiKey;
+import es.inteco.rastreador2.manager.ApiKeyManager;
 
 public class ValidationDatabaseService {
 
@@ -64,6 +66,8 @@ public class ValidationDatabaseService {
         }
     }
     public int setAnalysisDbRequest(SetAnalysisDBRequestDTO setAnalysisDBRequestDTO){
+        ApiKey apiKey = ApiKeyManager.getApiKey(setAnalysisDBRequestDTO.getApiKey());
+        if (!apiKey.equals(null)){
         Log.warn("Insertar analisis en BBDD");
         Evaluation evaluation = new Evaluation();
         CheckAccessibility checkAccessibility = new CheckAccessibility();
@@ -88,9 +92,16 @@ public class ValidationDatabaseService {
         else evaluation.setCssResources(null);
         return Evaluator.setDbId(evaluation, checkAccessibility);
     }
+    else {
+        Logger.putLog("ApiKey incorrecta o no existe", getClass(), Logger.LOG_LEVEL_ERROR);
+        return -1;
+    }
+    }
 
     public String setIncidenceListRequest(SetIncidenceListRequestDTO setIncidenceListRequestDTO){
         Log.info("Cargar incidencias en BBDD");
+        ApiKey apiKey = ApiKeyManager.getApiKey(setIncidenceListRequestDTO.getApiKey());
+        if (!apiKey.equals(null)){
         try (Connection conn = DataBaseManager.getConnection()) {
             IncidenciaDatos.saveIncidenceList(conn, setIncidenceListRequestDTO.getIdAnalysis(), Arrays.asList(setIncidenceListRequestDTO.getIncidences()));
             return "Se ha insertado la lista de incidencias con éxito";
@@ -100,8 +111,15 @@ public class ValidationDatabaseService {
             return "Se ha producido un error al guardar la lista de incidencias";
         }
     }
+    else {
+        Logger.putLog("ApiKey incorrecta o no existe", getClass(), Logger.LOG_LEVEL_ERROR);
+        return "ApiKey incorrecta o no existe";
+    }
+    }
 
     public String setAnalysisSuccessRequest(SetAnalysisSuccessRequestDTO setAnalysisSuccessRequestDTO){
+        ApiKey apiKey = ApiKeyManager.getApiKey(setAnalysisSuccessRequestDTO.getApiKey());
+        if (!apiKey.equals(null)){
         Log.warn("insert analysis success");
         Evaluation evaluation = new Evaluation();
         evaluation.setChecksExecutedStr(setAnalysisSuccessRequestDTO.getChecksExecuted());
@@ -109,13 +127,25 @@ public class ValidationDatabaseService {
         evaluation.setIdAnalisis(setAnalysisSuccessRequestDTO.getIdAnalisis());
         AnalisisDatos.endAnalysisSuccess(evaluation);
         return "Analisis finalizado con exito";
+    }
+    else {
+        Logger.putLog("ApiKey incorrecta o no existe", getClass(), Logger.LOG_LEVEL_ERROR);
+        return "ApiKey incorrecta o no existe";
+    }
         
     }
 
     public String setAnalysisErrorRequest(CheckAccessibility checkAccessibility){
+        ApiKey apiKey = ApiKeyManager.getApiKey(checkAccessibility.getApiKey());
+        if (!apiKey.equals(null)){
         Log.warn("Insert Analysis Error");
         AnalisisDatos.setAnalysisError(checkAccessibility);
         return "Análisis fallido insertado con exito";
+    }
+    else {
+        Logger.putLog("ApiKey incorrecta o no existe", getClass(), Logger.LOG_LEVEL_ERROR);
+        return "ApiKey incorrecta o no existe";
+    }
     }
     
     

@@ -37,6 +37,7 @@ import es.inteco.common.IntavConstants;
 import es.inteco.common.logging.Logger;
 import es.inteco.common.properties.PropertiesManager;
 import es.inteco.intav.comun.Incidencia;
+import es.inteco.intav.dao.ApiKeyDAO;
 import es.inteco.intav.dao.ValidatorDAO;
 import es.inteco.intav.datos.AnalisisDatos;
 import es.inteco.intav.datos.IncidenciaDatos;
@@ -47,6 +48,7 @@ import es.inteco.intav.utils.EvaluatorUtils;
 import es.inteco.plugin.Cartucho;
 import es.inteco.plugin.dao.DataBaseManager;
 import org.apache.commons.codec.binary.Base64;
+
 
 /**
  * Implementación de un cartucho que analiza las urls, así como el contenido de las páginas y clasificarlas como maliciosas o no.
@@ -83,6 +85,7 @@ public class CartuchoAccesibilidad extends Cartucho {
 						DataBaseManager.closeConnection(c);
 					}
 					else{
+					String apiKey = ApiKeyDAO.getApiKeyByName(c, "ValidationDatabaseService").getApiKey();
 					URL url = new URL(validator.getUrl());
 					Proxy nProxy = Proxy.NO_PROXY;
 					HttpURLConnection con = (HttpURLConnection)url.openConnection(nProxy);
@@ -90,6 +93,7 @@ public class CartuchoAccesibilidad extends Cartucho {
 				con.setRequestMethod("POST");
 				con.setRequestProperty("Content-Type", "application/json");
 				con.setRequestProperty("Accept", "application/json");
+				checkAccesibility.setApiKey(apiKey);
 				con.setReadTimeout(1200000);
 				con.setDoOutput(true);
 				Gson gson = new GsonBuilder().create();
