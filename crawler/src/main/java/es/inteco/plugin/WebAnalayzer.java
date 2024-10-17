@@ -18,6 +18,8 @@ package es.inteco.plugin;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.ws.http.HTTPException;
+
 import es.inteco.common.logging.Logger;
 import es.inteco.common.utils.StringUtils;
 import es.inteco.crawler.job.CrawledLink;
@@ -64,6 +66,9 @@ public class WebAnalayzer {
 				analizador.analyzer(datos);
 			}
 		} catch (Exception e) {
+			if(e instanceof HTTPException){
+				crawledLink.setNumRetries(-2);
+			}
 			Logger.putLog("Fallo al ejecutar el cartucho", WebAnalayzer.class, Logger.LOG_LEVEL_ERROR, e);
 		}
 	}
