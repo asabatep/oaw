@@ -12,5 +12,4 @@ import lombok.experimental.SuperBuilder;
 public class SetAnalysisDBRequestDTO {
 	public CheckAccessibilityDTO checkAccessibilityDTO;
 	public EvaluationDTO evaluationDTO;
-	public String apiKey;
 }

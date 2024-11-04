@@ -13,5 +13,4 @@ import lombok.experimental.SuperBuilder;
 public class SetIncidenceListRequestDTO {
 	public int idAnalysis;
 	public Incidencia[] incidences;
-	public String apiKey;
 }

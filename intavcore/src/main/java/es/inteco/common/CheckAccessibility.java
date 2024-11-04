@@ -53,16 +53,6 @@ public class CheckAccessibility {
 	/** The charset. */
 	private String charset;
 
-	private String apiKey;
-
-	public String getApiKey() {
-		return apiKey;
-	}
-
-	public void setApiKey(String apiKey) {
-		this.apiKey = apiKey;
-	}
-
 	/**
 	 * Gets the url.
 	 *
