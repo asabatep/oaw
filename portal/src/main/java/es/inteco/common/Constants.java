@@ -466,14 +466,10 @@ public interface Constants {
 	String OBSERVATORY_GRAPHIC_GLOBAL_DATA_LIST_CMVII = "globalDataListCMVII";
 	/** The observatory graphic global data list modality verification i. */
 	String OBSERVATORY_GRAPHIC_GLOBAL_DATA_LIST_MODALITY_VERIFICATION_I = "globalDataListModalityVerificationI";
-	String OBSERVATORY_GRAPHIC_GLOBAL_DATA_LIST_MODALITY_VERIFICATION_I_HTML = "globalDataListModalityVerificationIHtml";
-	String OBSERVATORY_GRAPHIC_GLOBAL_DATA_LIST_MODALITY_VERIFICATION_I_PDF = "globalDataListModalityVerificationIPdf";
 	/** The observatory graphic global data list modality verification ii. */
 	String OBSERVATORY_GRAPHIC_GLOBAL_DATA_LIST_MODALITY_VERIFICATION_II = "globalDataListModalityVerificationII";
 	/** The observatory graphic global data list compilance verification i. */
 	String OBSERVATORY_GRAPHIC_GLOBAL_DATA_LIST_COMPILANCE_VERIFICATION_I = "globalDataListCompilanceVerificationI";
-	String OBSERVATORY_GRAPHIC_GLOBAL_DATA_LIST_COMPILANCE_VERIFICATION_I_HTML = "globalDataListCompilanceVerificationIHtml";
-	String OBSERVATORY_GRAPHIC_GLOBAL_DATA_LIST_COMPILANCE_VERIFICATION_I_PDF = "globalDataListCompilanceVerificationIPdf";
 	/** The observatory graphic global data list compilance verification ii. */
 	String OBSERVATORY_GRAPHIC_GLOBAL_DATA_LIST_COMPILANCE_VERIFICATION_II = "globalDataListCompilanceVerificationII";
 	/** The observatory graphic segment data list dp. */
