@@ -1265,7 +1265,7 @@ public final class EvaluatorUtils {
 				&& !url.toLowerCase().endsWith(".7z") && !url.toLowerCase().endsWith(".rar") && !url.toLowerCase().endsWith(".tar.gz") && !url.toLowerCase().endsWith(".zip")
 				&& !url.toLowerCase().endsWith(".tar.xz") && !url.toLowerCase().endsWith(".war") && !url.toLowerCase().endsWith(".jar") && !url.toLowerCase().endsWith(".tar")
 				&& !url.equalsIgnoreCase(pmgr.getValue(IntavConstants.INTAV_PROPERTIES, "url.w3c.validator")) && !url.toLowerCase().contains(".css") && !url.toLowerCase().contains(".scss")
-				&& !url.toLowerCase().contains(".pdf") && !url.toLowerCase().contains(".xml") && !url.toLowerCase().contains(".wsdl");
+				&& !url.toLowerCase().contains(".pdf") && !url.toLowerCase().contains(".xml") && !url.toLowerCase().contains(".wsdl") && !url.toLowerCase().contains(".pdf");
 	}
 
 	/**
