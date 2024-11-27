@@ -46,6 +46,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.NavigableMap;
 import java.util.Objects;
 import java.util.Set;
@@ -801,15 +802,18 @@ public final class AnnexUtils {
 		final ContentHandler hd = getContentHandler(writer);
 		hd.startDocument();
 		hd.startElement(EMPTY_STRING, EMPTY_STRING, RESULTADOS_ELEMENT, null);
-		final ObservatoryForm observatoryForm = ObservatoryExportManager.getObservatory(idObsExecution);	
-		Set<String> keys = new HashSet<>();		
-		Logger.putLog("Tamaño categoria: " + observatoryForm.getCategoryFormList().size(), AnnexUtils.class, Logger.LOG_LEVEL_ERROR);
-		for (CategoryForm categoryForm : observatoryForm.getCategoryFormList()) {
+		final ObservatoryForm observatoryForm = ObservatoryExportManager.getObservatory(idObsExecution);
+		List<CategoryForm> filteredCategories = observatoryForm.getCategoryFormList().stream()
+        .collect(Collectors.toMap(
+            CategoryForm::getIdCrawlerCategory,   // Key: idCrawlerCategory
+            category -> category,                 // Value: the CategoryForm object itself
+            (existing, replacement) -> Integer.parseInt(existing.getId()) > Integer.parseInt(replacement.getId()) ? existing : replacement // Merge function to keep the largest id
+        ))
+        .values()
+        .stream()
+        .collect(Collectors.toList());	
+		for (CategoryForm categoryForm : filteredCategories) {
 			if (categoryForm != null) {
-				String idCrawler = categoryForm.getIdCrawlerCategory();
-				String key = idCrawler + observatoryForm.getIdExecution();
-				if (!keys.contains(key)){
-					keys.add(key);
 					for (SiteForm siteForm : categoryForm.getSiteFormList()) {
 						if (siteForm != null) {
 							final SemillaForm semillaForm = SemillaDAO.getSeedById(c, Long.parseLong(siteForm.getIdCrawlerSeed()));
@@ -1037,7 +1041,6 @@ public final class AnnexUtils {
 								hd.endElement(EMPTY_STRING, EMPTY_STRING, PORTAL_ELEMENT);
 						}	
 					}
-				}
 			}
 		}
 	}
@@ -1282,8 +1285,6 @@ public final class AnnexUtils {
 						final List<Long> analysisIdsByTracking = AnalisisDatos.getEvaluationIdsFromExecutedObservatoryAndIdSeed(idObsExecution, semillaForm.getId());
 						final List<ObservatoryEvaluationForm> currentEvaluationPageList = observatoryManager.getObservatoryEvaluationsFromObservatoryExecution(0, analysisIdsByTracking);
 						Map<String, Map<String, ValidationDetails>> wcagCompliance = WcagEmUtils.generateEquivalenceMap(currentEvaluationPageList);
-						for (ObservatoryEvaluationForm eval : currentEvaluationPageList) {	
-							Analysis analysis = AnalisisDatos.getAnalisisFromId(c, eval.getIdAnalysis());
 							String [] points = ALL_WCAG_EM_POINTS;
 							for (String sWcagEmPoint : points) {
 							String compliance = "";
@@ -1295,7 +1296,7 @@ public final class AnnexUtils {
 									compliance = messageResources.getMessage("observatory.graphic.compilance.green");
 									int countFailed = 0;
 									int countNA = 0;
-		
+									for (ObservatoryEvaluationForm eval : currentEvaluationPageList) {
 										Map<String, ValidationDetails> result = wcagCompliance.get(eval.getUrl());
 										// if cointain current wcag rule
 										if (result.containsKey(wcagEmPointKey.getWcagEmId())) {
@@ -1308,6 +1309,8 @@ public final class AnnexUtils {
 												countNA++;
 											}
 										}
+
+									}
 									
 									if (countFailed > currentEvaluationPageList.size() / 10) {
 										compliance = messageResources.getMessage("observatory.graphic.compilance.red");
@@ -1315,33 +1318,11 @@ public final class AnnexUtils {
 									if (countNA == currentEvaluationPageList.size()) {
 										compliance = messageResources.getMessage("observatory.graphic.compilance.gray");
 									}
-									if(isPDF(analysis)){
-										if (sWcagEmPoint.length() <= 2 || !sWcagEmPoint.substring(0, 2).equals("10")) 
-											compliance = "No aplica";
-									}
-									else {
-										if (sWcagEmPoint.length() > 2 && sWcagEmPoint.substring(0, 2).equals("10"))
-											compliance = "No aplica";
-									}
 								} else {
-									if (isPDF(analysis)){
-										// We set "No aplica" to no-web documents (as PDFs)
-										if (sWcagEmPoint.length() > 2 && sWcagEmPoint.substring(0, 2).equals("10"))
-											compliance = "N/T";
-										else
-											compliance = "No aplica";
-									}
-									else {
-										if (sWcagEmPoint.length() > 2 && sWcagEmPoint.substring(0, 2).equals("10"))
-											compliance = "No aplica";
-										else
-											compliance = "N/T";
-									}
-									
+									compliance = "N/T";	
 								}
 								writeTag(hd, "R_" + sWcagEmPoint.replace(".", "_"), compliance);
 							}
-						}
 					}
 						// Try to free memory
 						wcagCompliance = null;
@@ -1403,8 +1384,6 @@ public final class AnnexUtils {
 							keys.add(key);
 						for (Map.Entry<SemillaForm, TreeMap<String, ScoreForm>> semillaEntry : annexmap.entrySet()) {
 							final SemillaForm semillaForm = semillaEntry.getKey();
-							Logger.putLog("NAME1: " + categoryForm.getName(), AnnexUtils.class, Logger.LOG_LEVEL_ERROR);
-							Logger.putLog("NAME2: " + semillaForm.getCategoria().getName(), AnnexUtils.class, Logger.LOG_LEVEL_ERROR);
 							if (categoryForm.getName().equals(semillaForm.getCategoria().getName()) && hasTags(semillaForm, tagsToFilter)) {
 								// Multidependence
 								StringBuilder dependencias = new StringBuilder();
