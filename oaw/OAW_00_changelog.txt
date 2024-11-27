@@ -1,22 +1,11 @@
+5.8.5
+------------------------------------------------------------------------------------------------------------------------------------
+
 5.8.4
 ------------------------------------------------------------------------------------------------------------------------------------
-- Evitar tiempos de espera al obtener imágenes y CSS, corrige el nivel del informe en el informe pdf
-- Eliminar la generación de hallazgos del informe de declaración de accesibilidad 
-- Eliminar la generación de ira para pautas antiguas
-- Arreglo de varios bugs menores: 7627, 7587, 7478, 7361
 
 5.8.3
 ------------------------------------------------------------------------------------------------------------------------------------
-- Añadida verificación de encabezados en el análisis de PDF + permitir iframes entre encabezados
-- Corrección de errores
-- Actualizar textos de las listas de comprobaciones
-- Añadida información de resultados de PDF a los anexos
-- Añadido texto informativo de verapdf
-- Modificar el mensaje de número de problemas en los informes
-- Corregir la codificación en la lista de URL
-- Bug 7500 - Falso resultado de análisis en un PDF como "Parcialmente conforme"
-- Bug 7501 - Inconsistencias validación PDF mediante rastreador y extensión navegador.
-- Bug 7502 - Puntuación media AA cuando todas las verificaciones no aplican
 
 5.8.2
 ------------------------------------------------------------------------------------------------------------------------------------

@@ -17,11 +17,11 @@
         <groupId>es.minhap.oaw</groupId>
         <artifactId>oaw</artifactId>
         <relativePath>../oaw/pom.xml</relativePath>
-        <version>5.8.4</version>
+        <version>5.8.5</version>
     </parent>
     
     <properties>
-		<oaw.version>5.8.4</oaw.version>
+		<oaw.version>5.8.5</oaw.version>
 	</properties>
 
 	<build>

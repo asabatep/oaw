@@ -145,7 +145,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (1,'admin','c93ccd78b2076528346216b3b2f701e6','Administrador','','',''),(2,'Programado','21232f297a57a5a743894a0e4a801fc3','','','','');
+INSERT INTO `usuario` VALUES (1,'admin','5362f975ec84c11787df64965aaf0c84','Administrador','','',''),(2,'Programado','21232f297a57a5a743894a0e4a801fc3','','','','');
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -196,4 +196,3 @@ UNLOCK TABLES;
 
 INSERT INTO tguidelines values (11, 'observatorio-une-en2019_pdf.xml');
 INSERT INTO cartucho values (11, 'es.inteco.accesibilidad.CartuchoAccesibilidad', 1 , 'UNE-EN-2019-PDF', 15, 50, 11);
-

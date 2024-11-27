@@ -16,6 +16,7 @@
 package es.inteco.accesibilidad;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -26,6 +27,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.xml.ws.http.HTTPException;
+
 import org.jfree.util.Log;
 
 import com.google.gson.Gson;
@@ -85,11 +89,12 @@ public class CartuchoAccesibilidad extends Cartucho {
 					else{
 					URL url = new URL(validator.getUrl());
 					Proxy nProxy = Proxy.NO_PROXY;
-					HttpURLConnection con = (HttpURLConnection)url.openConnection(nProxy);
+					HttpURLConnection con = (HttpURLConnection) url.openConnection(nProxy);
 					DataBaseManager.closeConnection(c);
 				con.setRequestMethod("POST");
 				con.setRequestProperty("Content-Type", "application/json");
 				con.setRequestProperty("Accept", "application/json");
+				con.setReadTimeout(1200000);
 				con.setDoOutput(true);
 				Gson gson = new GsonBuilder().create();
 				String json = gson.toJson(checkAccesibility);
@@ -97,6 +102,10 @@ public class CartuchoAccesibilidad extends Cartucho {
 					byte[] input = json.getBytes("utf-8");
 					os.write(input, 0, input.length);			
 				}
+				int statusCode = con.getResponseCode();
+					if (statusCode != HttpURLConnection.HTTP_OK) {
+					    throw new HTTPException(statusCode);
+					}
 				try(BufferedReader br = new BufferedReader(
   					new InputStreamReader(con.getInputStream(), "utf-8"))) {
     				StringBuilder response = new StringBuilder();
@@ -106,10 +115,9 @@ public class CartuchoAccesibilidad extends Cartucho {
     														}
     				Log.warn(response.toString());
 					}
+
 				}
 				}
-    			
-			
 				else {
 					DataBaseManager.closeConnection(c);
 					Logger.putLog("CONTENT: " + new String(Base64.decodeBase64(checkAccesibility.getContent())), CartuchoAccesibilidad.class, Logger.LOG_LEVEL_WARNING);
@@ -125,6 +133,9 @@ public class CartuchoAccesibilidad extends Cartucho {
 		} catch (Exception e) {
 			Log.error("EXCEPTION: " + e.getMessage());
 			Logger.putLog("Excepcion: ", CartuchoAccesibilidad.class, Logger.LOG_LEVEL_ERROR, e);
+			if (e instanceof IOException){
+				throw new HTTPException(500);
+			}
 		}
 		if (isLast) {
 			CacheUtils.removeFromCache(IntavConstants.CHECKED_LINKS_CACHE_KEY + checkAccesibility.getIdRastreo());

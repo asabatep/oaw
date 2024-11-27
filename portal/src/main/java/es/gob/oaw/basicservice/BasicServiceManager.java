@@ -144,7 +144,11 @@ public class BasicServiceManager {
 			final BasicServiceCrawlingManager basicServiceCrawlingManager = new BasicServiceCrawlingManager();
 			final List<CrawledLink> crawledLinks = basicServiceCrawlingManager.getCrawledLinks(basicServiceForm);
 			final Long idCrawling = basicServiceForm.getId() * (-1);
-			if (!crawledLinks.isEmpty()) {
+			boolean successLink = false;
+			for (CrawledLink link: crawledLinks){
+				if (link.getNumRetries() >= 0) successLink = true;
+			}
+			if (!crawledLinks.isEmpty() && successLink) {
 				final CheckHistoricoService checkHistoricoService = new CheckHistoricoService();
 				if (basicServiceForm.isRegisterAnalysis()) {
 					if (basicServiceForm.isDeleteOldAnalysis()) {
@@ -280,10 +284,15 @@ public class BasicServiceManager {
 				Logger.putLog("Enviando correo del servicio de diagnóstico", BasicServiceManager.class, Logger.LOG_LEVEL_INFO);
 				mailService.sendBasicServiceReport(basicServiceForm, pdfPath, new File(pdfPath).getName());
 				BasicServiceUtils.updateRequestStatus(basicServiceForm, Constants.BASIC_SERVICE_STATUS_FINISHED);
-			} else {
+			} else if (crawledLinks.isEmpty()) {
 				// Avisamos de que ha sido imposible acceder a la página a
 				// rastrear
 				final String message = MessageFormat.format(pmgr.getValue(BASIC_SERVICE_PROPERTIES, "basic.service.mail.not.crawled.text"), basicServiceForm.getUser(), basicServiceForm.getDomain());
+				mailService.sendBasicServiceErrorMessage(basicServiceForm, message);
+				BasicServiceUtils.updateRequestStatus(basicServiceForm, Constants.BASIC_SERVICE_STATUS_NOT_CRAWLED);
+			}
+			else { // Si todas las validaciones del validador fallaron
+				final String message = MessageFormat.format(pmgr.getValue(BASIC_SERVICE_PROPERTIES, "basic.service.mail.validator.fail.text"), basicServiceForm.getUser(), basicServiceForm.getDomain());
 				mailService.sendBasicServiceErrorMessage(basicServiceForm, message);
 				BasicServiceUtils.updateRequestStatus(basicServiceForm, Constants.BASIC_SERVICE_STATUS_NOT_CRAWLED);
 			}
