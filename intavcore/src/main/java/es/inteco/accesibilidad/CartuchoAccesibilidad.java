@@ -98,6 +98,7 @@ public class CartuchoAccesibilidad extends Cartucho {
 				con.setReadTimeout(1200000);
 				con.setChunkedStreamingMode(0);
 				con.setDoOutput(true);
+				con.setInstanceFollowRedirects(false);
 				Gson gson = new GsonBuilder().create();
 				String json = gson.toJson(checkAccesibility);
 				try(OutputStream os = con.getOutputStream()) {
