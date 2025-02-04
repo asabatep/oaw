@@ -95,7 +95,7 @@ public class CartuchoAccesibilidad extends Cartucho {
 				con.setRequestMethod("POST");
 				con.setRequestProperty("Content-Type", "application/json");
 				con.setRequestProperty("Accept", "application/json");
-				con.setReadTimeout(1200000);
+				con.setReadTimeout(300000);
 				con.setChunkedStreamingMode(0);
 				con.setDoOutput(true);
 				con.setInstanceFollowRedirects(false);
