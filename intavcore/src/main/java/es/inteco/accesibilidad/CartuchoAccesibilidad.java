@@ -96,6 +96,7 @@ public class CartuchoAccesibilidad extends Cartucho {
 				con.setRequestProperty("Content-Type", "application/json");
 				con.setRequestProperty("Accept", "application/json");
 				con.setReadTimeout(1200000);
+				con.setChunkedStreamingMode(0);
 				con.setDoOutput(true);
 				Gson gson = new GsonBuilder().create();
 				String json = gson.toJson(checkAccesibility);
