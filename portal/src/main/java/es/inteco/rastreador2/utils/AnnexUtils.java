@@ -5962,8 +5962,20 @@ public final class AnnexUtils {
 							scoreForm.setLevel(siteForm.getLevel());
 							scoreForm.setTotalScore(new BigDecimal(siteForm.getScore()));
 							ResultadoSemillaForm form = ObservatorioDAO.getResultFromObservatoryAndSeed(c, idObsExecution, Long.parseLong(siteForm.getIdCrawlerSeed()));
-							scoreForm.setTotalScoreHtml(new BigDecimal(form.getScoreHtml()));
-							scoreForm.setTotalScorePdf(new BigDecimal(form.getScorePdf()));
+							if (form != null){
+								if(form.getScoreHtml() != null && !form.getScoreHtml().isEmpty()) {
+									scoreForm.setTotalScoreHtml(new BigDecimal(form.getScoreHtml()));
+								} 
+								else scoreForm.setTotalScoreHtml(new BigDecimal(-1));
+								if(form.getScorePdf() != null && !form.getScorePdf().isEmpty()){
+									scoreForm.setTotalScorePdf(new BigDecimal(form.getScorePdf()));
+								}
+								else scoreForm.setTotalScorePdf(new BigDecimal(-1)); 
+							}
+							else {
+								scoreForm.setTotalScoreHtml(new BigDecimal(-1));
+								scoreForm.setTotalScorePdf(new BigDecimal(-1));
+							}
 							TreeMap<String, ScoreForm> seedInfo = new TreeMap<>();
 							if (seedMap.get(Long.valueOf(siteForm.getIdCrawlerSeed())) != null) {
 								seedInfo = seedMap.get(Long.valueOf(siteForm.getIdCrawlerSeed()));
