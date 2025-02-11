@@ -1,10 +1,61 @@
+5.8.6
+------------------------------------------------------------------------------------------------------------------------------------
+- Ajustes en la conexión rastreador - validador para evitar el relanzamiento de peticiones.
+- Desactivación de comprobación de enlaces rotos para agilizar el proceso de generación de resultados en los observatorios.
+
+5.8.5
+------------------------------------------------------------------------------------------------------------------------------------
+- Filtrar las URLs que contienen .pdf en el proxy.
+- Escapar el carácter "&" en el formulario PAE.
+- Solucionar el problema de "anexo-portales".
+- Cambiar texto de verificación.
+- Controlar el error del validador
+- Solucionar el problema del límite de número en el informe.
+- Aumentar el tiempo de espera a 20 minutos.
+- Agregar encabezado a las tablas dinámicas del informe global.
+- Añadir un timeout a la solicitud del validador.
+
+5.8.4
+------------------------------------------------------------------------------------------------------------------------------------
+- Evitar tiempos de espera al obtener imágenes y CSS, corrige el nivel del informe en el informe pdf
+- Eliminar la generación de hallazgos del informe de declaración de accesibilidad
+- Eliminar la generación de ira para pautas antiguas
+- Arreglo de varios bugs menores: 7627, 7587, 7478, 7361
+
+5.8.3
+------------------------------------------------------------------------------------------------------------------------------------
+- Añadida verificación de encabezados en el análisis de PDF + permitir iframes entre encabezados
+- Corrección de errores
+- Actualizar textos de las listas de comprobaciones
+- Añadida información de resultados de PDF a los anexos
+- Añadido texto informativo de verapdf
+- Modificar el mensaje de número de problemas en los informes
+- Corregir la codificación en la lista de URL
+- Bug 7500 - Falso resultado de análisis en un PDF como "Parcialmente conforme"
+- Bug 7501 - Inconsistencias validación PDF mediante rastreador y extensión navegador.
+- Bug 7502 - Puntuación media AA cuando todas las verificaciones no aplican
+
+5.8.2
+------------------------------------------------------------------------------------------------------------------------------------
+- Eliminar análisis de parseo CSS + arreglo de media queries
+- Servicio básico, contenido, corregir mensaje
+- Arreglar la indexación de las carpetas de código fuente
+- Eliminar pdfActiveCheck + arreglar la coherencia de complejidad
+- Recoger siempre PDFs en el rastreo
+- Limpiar validatorDAO
+- Agregar título de PDF y nombre de archivo a los informes
+- Arreglar el escape de caracteres en español en el informe de Hallazgos
+- Escapar & en las URLs
+- Permitir elementos <div> en <dl>
+- Arreglar el problema de indexación del informe en PDF
+
 5.8.1
 ------------------------------------------------------------------------------------------------------------------------------------
 - El servicio de diagnóstico soporta múltiples destinatarios
 - Bug 6857 - Requisito 4.1.1 y equivalente verificación Compatibilidad 1.14 siempre deben ser PASA
 - Bug 6756 - Error enlaces análisis de pdf
 - Bug 6774 - Texto mal alineado informe pdf con la nueva metodología
-- Bug 7124 - Cambiar texto en diagnostico.html de la opción de declaración de accesibilidad 
+- Bug 7124 - Cambiar texto en diagnostico.html en la opción de declaración de accesibilidad
 
 5.8.0
 ------------------------------------------------------------------------------------------------------------------------------------
@@ -22,14 +73,14 @@
 ------------------------------------------------------------------------------------------------------------------------------------
 - Mejoras de accesibilidad en los informes agregados
 - Cálculo del nivel de adecuación en los informes individuales, ajuste de metodología
- 
+
 5.7.1
 ------------------------------------------------------------------------------------------------------------------------------------
 - Bug 6286 - Relanzamiento de semillas del observatorio
 - Bug 6322 - Cambio de copy para las alternativas textuales
 - Bug 6351 - Formato de urls en el informe de hallazgos
 - Bug 6268 - Cálculo de parte fija en los informes de agregados
- 
+
 5.7.0
 ------------------------------------------------------------------------------------------------------------------------------------
 - Bug 6340 - Incidencia en urls con varios parámetros separados por &
@@ -79,7 +130,7 @@
 - Actualización de formatos de los ficheros IRA
 - Modificación de leyendas de informes: UNE-EN301549:2019 -> UNE-EN 301549:2022
 - Resolución de falsos positivos en contraste con tamaños de letra grandes
-- Corrección de palabra mal escrita informe revisión de accesibilidad Multiples vías	
+- Corrección de palabra mal escrita informe revisión de accesibilidad Multiples vías
 - Fichero 4. Evolutivo y Progreso de Observatorio - Orden iteraciones #1470
 
 5.3.0
@@ -108,12 +159,12 @@
 - Generación de xml anexo-paginas-verificaciones.xml
 - Generación de varios XLSX en los anexos de resumen y estadísticas del observatorio
 - Adjuntado el código fuente de la página de accesibilidad en el cartucho de accesibilidad
-- Exportación/importación de semillas en xlsx 
+- Exportación/importación de semillas en xlsx
 - Envío de resultados de iteración de un observatorio por email
 - Modificaciones en la entidad dependencias para añadir campos adicionales necesarios en el punto anterior (email, configuración de envío automático, etc)
 - Resumen de los envíos de resultados de una iteración
-- Posibilidad de subir un fichero zip con varios ficheros html en la opción "Código fuente" del servicio de diagnóstico 
-- Modificada la llamada a la API del validador W3C para recuperar los errores correctamente y actualizar a la nueva versión ya que 
+- Posibilidad de subir un fichero zip con varios ficheros html en la opción "Código fuente" del servicio de diagnóstico
+- Modificada la llamada a la API del validador W3C para recuperar los errores correctamente y actualizar a la nueva versión ya que
   la anterior está deprecada y será retirada en algún momento
 - Actualización de varias librerías para solventar vulnerabilidades.
 
@@ -136,7 +187,7 @@
 - Plantilla de informe agregado del cartucho de la metodología de accesibilidad
 - Incluidos en la exportación de JSON los checks que no aplican
 - Incluídas las puntuaciones 'No puntúa' de verificaciones en el agregado que se computaban erróneamente como 'Conforme'
-- Añadidas la complejidad a los anexos en XML
+- Añadidad la complejidad a los anexos en XML
 
 5.0.5
 ------------------------------------------------------------------------------------------------------------------------------------

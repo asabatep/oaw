@@ -16,6 +16,7 @@
 package es.inteco.accesibilidad;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -26,6 +27,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.xml.ws.http.HTTPException;
+
 import org.jfree.util.Log;
 
 import com.google.gson.Gson;
@@ -47,6 +51,7 @@ import es.inteco.intav.utils.EvaluatorUtils;
 import es.inteco.plugin.Cartucho;
 import es.inteco.plugin.dao.DataBaseManager;
 import org.apache.commons.codec.binary.Base64;
+import java.net.SocketTimeoutException;
 
 /**
  * Implementación de un cartucho que analiza las urls, así como el contenido de las páginas y clasificarlas como maliciosas o no.
@@ -79,24 +84,31 @@ public class CartuchoAccesibilidad extends Cartucho {
 			    Connection c = DataBaseManager.getConnection();
 				ValidatorForm validator = ValidatorDAO.getValidator(c);
 				if(validator.getStatus() == 1){
-					if(validator.getPdfActive() == 0 && (checkAccesibility.getUrl().contains(".pdf") || new String(Base64.decodeBase64(checkAccesibility.getContent())).contains("%PDF"))){
+					if(!checkAccesibility.getGuideline().contains("pdf") && (checkAccesibility.getUrl().contains(".pdf") || new String(Base64.decodeBase64(checkAccesibility.getContent())).contains("%PDF"))){
 						DataBaseManager.closeConnection(c);
 					}
 					else{
 					URL url = new URL(validator.getUrl());
 					Proxy nProxy = Proxy.NO_PROXY;
-					HttpURLConnection con = (HttpURLConnection)url.openConnection(nProxy);
+					HttpURLConnection con = (HttpURLConnection) url.openConnection(nProxy);
 					DataBaseManager.closeConnection(c);
 				con.setRequestMethod("POST");
 				con.setRequestProperty("Content-Type", "application/json");
 				con.setRequestProperty("Accept", "application/json");
+				con.setReadTimeout(300000);
+				con.setChunkedStreamingMode(0);
 				con.setDoOutput(true);
+				con.setInstanceFollowRedirects(false);
 				Gson gson = new GsonBuilder().create();
 				String json = gson.toJson(checkAccesibility);
 				try(OutputStream os = con.getOutputStream()) {
 					byte[] input = json.getBytes("utf-8");
 					os.write(input, 0, input.length);			
 				}
+				int statusCode = con.getResponseCode();
+					if (statusCode != HttpURLConnection.HTTP_OK) {
+					    throw new HTTPException(statusCode);
+					}
 				try(BufferedReader br = new BufferedReader(
   					new InputStreamReader(con.getInputStream(), "utf-8"))) {
     				StringBuilder response = new StringBuilder();
@@ -106,13 +118,11 @@ public class CartuchoAccesibilidad extends Cartucho {
     														}
     				Log.warn(response.toString());
 					}
+
 				}
 				}
-    			
-			
 				else {
 					DataBaseManager.closeConnection(c);
-					Logger.putLog("CONTENT: " + new String(Base64.decodeBase64(checkAccesibility.getContent())), CartuchoAccesibilidad.class, Logger.LOG_LEVEL_WARNING);
 					if ((checkAccesibility.getUrl() != null && !checkAccesibility.getUrl().contains(".pdf")) && !(new String(Base64.decodeBase64(checkAccesibility.getContent())).contains("%PDF"))) {
 						EvaluatorUtils.evaluateContent(checkAccesibility, pmgr.getValue("crawler.core.properties", "check.accessibility.default.language"));
 					}
@@ -125,6 +135,9 @@ public class CartuchoAccesibilidad extends Cartucho {
 		} catch (Exception e) {
 			Log.error("EXCEPTION: " + e.getMessage());
 			Logger.putLog("Excepcion: ", CartuchoAccesibilidad.class, Logger.LOG_LEVEL_ERROR, e);
+			if (e instanceof IOException || e instanceof SocketTimeoutException){
+				throw new HTTPException(500);
+			}
 		}
 		if (isLast) {
 			CacheUtils.removeFromCache(IntavConstants.CHECKED_LINKS_CACHE_KEY + checkAccesibility.getIdRastreo());

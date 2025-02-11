@@ -137,13 +137,18 @@ public class BasicServiceManager {
 	 */
 	public void executeCrawling(final BasicServiceForm basicServiceForm, final MessageResources messageResources) {
 		Logger.putLog("executeCrawling", BasicServiceManager.class, Logger.LOG_LEVEL_WARNING);
+		Logger.putLog("BasicServiceName: " + basicServiceForm.getFileName(), BasicServiceManager.class, Logger.LOG_LEVEL_WARNING);
 		String pdfPath = null;
 		try {
 			// Lanzamos el rastreo de INTAV
 			final BasicServiceCrawlingManager basicServiceCrawlingManager = new BasicServiceCrawlingManager();
 			final List<CrawledLink> crawledLinks = basicServiceCrawlingManager.getCrawledLinks(basicServiceForm);
 			final Long idCrawling = basicServiceForm.getId() * (-1);
-			if (!crawledLinks.isEmpty()) {
+			boolean successLink = false;
+			for (CrawledLink link: crawledLinks){
+				if (link.getNumRetries() >= 0) successLink = true;
+			}
+			if (!crawledLinks.isEmpty() && successLink) {
 				final CheckHistoricoService checkHistoricoService = new CheckHistoricoService();
 				if (basicServiceForm.isRegisterAnalysis()) {
 					if (basicServiceForm.isDeleteOldAnalysis()) {
@@ -210,14 +215,14 @@ public class BasicServiceManager {
 					final BasicServicePdfReport basicServicePdfReport = new BasicServicePdfReport(messageResources, new AnonymousResultExportPdfAccesibilidad(basicServiceForm));
 					basicServicePdfReport.exportToPdf(currentEvaluationPageList, previousEvaluationsPageList, pdfPath);
 					// Odt report: Hallazgos
-					generateOdtReport(currentEvaluationPageList, pdfPath);
+					//generateOdtReport(currentEvaluationPageList, pdfPath);
 				}
 				// JSON WCAG-EM and ODS
 				if ("true".equalsIgnoreCase(basicServiceForm.getDepthReport())) {
 					try {
 			    	Connection c = DataBaseManager.getConnection();
 					ValidatorForm validator = ValidatorDAO.getValidator(c);
-					if(validator.getStatus() == 1 && validator.getPdfActive() == 1){
+					if(validator.getStatus() == 1 && basicServiceForm.getReport().contains("pdf")){
 						pdfActive = true;
 						DataBaseManager.closeConnection(c);
 					}
@@ -225,6 +230,10 @@ public class BasicServiceManager {
 					catch (Exception e){
 						e.printStackTrace();
 					}
+					if(Constants.REPORT_OBSERVATORY_4.equals(basicServiceForm.getReport()) || Constants.REPORT_OBSERVATORY_4_NOBROKEN.equals(basicServiceForm.getReport())
+					|| Constants.REPORT_OBSERVATORY_4_PDF.equals(basicServiceForm.getReport()) || Constants.REPORT_OBSERVATORY_4_NOBROKEN_PDF.equals(basicServiceForm.getReport())) {
+
+					
 					WcagEmReport report = WcagEmUtils.generateReport(messageResources, new AnonymousResultExportPdfUNEEN2019(basicServiceForm), basicServiceForm.getName(), idCrawling);
 					if(!pdfActive) {
 						report.getGraph().get(0).getStructuredSample().setNoWebpage(getNoWebPages(crawledLinks));
@@ -241,6 +250,7 @@ public class BasicServiceManager {
 					File outputFilexlsx = new File(new File(pdfPath).getParentFile().getPath() + "/Informe Revision Accesibilidad - Sitios web.xlsx");
 					wb.write(new FileOutputStream(outputFilexlsx));
 				}
+			}
 				// Generar código analizado
 				final SourceFilesManager sourceFilesManager = new SourceFilesManager(new File(pdfPath).getParentFile());
 				final List<Long> analysisIdsByTracking = AnalisisDatos.getAnalysisIdsByTracking(DataBaseManager.getConnection(), idCrawling);
@@ -274,10 +284,15 @@ public class BasicServiceManager {
 				Logger.putLog("Enviando correo del servicio de diagnóstico", BasicServiceManager.class, Logger.LOG_LEVEL_INFO);
 				mailService.sendBasicServiceReport(basicServiceForm, pdfPath, new File(pdfPath).getName());
 				BasicServiceUtils.updateRequestStatus(basicServiceForm, Constants.BASIC_SERVICE_STATUS_FINISHED);
-			} else {
+			} else if (crawledLinks.isEmpty()) {
 				// Avisamos de que ha sido imposible acceder a la página a
 				// rastrear
 				final String message = MessageFormat.format(pmgr.getValue(BASIC_SERVICE_PROPERTIES, "basic.service.mail.not.crawled.text"), basicServiceForm.getUser(), basicServiceForm.getDomain());
+				mailService.sendBasicServiceErrorMessage(basicServiceForm, message);
+				BasicServiceUtils.updateRequestStatus(basicServiceForm, Constants.BASIC_SERVICE_STATUS_NOT_CRAWLED);
+			}
+			else { // Si todas las validaciones del validador fallaron
+				final String message = MessageFormat.format(pmgr.getValue(BASIC_SERVICE_PROPERTIES, "basic.service.mail.validator.fail.text"), basicServiceForm.getUser(), basicServiceForm.getDomain());
 				mailService.sendBasicServiceErrorMessage(basicServiceForm, message);
 				BasicServiceUtils.updateRequestStatus(basicServiceForm, Constants.BASIC_SERVICE_STATUS_NOT_CRAWLED);
 			}

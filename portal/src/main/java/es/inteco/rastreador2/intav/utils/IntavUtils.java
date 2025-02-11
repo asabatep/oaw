@@ -475,9 +475,9 @@ public final class IntavUtils {
 				scoreForm.setSuitabilityScore(scoreForm.getSuitabilityScore().divide(new BigDecimal(evaList.size()), 2, BigDecimal.ROUND_HALF_UP));
 			}
 			else {
-				scoreForm.setScoreLevel2(new BigDecimal(0));
-				scoreForm.setScoreLevelAA(new BigDecimal(0));
-				scoreForm.setSuitabilityScore(new BigDecimal(0));
+				scoreForm.setScoreLevel2(new BigDecimal(-1));
+				scoreForm.setScoreLevelAA(new BigDecimal(-1));
+				scoreForm.setSuitabilityScore(new BigDecimal(-1));
 			}
 			// REVIEW Calculated compliance
 			scoreForm.setCompliance(calculatedCompliance.get(evaList.get(0).getCrawlerExecutionId()));
@@ -527,7 +527,7 @@ public final class IntavUtils {
 			}
 			if ((countC + countNA) == result.getValue().size()) {
 				resultCompilance.put(result.getKey(), Constants.OBS_COMPILANCE_FULL);
-			} else if ((countC + countNA) > countNC) {
+			} else if ((countC) > countNC) {
 				resultCompilance.put(result.getKey(), Constants.OBS_COMPILANCE_PARTIAL);
 			} else {
 				resultCompilance.put(result.getKey(), Constants.OBS_COMPILANCE_NONE);

@@ -390,7 +390,7 @@ public final class ObservatorioDAO extends DataBaseDAO {
 		try (Statement s = c.createStatement()) {
 			try (ResultSet rs = s.executeQuery(
 					"SELECT o.id_observatorio, o.nombre, ore.id, ore.fecha, c.aplicacion, (SELECT al.nombre FROM ambitos_lista al WHERE al.id_ambito=o.id_ambito) as 'ambito', (SELECT ot.name FROM observatorio_tipo ot WHERE ot.id_tipo=o.id_tipo) AS 'tipo' FROM observatorio o JOIN observatorios_realizados ore ON (o.id_observatorio=ore.id_observatorio) \n"
-							+ "	LEFT JOIN cartucho c ON (c.id_cartucho = ore.id_cartucho) WHERE c.id_cartucho = 9 ORDER BY ore.fecha DESC")) {
+							+ "	LEFT JOIN cartucho c ON (c.id_cartucho = ore.id_cartucho) WHERE (c.id_cartucho = 9 OR c.id_cartucho = 11) ORDER BY ore.fecha DESC")) {
 				while (rs.next()) {
 					final ExecutedObservatorioForm tmp = new ExecutedObservatorioForm();
 					tmp.setIdObservatorio(rs.getInt("o.id_observatorio"));
@@ -1439,6 +1439,29 @@ public final class ObservatorioDAO extends DataBaseDAO {
 			throw e;
 		}
 		return semillasFormList;
+	}
+
+	public static ResultadoSemillaForm getResultFromObservatoryAndSeed(Connection c, final Long idObservatorioRealizado, final Long idLista) throws Exception{
+		c = reOpenConnectionIfIsNecessary(c);
+		try (PreparedStatement ps = c.prepareStatement("SELECT * FROM rastreos_realizados rr WHERE rr.id_obs_realizado = ? and id_lista = ?")) {
+			ps.setLong(1, idObservatorioRealizado);
+			ps.setLong(2, idLista);
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					final ResultadoSemillaForm resultadoSemillaForm = new ResultadoSemillaForm();
+					resultadoSemillaForm.setId(rs.getString("rr.id_lista"));
+					resultadoSemillaForm.setScore(rs.getString("rr.score"));
+					resultadoSemillaForm.setScorePdf(rs.getString("rr.score_pdf"));
+					resultadoSemillaForm.setScoreHtml(rs.getString("rr.score_html"));
+					return resultadoSemillaForm;
+				}
+			}
+		} catch (SQLException e) {
+			Logger.putLog("Exception: ", ObservatorioDAO.class, Logger.LOG_LEVEL_ERROR, e);
+			return null;
+		}
+		return null;
+
 	}
 
 	/**

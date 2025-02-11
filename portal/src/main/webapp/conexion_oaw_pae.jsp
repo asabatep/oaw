@@ -210,7 +210,7 @@
                 final String encodedCodigo = codec.encode(codigo);
                 final String postRequest = String.format("content=%s&url=%s&correo=%s&complexity=%s&informe=%s&usuario=%s&inDirectory=%s&registerAnalysis=%s&analysisToDelete=%s&informe-nobroken=%s&urls=%s&type=%s&filename=%s&depthReport=%s",
                         encodedCodigo != null ? encodedCodigo : "",
-                        url != null ? url : "",
+                        url != null ? codec.encode(url) : "",
                         correo,
                         complexity,
                         informe,
@@ -219,7 +219,7 @@
                         registerAnalysis,
                         analysisToDelete,
                         nobroken,
-                        urls,
+                        codec.encode(urls),
                         type,
                         fileName,
                         depthReport
@@ -319,6 +319,15 @@
                 if (urls.isEmpty()) {
                   errores.add("Indique al menos una URL para an&aacutelisis de tipo 'Conjunto de URLs'");
                 } else {
+                    try {
+                        this.urls = java.net.URLEncoder.encode(urls, "ISO-8859-1");
+                    } catch (Exception e) {
+                        try {
+                            this.urls = java.net.URLEncoder.encode(urls, "UTF-8");
+                        } catch (Exception eutf8) {
+                            errores.add("Las URL tienen caracteres que no se pueden codificar");
+                        }
+                    }
                     for (String domain: urls.split("\r\n")) {
                         if (!domain.startsWith("http") && !domain.startsWith("https")) {
                             errores.add("La URL " + domain + " debe comenzar por http:// o https://");

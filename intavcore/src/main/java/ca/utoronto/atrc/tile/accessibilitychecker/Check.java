@@ -48,6 +48,7 @@ import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -1457,25 +1458,33 @@ public class Check {
 	 * @return the dimension
 	 */
 	private Dimension loadImage(final Element elementRoot, final String srcImg) {
-		try {
-			final String baseUrl = CheckUtils.getBaseUrl(elementRoot);
-			final URL url = baseUrl != null ? new URL(baseUrl) : new URL((String) elementRoot.getUserData("url"));
-			final URL urlImage = new URL(url, srcImg);
-			final BufferedImage image = ImageIO.read(urlImage);
-			if (image != null) {
-				return new Dimension(image.getWidth(), image.getHeight());
-			} else {
-				Logger.putLog("Unknown image format: " + urlImage, CheckerParser.class, Logger.LOG_LEVEL_INFO);
-				return null;
-			}
-		} catch (IOException e) {
-			Logger.putLog("Exception loading image", CheckerParser.class, Logger.LOG_LEVEL_INFO, e);
-			return null;
-		} catch (Throwable t) {
-			Logger.putLog(String.format("Throwable %s", t.getMessage()), CheckerParser.class, Logger.LOG_LEVEL_INFO);
-			return null;
-		}
-	}
+    try {
+      final String baseUrl = CheckUtils.getBaseUrl(elementRoot);
+      final URL url =
+          baseUrl != null ? new URL(baseUrl) : new URL((String) elementRoot.getUserData("url"));
+      final URL urlImage = new URL(url, srcImg);
+      URLConnection connection = urlImage.openConnection();
+      connection.setConnectTimeout(2000);
+      connection.setReadTimeout(2000);
+      final BufferedImage image = ImageIO.read(connection.getInputStream());
+      if (image != null) {
+        return new Dimension(image.getWidth(), image.getHeight());
+      } else {
+        Logger.putLog(
+            "Unknown image format: " + urlImage, CheckerParser.class, Logger.LOG_LEVEL_INFO);
+        return null;
+      }
+    } catch (IOException e) {
+      Logger.putLog("Exception loading image", CheckerParser.class, Logger.LOG_LEVEL_INFO, e);
+      return null;
+    } catch (Exception t) {
+      Logger.putLog(
+          String.format("Throwable %s", t.getMessage()),
+          CheckerParser.class,
+          Logger.LOG_LEVEL_INFO);
+      return null;
+    }
+  }
 
 	/**
 	 * Extract image dimension.
@@ -2661,62 +2670,81 @@ public class Check {
 	}
 
 	/**
-	 * Function definition list construction.
-	 *
-	 * @param checkCode    the check code
-	 * @param nodeNode     the node node
-	 * @param elementGiven the element given
-	 * @return true, if successful
-	 */
-	private boolean functionDefinitionListConstruction(CheckCode checkCode, Node nodeNode, Element elementGiven) {
-		NodeList nodeList = elementGiven.getChildNodes();
-		List<String> exceptions = Collections.emptyList();
-		if (checkCode.getFunctionValue() != null && !checkCode.getFunctionValue().equals("")) {
-			exceptions = Arrays.asList(checkCode.getFunctionValue().split(";"));
-		}
-		boolean isDt = false;
-		boolean dtHasDd = false;
-		if (nodeList != null && nodeList.getLength() > 0) {
-			for (int i = 0; i < nodeList.getLength(); i++) {
-				if (nodeList.item(i).getNodeType() == Node.ELEMENT_NODE) {
-					// divs are allowed
-//					if (nodeList.item(i).getNodeName().equalsIgnoreCase("div")) {
-//						// TODO Recursively??
-//						// continue;
-//						return functionDefinitionListConstruction(checkCode, null, (Element) nodeList.item(i));
-//					} else
-					if (nodeList.item(i).getNodeName().equalsIgnoreCase("dd")) {
-						if (!isDt) {
-							if (!dtHasDd) {
-								return true; // Si el primer elemento es dd
-												// Error
-							} // Si dtHasDd es true y isDt false es porque son
-								// dd seguidos, OK
-						} else { // Si dt es igual a true y nos encontramos un
-									// dd, OK
-							isDt = false;
-							dtHasDd = true;
-						}
-					} else if (nodeList.item(i).getNodeName().equalsIgnoreCase("dt")) {
-						if (!isDt) { // Si isDt es false es que el anterior es
-										// un dd
-							isDt = true;
-							dtHasDd = false;
-						}
-						// else -> dos dt seguidos se permiten
-					} else if (!exceptions.contains(nodeList.item(i).getNodeName().toLowerCase())) {
-						return true;
-					}
-				}
-			}
-			if (isDt) { // Si acaba en Dt, Error
-				return true;
-			}
-		} else { // Si no tiene nodos, Error
-			return true;
-		}
-		return false;
-	}
+ * Function definition list construction.
+ *
+ * @param checkCode the check code
+ * @param nodeNode the node node
+ * @param elementGiven the element given
+ * @return true, if successful
+ */
+public boolean functionDefinitionListConstruction(
+    CheckCode checkCode, Node nodeNode, Element elementGiven) {
+  return functionDefinitionListConstructionRecursive(checkCode, nodeNode, elementGiven, 0);
+}
+
+
+  /**
+ * Function definition list construction with recursion depth to deal with div elements
+ *
+ * @param checkCode the check code
+ * @param nodeNode the node node
+ * @param elementGiven the element given
+ * @param depth the current recursion depth
+ * @return true, if successful
+ */
+private boolean functionDefinitionListConstructionRecursive(
+  CheckCode checkCode, Node nodeNode, Element elementGiven, int depth) {
+
+NodeList nodeList = elementGiven.getChildNodes();
+List<String> exceptions = getFunctionValueExceptions(checkCode);
+
+boolean isDt = false;
+boolean dtHasDd = false;
+
+// The list must have more than 1 element
+if (nodeList != null && nodeList.getLength() > 0) {
+  for (int i = 0; i < nodeList.getLength(); i++) {
+    Node item = nodeList.item(i);
+    if (item.getNodeType() == Node.ELEMENT_NODE) {
+      String nodeName = item.getNodeName().toLowerCase();
+      
+      if (nodeName.equalsIgnoreCase("div")) {
+        // Recursive call with one level of recursion
+        if (depth == 0) {
+          if (functionDefinitionListConstructionRecursive(checkCode, nodeNode, (Element) item, depth + 1)) {
+            return true;
+          }
+        }
+        else return true;
+      } else if (nodeName.equalsIgnoreCase("dd")) {
+        if (!isDt && !dtHasDd) {
+          return true; // Error if the first element is dd
+        }
+        isDt = false;
+        dtHasDd = true;
+      } else if (nodeName.equalsIgnoreCase("dt")) {
+        if (!isDt) {
+          isDt = true;
+          dtHasDd = false;
+        }
+      } else if (!exceptions.contains(nodeName)) {
+        return true;
+      }
+    }
+  }
+  return isDt; // Error if it ends with Dt, otherwise no error
+}
+return true; // Error if it has no nodes
+}
+
+  // Helper method (extracted for readability)
+
+  private List<String> getFunctionValueExceptions(CheckCode checkCode) {
+    String functionValue = checkCode.getFunctionValue();
+    return (functionValue != null && !functionValue.isEmpty())
+        ? Arrays.asList(functionValue.split(";"))
+        : Collections.emptyList();
+  }
 
 	/**
 	 * Function all elements not like this.

@@ -1,0 +1,104 @@
+version: '2.2'
+
+networks:
+  oaw-dev:
+    driver: bridge
+    name: oaw-dev
+
+services:
+
+  renderer-1:
+    privileged: true
+    build: ../motor-js/renderer
+    image: oawjs_renderer
+    cpus: 2
+    restart: always
+    command: node /opt/prerender/server.js
+    container_name: docker_oaw_renderer_1
+    networks:
+      - oaw-dev
+
+  renderer-2:
+    privileged: true
+    build: ../motor-js/renderer
+    image: oawjs_renderer
+    cpus: 2
+    restart: always
+    command: node /opt/prerender/server.js
+    container_name: docker_oaw_renderer_2
+    networks:
+      - oaw-dev
+
+  renderer-3:
+    privileged: true
+    build: ../motor-js/renderer
+    image: oawjs_renderer
+    cpus: 2
+    restart: always
+    command: node /opt/prerender/server.js
+    container_name: docker_oaw_renderer_3
+    networks:
+      - oaw-dev
+
+  proxy:
+    build: ../motor-js/proxy
+    command: node /opt/proxy/index.js
+    restart: always
+    volumes:
+      - ../motor-js/proxy/index.js:/opt/proxy/index.js
+    container_name: oaw-dev-proxy
+    ports:
+      - 7013:7013
+    networks:
+      - oaw-dev
+
+  nginx:
+    image: nginx:1.13.8-alpine
+    volumes:
+      - ../motor-js/nginx/reverse.conf:/etc/nginx/conf.d/default.conf
+      - ../motor-js/nginx/certs/server.crt:/etc/nginx/ssl/server.crt
+      - ../motor-js/nginx/certs/server.key:/etc/nginx/ssl/server.key
+    links:
+      - renderer-1
+      - renderer-2
+      - renderer-3
+    restart: always
+    shm_size: 1gb
+    networks:
+      - oaw-dev
+
+  mysql:
+    image: mysql:5.7.21
+    command: 
+      --max_allowed_packet=32505856
+      --innodb_use_native_aio=0
+    ports:
+      - 7012:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./mysql/01_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
+      - ./mysql/02_data.sql:/docker-entrypoint-initdb.d/02_data.sql
+      - ./volumes/mysql/:/var/lib/mysql/
+    container_name: oaw-dev-mysql
+    networks:
+      - oaw-dev
+
+  tomcat:
+    build: ./tomcat
+    ports:
+      - 7010:8080
+      - 7011:8443
+    volumes:
+      - ../portal/target/oaw.war:/usr/local/tomcat/webapps/oaw.war
+      - ./tomcat/server.xml:/usr/local/tomcat/conf/server.xml
+      - ./tmp:/tmp
+    container_name: oaw-dev-tomcat
+    dns:
+      - 192.168.4.7
+      - 192.168.4.8
+    links:
+      - mysql
+    restart: always
+    networks:
+      - oaw-dev

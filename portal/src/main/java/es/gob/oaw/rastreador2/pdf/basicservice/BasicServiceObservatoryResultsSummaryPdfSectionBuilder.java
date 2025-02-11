@@ -76,7 +76,8 @@ public class BasicServiceObservatoryResultsSummaryPdfSectionBuilder {
 	 * @throws DocumentException the document exception
 	 */
 	public void addObservatoryResultsSummary(final MessageResources messageResources, final Document document, final PdfTocManager pdfTocManager) throws DocumentException {
-		Chapter chapter = PDFUtils.createChapterWithTitle(messageResources.getMessage("resultados.primarios.res.verificacion").toUpperCase(), pdfTocManager, ConstantsFont.CHAPTER_TITLE_MP_FONT);
+		Chapter chapter = PDFUtils.createChapterWithTitle(messageResources.getMessage("pdf.accessibility.global.summary.title").toUpperCase(), pdfTocManager.getIndex(),
+		pdfTocManager.addSection(), pdfTocManager.getNumChapter(), ConstantsFont.CHAPTER_TITLE_MP_FONT, true, "anchor_resumen_resultados");
 		PDFUtils.addParagraph(messageResources.getMessage("resultados.primarios.5.p1"), ConstantsFont.PARAGRAPH, chapter, Element.ALIGN_JUSTIFIED, true, false);
 		PDFUtils.addParagraph(messageResources.getMessage("resultados.primarios.5.p2"), ConstantsFont.PARAGRAPH, chapter, Element.ALIGN_JUSTIFIED, true, false);
 		addResultsByVerification(messageResources, chapter, currentEvaluationPageList, pdfTocManager);

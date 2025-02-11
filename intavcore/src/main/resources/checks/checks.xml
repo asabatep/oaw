@@ -1905,6 +1905,7 @@
 		<name>Hay dos o mas encabezados del mismo nivel con el mismo texto
 		</name>
 		<error>check.141.error</error>
+		<rationale>check.141.rationale</rationale>
 		<machine>
 			<trigger element="*" />
 			<condition type="and">
@@ -1924,6 +1925,7 @@
 	<check id="142" key="a" confidence="high" status="3">
 		<name>Enlace con texto vacío</name>
 		<error>check.142.error</error>
+		<rationale>check.142.rationale</rationale>
 		<machine>
 			<trigger element="a" />
 			<condition type="and">
@@ -2064,6 +2066,7 @@
 			a menos que la tabla esté identificada en el documento.
 		</name>
 		<error>check.151.error</error>
+		<rationale>check.151.rationale</rationale>
 		<machine>
 			<trigger element="table" />
 			<condition type="and">
@@ -2140,6 +2143,7 @@
 			.
 		</name>
 		<error>check.157.error</error>
+		<rationale>check.157.rationale</rationale>
 		<machine>
 			<trigger element="area" />
 			<condition type="and">
@@ -2178,6 +2182,7 @@
 			está vacío.
 		</name>
 		<error>check.159.error</error>
+		<rationale>check.159.rationale</rationale>
 		<machine>
 			<trigger element="table" />
 			<function call="table-heading-blank" node="." />
@@ -2270,6 +2275,7 @@
 	<check id="161" key="metadata" confidence="high" status="5">
 		<name>El elemento tiene un código de idioma no válido.</name>
 		<error>check.161.error</error>
+		<rationale>check.161.rationale</rationale>
 		<machine>
 			<trigger element="*" />
 			<function call="not-valid-language" node="." />
@@ -2736,6 +2742,7 @@
 		<name>Las tablas de resumen no duplican las tablas de pie de página.
 		</name>
 		<error>check.243.error</error>
+		<rationale>check.243.rationale</rationale>
 		<machine>
 			<trigger element="table" />
 			<function call="caption-summary-same" node="." value="summary" />
@@ -3178,6 +3185,7 @@
 	<check id="306" key="input" confidence="high">
 		<name></name>
 		<error>check.306.error</error>
+		<rationale>check.306.rationale</rationale>
 		<machine>
 			<trigger element="input" />
 			<condition type="and">
@@ -4704,6 +4712,7 @@
 	<check id="406" key="select" confidence="high">
 		<name>Select con muchos options y ningún optgroup</name>
 		<error>check.406.error</error>
+		<rationale>check.406.rationale</rationale>
 		<machine>
 			<trigger element="select" />
 			<condition type="and">
@@ -4716,6 +4725,7 @@
 	<check id="407" key="select" confidence="high">
 		<name>Optgroup sin label</name>
 		<error>check.407.error</error>
+		<rationale>check.407.rationale</rationale>
 		<machine>
 			<trigger element="optgroup" />
 			<condition type="or">
@@ -4991,7 +5001,7 @@
 		<name>Hay dos del mismo nivel seguidos sin contenido entre ellos
 		</name>
 		<error>check.422.error</error>
-		<error>check.422.rationale</error>
+		<rationale>check.422.rationale</rationale>
 		<machine>
 			<trigger element="*" />
 			<condition type="and">
@@ -5035,8 +5045,8 @@
 		<machine>
 			<trigger element="dl" />
 			<condition type="and">
-				<function call="element-count-equals" node="." value="dt" number="0" attribute1="0" />
-				<function call="element-count-equals" node="." value="dd" number="0" attribute1="0" />
+				<function call="element-count-equals" node="." value="dt" number="0" attribute1="1" />
+				<function call="element-count-equals" node="." value="dd" number="0" attribute1="1" />
 			</condition>
 		</machine>
 	</check>
@@ -5074,8 +5084,8 @@
 
 	<check id="427" key="dl" confidence="high">
 		<name>Lista de definicion mal construida</name>
-		<error>check.312.error</error>
-		<rationale>check.312.rationale</rationale>
+		<error>check.427.error</error>
+		<rationale>check.427.rationale</rationale>
 		<machine>
 			<trigger element="dl" />
 			<!-- Se diferencia de la 312 que no permitimos ningún elemento distinto de dt,dd como hijo de dl (312 permite ul,ol) -->
@@ -6398,5 +6408,11 @@
 		<error>check.524.error</error>
 		<rationale>check.524.rationale</rationale>
 	</check>
+	<check id ="525" key="pdf" confidence="high">
+		<name> [PDF] Se verifica que existe una estructura de encabedados en el documento </name>
+		<error>check.525.error</error>
+		<rationale>check.525.rationale</rationale>
+	</check>
+
 
 </checks>

@@ -259,10 +259,9 @@ public class BasicServicePageResultsPdfSectionBuilder extends ObservatoryPageRes
 				subSubSection.add(p);
 			}
 			if (maxNumErrors <= 0) {
-				if (specificProblems.size() > Integer.parseInt(pmgr.getValue(Constants.PDF_PROPERTIES, "pdf.intav.specific.problems.number"))) {
+				if (specificProblems.size() >= Integer.parseInt(pmgr.getValue(Constants.PDF_PROPERTIES, "pdf.intav.specific.problems.number"))) {
 					final String[] arguments = new String[2];
 					arguments[0] = pmgr.getValue(Constants.PDF_PROPERTIES, "pdf.intav.specific.problems.number");
-					arguments[1] = String.valueOf(specificProblems.size());
 					final Paragraph p = new Paragraph(messageResources.getMessage("pdf.accessibility.bs.num.errors.summary", arguments), ConstantsFont.MORE_INFO_FONT);
 					p.setAlignment(Paragraph.ALIGN_RIGHT);
 					subSubSection.add(p);
@@ -331,7 +330,7 @@ public class BasicServicePageResultsPdfSectionBuilder extends ObservatoryPageRes
 				subSubSection.add(p);
 			}
 			if (maxNumErrors <= 0) {
-				if (specificProblems.size() > Integer.parseInt(pmgr.getValue(Constants.PDF_PROPERTIES, "pdf.intav.specific.problems.number"))) {
+				if (specificProblems.size() >= Integer.parseInt(pmgr.getValue(Constants.PDF_PROPERTIES, "pdf.intav.specific.problems.number"))) {
 					final String[] arguments = new String[2];
 					arguments[0] = pmgr.getValue(Constants.PDF_PROPERTIES, "pdf.intav.specific.problems.number");
 					arguments[1] = String.valueOf(specificProblems.size());

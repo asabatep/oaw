@@ -2144,7 +2144,7 @@ public final class ResultadosAnonimosObservatorioIntavUtils {
 									numZeroRed = numZeroRed + 1;
 								}
 							}
-							if (numZeroRed > maxFails) {
+							if (numZeroRed >= maxFails) {
 								isAA = false;
 							}
 						}

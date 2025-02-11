@@ -43,6 +43,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import es.gob.oaw.rastreador2.pdf.utils.PdfTocManager;
 import es.inteco.common.Constants;
 import es.inteco.common.ConstantsFont;
+import es.inteco.common.logging.Logger;
 import es.inteco.common.properties.PropertiesManager;
 import es.inteco.intav.form.ObservatoryEvaluationForm;
 import es.inteco.intav.form.ObservatoryLevelForm;
@@ -107,7 +108,7 @@ public class BasicServiceObservatoryScorePdfSectionBuilder {
 		final Chapter chapter;
 		if (pdfBuilder instanceof AnonymousResultExportPdfAccesibilidad || pdfBuilder instanceof AnonymousResultExportPdfUNEEN2019) {
 			chapter = PDFUtils.createChapterWithTitle(messageResources.getMessage("pdf.accessibility.global.summary.title").toUpperCase(), pdfTocManager.getIndex(), pdfTocManager.addSection(),
-					pdfTocManager.getNumChapter(), ConstantsFont.CHAPTER_TITLE_MP_FONT, true, "anchor_detalle_sitio_web");
+					pdfTocManager.getNumChapter(), ConstantsFont.CHAPTER_TITLE_MP_FONT, true, "anchor_resumen_resultados");
 			final ArrayList<String> boldWords = new ArrayList<>();
 			if (pdfBuilder instanceof AnonymousResultExportPdfUNEEN2019) {
 				Section section31 = PDFUtils.createSection(messageResources.getMessage("pdf.accessibility.global.summary.globals"), pdfTocManager.getIndex(), ConstantsFont.CHAPTER_TITLE_MP_FONT_2_L,
@@ -258,11 +259,23 @@ public class BasicServiceObservatoryScorePdfSectionBuilder {
 				tablaRankings.addCell(PDFUtils.createTableCell("Puntuación media de páginas HTML", Constants.GRIS_MINIMO, ConstantsFont.labelCellFont, Element.ALIGN_LEFT,
 				DEFAULT_PADDING, -1));
 				tablaRankings.addCell(PDFUtils.createTableCell(currentScore.getTotalScoreHtml().compareTo(BigDecimal.ZERO) < 0 ? "No aplica": currentScore.getTotalScoreHtml().toPlainString() , Color.WHITE, ConstantsFont.strongNoteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+				if (previousScore != null) {
+					tablaRankings.addCell(PDFUtils.createTableCell(previousScore.getTotalScoreHtml().toPlainString(), Color.WHITE, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+					tablaRankings.addCell(PDFUtils.createTableCell(getEvolutionImage(currentScore.getTotalScoreHtml(), previousScore.getTotalScoreHtml()),
+							String.valueOf(currentScore.getTotalScoreHtml().subtract(previousScore.getTotalScoreHtml()).toPlainString()), Color.WHITE, ConstantsFont.noteCellFont, Element.ALIGN_LEFT,
+							DEFAULT_PADDING, -1));
+				}
 				tablaRankings.completeRow();
 
 				tablaRankings.addCell(PDFUtils.createTableCell("Puntuación media de documentos PDF", Constants.GRIS_MINIMO, ConstantsFont.labelCellFont, Element.ALIGN_LEFT,
 				DEFAULT_PADDING, -1));
 				tablaRankings.addCell(PDFUtils.createTableCell(currentScore.getTotalScorePdf().compareTo(BigDecimal.ZERO) < 0 ? "No aplica": currentScore.getTotalScorePdf().toPlainString(), Color.WHITE, ConstantsFont.strongNoteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+				if (previousScore != null) {
+					tablaRankings.addCell(PDFUtils.createTableCell(previousScore.getTotalScorePdf().toPlainString(), Color.WHITE, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+					tablaRankings.addCell(PDFUtils.createTableCell(getEvolutionImage(currentScore.getTotalScorePdf(), previousScore.getTotalScorePdf()),
+							String.valueOf(currentScore.getTotalScorePdf().subtract(previousScore.getTotalScorePdf()).toPlainString()), Color.WHITE, ConstantsFont.noteCellFont, Element.ALIGN_LEFT,
+							DEFAULT_PADDING, -1));
+				}
 				tablaRankings.completeRow();
 
 				chapter.add(tablaRankings);
@@ -287,14 +300,15 @@ public class BasicServiceObservatoryScorePdfSectionBuilder {
 				section.add(Chunk.NEXTPAGE);
 				if (pdfBuilder instanceof AnonymousResultExportPdfUNEEN2019) {
 					Section section1 = PDFUtils.createSection(messageResources.getMessage("observatorio.nivel.cumplimiento.media.verificacion.title.level1"), pdfTocManager.getIndex(),
-							ConstantsFont.CHAPTER_TITLE_MP_FONT_2_L, section, pdfTocManager.addSection(), 1);
+							ConstantsFont.CHAPTER_TITLE_MP_FONT_2_L, chapter, pdfTocManager.addSection(), 1);
 					addMidsComparationByVerificationLevelGraphic(pdfBuilder, messageResources, section1, file, currentEvaluationPageList, noDataMess, Constants.OBS_PRIORITY_1);
-					section.add(createObservatoryVerificationScoreTable(messageResources, currentScore, previousScore, Constants.OBS_PRIORITY_1));
-					section.add(Chunk.NEXTPAGE);
+					section1.add(createObservatoryVerificationScoreTable(messageResources, currentScore, previousScore, Constants.OBS_PRIORITY_1));
+					section1.add(Chunk.NEWLINE);
+					section1.add(Chunk.NEXTPAGE);
 					Section section2 = PDFUtils.createSection(messageResources.getMessage("observatorio.nivel.cumplimiento.media.verificacion.title.level2"), pdfTocManager.getIndex(),
-							ConstantsFont.CHAPTER_TITLE_MP_FONT_2_L, section, pdfTocManager.addSection(), 1);
+							ConstantsFont.CHAPTER_TITLE_MP_FONT_2_L, chapter, pdfTocManager.addSection(), 1);
 					addMidsComparationByVerificationLevelGraphic(pdfBuilder, messageResources, section2, file, currentEvaluationPageList, noDataMess, Constants.OBS_PRIORITY_2);
-					section.add(createObservatoryVerificationScoreTable(messageResources, currentScore, previousScore, Constants.OBS_PRIORITY_2));
+					section2.add(createObservatoryVerificationScoreTable(messageResources, currentScore, previousScore, Constants.OBS_PRIORITY_2));
 				}
 			} else if (!(pdfBuilder instanceof AnonymousResultExportPdfAccesibilidad)) {
 				final PdfPTable tablaRankings = new PdfPTable(columnWidths);
@@ -732,7 +746,7 @@ public class BasicServiceObservatoryScorePdfSectionBuilder {
 			table.addCell(PDFUtils.createTableCell(actualLabelValueBean.getValue(), Color.WHITE, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
 		}
 		table.addCell(PDFUtils.createTableCell(scoreLabel, Color.WHITE, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
-		table.addCell(PDFUtils.createTableCell(scoreValue.toString(), Constants.GRIS_MUY_CLARO, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+		table.addCell(PDFUtils.createTableCell(scoreValue.toString().equals("-1") ? "No aplica" : scoreValue.toString(), Constants.GRIS_MUY_CLARO, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
 		table.setSpacingBefore(ConstantsFont.LINE_SPACE);
 		table.setSpacingAfter(0);
 		return table;
@@ -788,7 +802,7 @@ public class BasicServiceObservatoryScorePdfSectionBuilder {
 			table.addCell(createEvolutionDifferenceCellValue(actualLabelValueBean.getValue(), previousLabelValueBean.getValue(), Color.WHITE));
 		}
 		table.addCell(PDFUtils.createTableCell(averageResultLabel, Color.WHITE, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
-		table.addCell(PDFUtils.createTableCell(actualScoreLevel.toString(), Constants.GRIS_MUY_CLARO, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
+		table.addCell(PDFUtils.createTableCell(actualScoreLevel.toString().equals("-1") ? "No aplica" : actualScoreLevel.toString(), Constants.GRIS_MUY_CLARO, ConstantsFont.noteCellFont, Element.ALIGN_CENTER, DEFAULT_PADDING, -1));
 		table.addCell(createEvolutionDifferenceCellValue(actualScoreLevel, previousScoreLevel, Color.WHITE));
 		table.setSpacingBefore(ConstantsFont.LINE_SPACE);
 		table.setSpacingAfter(0);

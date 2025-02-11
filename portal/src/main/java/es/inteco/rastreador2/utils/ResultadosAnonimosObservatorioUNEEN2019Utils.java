@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.util.LabelValueBean;
@@ -198,14 +199,41 @@ public final class ResultadosAnonimosObservatorioUNEEN2019Utils {
 			final String noDataMess = messageResources.getMessage(GRAFICA_SIN_DATOS);
 			// List<ComplejidadForm> complejidades = ComplejidadDAO.getComplejidades(DataBaseManager.getConnection(), null, -1);
 			final List<ComplejidadForm> complejidades = ComplejidadDAO.getComplejidadesObs(DataBaseManager.getConnection(), tagsFilter, new String[] { executionId });
+			List<ObservatoryEvaluationForm> htmlList = pageExecutionList.stream().filter(ObservatoryEvaluationForm::isHtml).collect(Collectors.toList());
+			List<ObservatoryEvaluationForm> pdfList = pageExecutionList.stream().filter(form -> !form.isHtml()).collect(Collectors.toList());
 			// Adecuación global
-			String file = filePath + messageResources.getMessage("observatory.graphic.accessibility.level.allocation.name") + ".jpg";
-			String title = messageResources.getMessage("observatory.graphic.accessibility.level.allocation.title");
+			String file = filePath + "PuntuacionMediaGlobal" + ".jpg";
+			String title = "Puntuacion global";
+			getGlobalScoreGraphic(messageResources, pageExecutionList, globalGraphics, title, file, noDataMess, regenerate, color);
+			// Adecuación global
+			file = filePath + messageResources.getMessage("observatory.graphic.accessibility.level.allocation.name") + ".jpg";
+			title = messageResources.getMessage("observatory.graphic.accessibility.level.allocation.title");
 			getGlobalAccessibilityLevelAllocationSegmentGraphic(messageResources, pageExecutionList, globalGraphics, title, file, noDataMess, regenerate);
+
+			// Adecuación global html
+			file = filePath + messageResources.getMessage("observatory.graphic.accessibility.level.allocation.html.name") + ".jpg";
+			title = messageResources.getMessage("observatory.graphic.accessibility.level.allocation.html.title");
+			getGlobalAccessibilityLevelAllocationSegmentGraphic(messageResources, htmlList, globalGraphics, title, file, noDataMess, regenerate);
+
+			// Adecuación global pdf
+			file = filePath + messageResources.getMessage("observatory.graphic.accessibility.level.allocation.pdf.name") + ".jpg";
+			title = messageResources.getMessage("observatory.graphic.accessibility.level.allocation.pdf.title");
+			getGlobalAccessibilityLevelAllocationSegmentGraphic(messageResources, pdfList, globalGraphics, title, file, noDataMess, regenerate);
+
+			
 			// Cumplimiento global
 			title = messageResources.getMessage("observatory.graphic.compilance.level.allocation.name.title");
 			file = filePath + messageResources.getMessage("observatory.graphic.compilance.level.allocation.name") + ".jpg";
 			getGlobalCompilanceGraphic(messageResources, pageExecutionList, globalGraphics, title, file, noDataMess, regenerate);
+			// Cumplimiento global html
+			title = messageResources.getMessage("observatory.graphic.compilance.level.allocation.html.name.title");
+			file = filePath + messageResources.getMessage("observatory.graphic.compilance.level.allocation.html.name") + ".jpg";
+
+			getGlobalCompilanceGraphic(messageResources, htmlList, globalGraphics, title, file, noDataMess, regenerate);
+			// Cumplimiento global pdf
+			title = messageResources.getMessage("observatory.graphic.compilance.level.allocation.pdf.name.title");
+			file = filePath + messageResources.getMessage("observatory.graphic.compilance.level.allocation.pdf.name") + ".jpg";
+			getGlobalCompilanceGraphic(messageResources, pdfList, globalGraphics, title, file, noDataMess, regenerate);
 			// Gráfico nivel de cumplimiento global
 			title = messageResources.getMessage("observatory.graphic.global.puntuation.allocation.segment.strached.title");
 			file = filePath + messageResources.getMessage("observatory.graphic.global.puntuation.allocation.segment.strached.name") + ".jpg";
@@ -567,6 +595,72 @@ public final class ResultadosAnonimosObservatorioUNEEN2019Utils {
 			}
 		}
 		return evolutionGraphics;
+	}
+
+
+
+	/**
+	 * Gets the global score graphic
+	 *
+	 * @param messageResources  the message resources
+	 * @param pageExecutionList the page execution list
+	 * @param graphics          the graphics
+	 * @param title             the title
+	 * @param filePath          the file path
+	 * @param noDataMess        the no data mess
+	 * @param regenerate        the regenerate
+	 * @return the global accessibility level allocation segment graphic
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 */
+	public static void getGlobalScoreGraphic(final MessageResources messageResources, final List<ObservatoryEvaluationForm> pageExecutionList,
+			final Map<String, Object> graphics, final String title, final String filePath, final String noDataMess, final boolean regenerate, String color) throws IOException {
+		final PropertiesManager pmgr = new PropertiesManager();
+		final File file = new File(filePath);
+		List<FulfilledCrawlingForm> formResults;
+		try {
+			formResults = RastreoDAO.getExecutedObs(DataBaseManager.getConnection(), pageExecutionList.get(0).getObservatoryExecutionId());
+			if (!file.exists() || regenerate) {
+				Double score = 0.0;
+			int seedCount = 0;
+			int htmlSeedCount = 0;
+			int pdfSeedCount = 0;
+			Double scoreHtml = - 1.0;
+			Double scorePdf = -1.0;
+			for (FulfilledCrawlingForm formResult : formResults) {
+				if (formResult.getScore() != null && formResult.getScore() >= 0){
+					score+=formResult.getScore();
+					seedCount++;
+				}
+				if (formResult.getScoreHtml() != null && formResult.getScoreHtml() >=0){
+					scoreHtml+=formResult.getScoreHtml();
+					htmlSeedCount++;
+				}
+				if (formResult.getScorePdf() != null && formResult.getScorePdf() >=0){
+					scorePdf+=formResult.getScorePdf();
+					pdfSeedCount++;
+				}
+			}
+			if (seedCount > 0){
+				score = score / seedCount;
+			}
+			if (htmlSeedCount > 0){
+				scoreHtml = (scoreHtml + 1) / htmlSeedCount;
+			}
+			if (pdfSeedCount > 0){
+				scorePdf = (scorePdf + 1) / pdfSeedCount;
+			}
+			Map<String, BigDecimal> results = new LinkedHashMap<>();
+			
+			results.put("Puntuación global", new BigDecimal(score).setScale(1, BigDecimal.ROUND_HALF_EVEN));
+			results.put("Puntuación html", scoreHtml == null || scoreHtml < 0 ? new BigDecimal(0).setScale(1, BigDecimal.ROUND_HALF_EVEN) : new BigDecimal(scoreHtml).setScale(1, BigDecimal.ROUND_HALF_EVEN));
+			results.put("Puntuación pdf", scorePdf == null || scorePdf < 0 ? new BigDecimal(0).setScale(1, BigDecimal.ROUND_HALF_EVEN) : new BigDecimal(scorePdf).setScale(1, BigDecimal.ROUND_HALF_EVEN));
+			
+			GraphicsUtils.createBarChart(results, title, "", "", color,false, false, false, filePath, noDataMess, messageResources, x, y);
+			}
+		} catch (Exception e) {
+			Logger.putLog("Error al generar el gráfico de la puntuación global", ResultadosAnonimosObservatorioUNEEN2019Utils.class, Logger.LOG_LEVEL_ERROR, e);
+		}
+		
 	}
 
 	/**
@@ -2111,8 +2205,19 @@ public final class ResultadosAnonimosObservatorioUNEEN2019Utils {
 				for (Long idAnalysis : listAnalysis) {
 					final Evaluation evaluation = evaluator.getObservatoryAnalisisDB(c, idAnalysis, EvaluatorUtils.getDocList(), originAnnexes);
 					final String methodology = ObservatorioDAO.getMethodology(c, Long.parseLong(executionId));
-					final ObservatoryEvaluationForm evaluationForm = EvaluatorUtils.generateObservatoryEvaluationForm(evaluation, methodology, false, true);
+					ObservatoryEvaluationForm evaluationForm = EvaluatorUtils.generateObservatoryEvaluationForm(evaluation, methodology, false, true);
 					evaluationForm.setObservatoryExecutionId(Long.parseLong(executionId));
+
+					String checks = AnalisisDatos.getExecutedChecks(c, evaluationForm.getIdAnalysis());
+						if(!checks.isEmpty()){
+							String[] parts = checks.split(",");
+							if(Integer.parseInt(parts[1]) >= 500){ //Si el check es de pdfs. //TODO Actualizar la condicion si aparecen nuevos checks por encima de 500
+								evaluationForm.setHtml(false);
+							}
+						else {
+							evaluationForm.setHtml(true);
+						}
+						}
 					final FulfilledCrawlingForm ffCrawling = RastreoDAO.getFullfilledCrawlingExecution(c, evaluationForm.getCrawlerExecutionId());
 					if (ffCrawling != null) {
 						final SeedForm seedForm = new SeedForm();
@@ -2993,6 +3098,7 @@ public final class ResultadosAnonimosObservatorioUNEEN2019Utils {
 			dataSet.setValue(parseLevelLabel(Constants.OBS_PARCIAL, messageResources), result.get(Constants.OBS_NV));
 			dataSet.setValue(parseLevelLabel(Constants.OBS_A, messageResources), result.get(Constants.OBS_A));
 			dataSet.setValue(parseLevelLabel(Constants.OBS_AA, messageResources), result.get(Constants.OBS_AA));
+			Logger.putLog("FilePath: " + filePath, ResultadosAnonimosObservatorioUNEEN2019Utils.class, Logger.LOG_LEVEL_ERROR);
 			GraphicsUtils.createPieChart(dataSet, title, messageResources.getMessage("observatory.graphic.site.number"), total, filePath, noDataMess,
 					pmgr.getValue(CRAWLER_PROPERTIES, "chart.observatory.graphic.intav.colors"), x, y);
 		}
@@ -3114,7 +3220,7 @@ public final class ResultadosAnonimosObservatorioUNEEN2019Utils {
 				}
 				if ((countC + countNA) == result.getValue().size()) {
 					totalC++;
-				} else if ((countC + countNA) > countNC) {
+				} else if ((countC) > countNC) {
 					totalPC++;
 				} else {
 					totalNC++;
@@ -3340,6 +3446,7 @@ public final class ResultadosAnonimosObservatorioUNEEN2019Utils {
 	 */
 	public static Map<String, Integer> getResultsBySiteLevel(final List<ObservatoryEvaluationForm> observatoryEvaluationList) throws IOException {
 		final Map<String, Integer> globalResult = new HashMap<>();
+		//TODO: Si hay que hacer los informes como pide Guillermo. En todos estos metodos, sacar la puntuación de pdf y de html, comprobar cual existe para saber el tipo del sitio web.
 		globalResult.put(Constants.OBS_NV, 0);
 		globalResult.put(Constants.OBS_A, 0);
 		globalResult.put(Constants.OBS_AA, 0);
@@ -3859,7 +3966,7 @@ public final class ResultadosAnonimosObservatorioUNEEN2019Utils {
 									numZeroRed = numZeroRed + 1;
 								}
 							}
-							if (numZeroRed > maxFails) {
+							if (numZeroRed >= maxFails) {
 								isAA = false;
 							}
 						}
