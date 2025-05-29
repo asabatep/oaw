@@ -91,3 +91,5 @@ docker/volumes/*
 
 ### Tmp docker folder
 docker/tmp/*
+
+docker-compose.override.yml
