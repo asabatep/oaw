@@ -5,7 +5,7 @@ RUN cd /oaw/oaw && \
     mvn clean install -P desarrollo -DskipTests
 
 FROM quay.io/rockylinux/rockylinux:9
-RUN dnf -y install --setopt=install_weak_deps=false tomcat java-1.8.0-openjdk-headless && \
+RUN dnf -y install --setopt=install_weak_deps=0 tomcat java-1.8.0-openjdk-headless && \
     alternatives --set java java-1.8.0-openjdk.x86_64 && \
     curl -JLO https://distrib-coffee.ipsl.jussieu.fr/pub/linux/altlinux/p10/branch/noarch/RPMS.classic/apache-commons-pool-1.6-alt2_22jpp11.noarch.rpm && \
     curl -JLO https://distrib-coffee.ipsl.jussieu.fr/pub/linux/altlinux/p10/branch/noarch/RPMS.classic/apache-commons-dbcp-1.4-alt2_29jpp11.noarch.rpm && \
