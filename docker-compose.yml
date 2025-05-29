@@ -18,12 +18,8 @@ services:
     image: docker.io/mariadb:11.4
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
-      - "./portal/scripts:/oaw/portal/scripts"
+      - "./docker/mysql:/docker-entrypoint-initdb.d"
       - "oawdb:/var/lib/mysql"
-    entrypoint: /bin/sh -c "
-      set -eux && 
-      find /oaw/portal/scripts -iname '*sql' | sort | grep -v 101_ROLLBACK_OAW_4.0.0.sql | xargs cat > /docker-entrypoint-initdb.d/init.sql &&
-      exec /usr/local/bin/docker-entrypoint.sh mariadbd"
     environment:
       - MYSQL_ROOT_PASSWORD=oawdb
       - MYSQL_DATABASE=oawdb
