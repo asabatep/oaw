@@ -1,13 +1,22 @@
 # OAW
 Rastreador Observatorio de Accesibilidad Web
 
+## Quick start
+In a machine with docker and docker-compose, clone this repository and run `docker-compose up -d`. Be patient as building the application and populating the database might take some minutes.
+
+After the application is up, it will be accessible on http://localhost:8080/oaw. Login with user `admin` and password `changeme`. You should change the password on first login.
+
+Mails sent by the application are intercepted by mailpit and are accessible on http://localhost:8025. If you wish to actually send emails, remove the `port` configuration from the mailpit service and set the proper environment variables for either [SMTP forwarding](https://mailpit.axllent.org/docs/configuration/smtp-forward/) or [SMTP relaying](https://mailpit.axllent.org/docs/configuration/smtp-relay/) as required by your environment.
+
+## Components
+
 This repository contains 3 applications:
 
 * OAW: Java Web Application.
 * Motor JS: An implementation of https://github.com/prerender/prerender to render web pages and return code.
 * WCAG EM Tool: An fork of https://github.com/w3c/wcag-em-report-tool with capabiluty to exports as ODS format.
 
-## OAW (Observatorio de Accesibilidad Web)
+### OAW (Observatorio de Accesibilidad Web)
 
 The application code is distributed in several maven projects:
 
@@ -28,7 +37,7 @@ To do this, inside the oaw directory we will execute the following command so th
 
 If everything goes well, a war will be generated in the portal/target folder which will be the one we should display this war in the webapps folder of the tomcat server. 
 
-### Requirements
+#### Requirements
 
 Currently OAW is deployment under this configuration:
 
@@ -38,41 +47,15 @@ Currently OAW is deployment under this configuration:
 
 This is a Maven projet that requieres version 3.0.0 or high
 
-### Quick Deployment (Linux & Docker)
-
-You can deploy all application running `deploy.sh` script.
-
-But first, you need the following requirements:
-
-* [OpenSSL](https://www.openssl.org/) 3.0.2: Used for Nginx certificate generation
-* [java-8-openjdk-amd64](https://www.oracle.com/es/java/technologies/javase/javase8-archive-downloads.html): JDK, not JRE
-* [Apache Maven](https://maven.apache.org/what-is-maven.html) 3.6.3: Compile and war creation
-* [Docker](https://docs.docker.com/get-started/overview/) 24.0.5 and [Docker Compose](https://docs.docker.com/compose/) 2.20.2
-
-*Note: The quick Deployment was built with all of these specific versions. We do not guarantee that it will work with other versions. Especially lower versions.
-
-Run this command in your terminal at the root path:
-
-```bash
-./deploy.sh
-```
-
-This script performs the following tasks:
-
-1. Set JAVA_HOME environment variable
-2. Generate Nginx certificates, if it doesn't already exist
-3. War generation
-4. Build and run docker containers
-
-### Instalation
+#### Instalation
 
 You can find full documentacion (in Spanish) at https://administracionelectronica.gob.es/ctt/oaw/descargas in __Rastreador OAW WCAG 2.1__ section. At this moment, the last documentation avalaible can be downloaded [here](https://administracionelectronica.gob.es/ctt/resources/Soluciones/2431/Descargas/Liberacion-codigo-OAW---MAETD-v5-0-4.zip?idIniciativa=2431&idElemento=19053)
 
-#### MySQL Database
+##### MySQL Database
 
 To fresh install execute the scripts locates in folder /portal/scripts from version 4.0.0 to higher version.
 
-#### Tomcat
+##### Tomcat
 
 Create a context configuration like this in *server.xml*:
 ```xml
@@ -87,7 +70,7 @@ Create a context configuration like this in *server.xml*:
 Note to change *url*, *port*, *user* and *password* values. In folder *profiles* exists an example of this configuracion. Adapt to your environment.
 
 
-#### Profiles
+##### Profiles
 
 There are several parameters that are configurable by environment, as well as configuration files that depend on the environment. In the current project there are two default compilation profiles: development and integration. 
 
@@ -95,7 +78,7 @@ In the oaw project's pom.xml is reflected the configuration for each profile, be
 
 __It is necessary to review and adapt the configuration of the profiles if necessary.__
 
-#### External properties
+##### External properties
 
 In the file /portal/profiles/<profile>/propertiesmanager.properties a series of properties files and their location are indicated. You should configure the files paths according to the information of this file.
 
@@ -106,7 +89,7 @@ In the file /portal/profiles/<profile>/propertiesmanager.properties a series of 
 * check.patterns.properties: Regural expressions and validation patterns
 
 
-#### Unsatisfied dependencies  in Maven Central
+##### Unsatisfied dependencies  in Maven Central
 
 Some of the links are not available in Maven's central repository. They can be downloaded at the following links:1
 
@@ -115,7 +98,7 @@ Some of the links are not available in Maven's central repository. They can be d
 
 They need to be installed manually: https://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html 
 
-## Motor JS
+### Motor JS
 
 Into folder motor-js contains this tool has 3 packages:
 
@@ -125,11 +108,11 @@ Into folder motor-js contains this tool has 3 packages:
 
 This project is configuring to execute as docker solution
 
-## WCAG EM Tool
+### WCAG EM Tool
 
 Into folder wcagemtool is an customitation of https://github.com/w3c/wcag-em-report-tool that can export result in ODS custom format.
 
-## Templates
+### Templates
 
 From version 5.6.0 new versions of templates are available that must be incorporated into the application. 
 
