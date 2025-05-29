@@ -95,7 +95,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `observatorio_proxy` WRITE;
 /*!40000 ALTER TABLE `observatorio_proxy` DISABLE KEYS */;
-INSERT INTO `observatorio_proxy` VALUES (1,'oaw_proxy','18088');
+INSERT INTO `observatorio_proxy` VALUES (1,'proxy','18088');
 /*!40000 ALTER TABLE `observatorio_proxy` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -137,7 +137,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (1,'admin','4cb9c8a8048fd02294477fcb1a41191a','Administrador','','',''),(2,'Programado','4cb9c8a8048fd02294477fcb1a41191a','','','','');
+INSERT INTO `usuario` VALUES (1,'admin','4cb9c8a8048fd02294477fcb1a41191a','Administrador','','','');
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
