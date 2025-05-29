@@ -8,10 +8,13 @@ services:
       oawdb:
         condition: service_healthy
     restart: unless-stopped
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
 
   oawdb:
     image: docker.io/mariadb:11.4
     volumes:
+      - "/etc/localtime:/etc/localtime:ro"
       - "./portal/scripts:/oaw/portal/scripts"
       - "oawdb:/var/lib/mysql"
     entrypoint: /bin/sh -c "
@@ -32,20 +35,28 @@ services:
     restart: unless-stopped
 
   renderer:
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
     build: ./motor-js/renderer
     restart: unless-stopped
     
   proxy:
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
     build: ./motor-js/proxy      
     restart: unless-stopped
 
   nginx:
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
     build: ./motor-js/nginx
     links:
       - renderer
     restart: unless-stopped
 
   mailer:
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
     image: docker.io/axllent/mailpit
     ports:
       - "8025:8025"
