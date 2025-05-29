@@ -1,16 +1,11 @@
-FROM nginx:1.13.8-alpine
-
-# Instala openssl y herramientas básicas
-RUN apk add --no-cache openssl
-
-# Copiamos la configuración de lo que debe hacer nginx
-COPY reverse.conf /etc/nginx/conf.d/default.conf
-
-# Genera o regenera certificados si están caducados
-COPY generarCertificados.sh /app/generarCertificados.sh 
-RUN chmod 755 /app/generarCertificados.sh 
-
-ENTRYPOINT ["/app/generarCertificados.sh"]
-
-# Comando principal para arrancar el nginx
-CMD ["nginx", "-g", "daemon off;"]
+FROM alpine:3.21
+RUN apk add --no-cache nginx openssl && \
+    mkdir -vp /etc/nginx/ssl && \
+    cd /etc/nginx/ssl && \
+    openssl genrsa -out server.key 2048 && \
+    openssl req -new -key server.key -out server.csr -subj "/C=ES/ST=ZZ/L=ZZ/O=oaw/OU=oaw/CN=localhost" && \
+    openssl x509 -req -days 365 -in server.csr -signkey server.key -out server.crt && \
+    rm server.csr
+COPY reverse.conf /etc/nginx/http.d/default.conf
+COPY nginx-entrypoint.sh /nginx-entrypoint.sh
+ENTRYPOINT /nginx-entrypoint.sh

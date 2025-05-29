@@ -1,5 +1,5 @@
-FROM node:9.5.0-alpine
-
-#Instalamos dependencias necesarias
-RUN  npm install request --save
-RUN  npm install regex@0.1.1 --save
+FROM node:20
+WORKDIR /opt/proxy
+RUN npm cache clean --force && npm install request regex --save
+COPY index.js /opt/proxy/index.js
+ENTRYPOINT node /opt/proxy/index.js
