@@ -8,6 +8,8 @@ services:
       oawdb:
         condition: service_healthy
     restart: unless-stopped
+    environment:
+      - JAVA_OPTS=-XX:+UseShenandoahGC -XX:+UseNUMA -XX:-UseBiasedLocking -XX:ParallelGCThreads=2 -XX:+UseLargePages -Xms256M -Xmx2048M -XX:MinHeapFreeRatio=10 -XX:MaxHeapFreeRatio=20 -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
 
