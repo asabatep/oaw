@@ -562,7 +562,7 @@ INSERT INTO `roles` (`id_rol`, `rol`, `id_tipo`) VALUES(4, 'Responsable cliente'
 INSERT INTO `roles` (`id_rol`, `rol`, `id_tipo`) VALUES(5, 'Visualizador cliente', 2);
 INSERT INTO `roles` (`id_rol`, `rol`, `id_tipo`) VALUES(6, 'Observatorio', 3);
 
-INSERT INTO `usuario` (`id_usuario`, `usuario`, `password`, `nombre`, `apellidos`, `departamento`, `email`) VALUES(1, 'username', 'password-md5', 'Nombre', 'Apellidos', 'Departamento', 'email@mail.com');
+INSERT INTO `usuario` (`id_usuario`, `usuario`, `password`, `nombre`, `apellidos`, `departamento`, `email`) VALUES(1, 'admin', '4cb9c8a8048fd02294477fcb1a41191a', 'Admin', 'Admin', 'Departamento de ejemplo', 'changeme@example.com');
 
 INSERT INTO `usuario_cartucho` (`id_usuario`, `id_cartucho`) VALUES(1, 1);
 INSERT INTO `usuario_cartucho` (`id_usuario`, `id_cartucho`) VALUES(1, 2);
