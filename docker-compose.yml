@@ -1,0 +1,58 @@
+services:
+  oaw:
+    ports:
+      - "8080:8080"
+    build:
+      context: .
+    depends_on:
+      oawdb:
+        condition: service_healthy
+    restart: unless-stopped
+
+  oawdb:
+    image: docker.io/mariadb:lts
+    volumes:
+      - "./portal/scripts:/oaw/portal/scripts"
+    entrypoint: /bin/sh -c "
+      set -eux && 
+      find /oaw/portal/scripts -iname '*sql' | sort | grep -v 101_ROLLBACK_OAW_4.0.0.sql | xargs cat > /docker-entrypoint-initdb.d/init.sql &&
+      exec /usr/local/bin/docker-entrypoint.sh mariadbd"
+    environment:
+      - MYSQL_ROOT_PASSWORD=oawdb
+      - MYSQL_DATABASE=oawdb
+      - MYSQL_USER=oawdb
+      - MYSQL_PASSWORD=oawdb
+    healthcheck:
+      test: ["CMD", "/usr/local/bin/healthcheck.sh", "--connect"]
+      interval: 60s
+      retries: 3
+      start_period: 60s      
+      timeout: 10s
+    restart: unless-stopped
+
+  renderer:
+    build: ./motor-js/renderer
+    image: oawjs_renderer
+    restart: unless-stopped
+    privileged: true
+    
+  proxy:
+    build: ./motor-js/proxy      
+    image: oawjs_proxy
+    restart: unless-stopped
+    ports:
+      - "18088:18088"        
+
+  nginx:
+    build:
+      context: ./motor-js/nginx
+    links:
+      - renderer
+    restart: unless-stopped
+
+  mailer:
+    image: docker.io/axllent/mailpit
+    ports:
+      - "8025:8025"
+    restart: unless-stopped
+    command: -s 0.0.0.0:25
