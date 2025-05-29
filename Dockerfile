@@ -16,5 +16,5 @@ RUN dnf -y install --setopt=install_weak_deps=false tomcat java-1.8.0-openjdk-he
     rm -vf apache*rpm && \
     dnf -y clean all
 COPY --from=build /oaw/portal/target/oaw.war /var/lib/tomcat/webapps
-USER tomcat
+COPY ./tomcat-entrypoint.sh /tomcat-entrypoint.sh
 ENTRYPOINT /usr/libexec/tomcat/server start
