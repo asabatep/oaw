@@ -118,8 +118,8 @@
 			</activation>
 			<properties>
 				<profile.name>desarrollo</profile.name>
-				<deploy.path>/home/alvaro/Development/Programs/apache-tomcat-7.0.54/webapps/oaw</deploy.path>
-				<files.path>/tmp/oaw/files</files.path>
+				<deploy.path>/var/lib/tomcat/webapps/oaw/oaw</deploy.path>
+				<files.path>/srv/files</files.path>
 			</properties>
 		</profile>
 
