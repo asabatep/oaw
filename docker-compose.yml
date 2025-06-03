@@ -37,6 +37,7 @@ services:
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
     build: ./motor-js/renderer
+    shm_size: 1g
     restart: unless-stopped
     
   proxy:
