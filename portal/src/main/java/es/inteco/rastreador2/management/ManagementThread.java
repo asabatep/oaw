@@ -74,8 +74,6 @@ public class ManagementThread extends Thread {
 		while (!stop) {
 			try {
 				Thread.sleep(interval);
-				// Uso de memoria
-				checkMemoryUsage();
 				// Uso de CPU
 				checkCpuUsage();
 			} catch (InterruptedException ie) {
@@ -130,38 +128,6 @@ public class ManagementThread extends Thread {
 		return cpuUsage;
 	}
 
-	/**
-	 * Check memory usage.
-	 */
-	private void checkMemoryUsage() {
-		PropertiesManager pmgr = new PropertiesManager();
-		MemoryMXBean memoryMXBean = ManagementFactory.getMemoryMXBean();
-		BigDecimal heapMemoryUsed = new BigDecimal(memoryMXBean.getHeapMemoryUsage().getUsed());
-		BigDecimal heapMemoryMax = new BigDecimal(memoryMXBean.getHeapMemoryUsage().getMax());
-		BigDecimal memoryPercentageLimit = new BigDecimal(pmgr.getValue("management.properties", "memory.percentage.limit"));
-		BigDecimal memoryPercentageGC = new BigDecimal(pmgr.getValue("management.properties", "memory.percentage.garbage.collector"));
-		BigDecimal usedPercentage = heapMemoryUsed.divide(heapMemoryMax, 4, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)).setScale(2);
-		if (usedPercentage.compareTo(memoryPercentageLimit) > 0) {
-			numWarningsMemory++;
-			if (numWarningsMemory >= Integer.parseInt(pmgr.getValue("management.properties", "management.memory.num.intervals"))) {
-				Logger.putLog(
-						"La memoria utilizada es del " + usedPercentage + "%(" + heapMemoryUsed.divide(new BigDecimal(1000000), 2, BigDecimal.ROUND_HALF_UP) + " MB de "
-								+ heapMemoryMax.divide(new BigDecimal(1000000), 2, BigDecimal.ROUND_HALF_UP) + " MB). Se va a proceder a avisar a los administradores.",
-						ManagementThread.class, Logger.LOG_LEVEL_ERROR);
-				try {
-					sendMemoryMail(usedPercentage, heapMemoryMax, heapMemoryUsed);
-				} catch (Exception e) {
-					Logger.putLog("Error al intentar enviar el correo electrónico", ManagementThread.class, Logger.LOG_LEVEL_ERROR, e);
-				}
-				numWarningsMemory = 0;
-			}
-		} else if (usedPercentage.compareTo(memoryPercentageGC) > 0) {
-			Logger.putLog("El uso de memoria es alto, se va a proceder a llamar al recolector de basura de Java manualmente", ManagementThread.class, Logger.LOG_LEVEL_INFO);
-			memoryMXBean.gc();
-		} else {
-			numWarningsMemory = 0;
-		}
-	}
 
 	/**
 	 * Send memory mail.
