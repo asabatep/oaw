@@ -58,7 +58,10 @@ services:
   mailer:
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
+      - "oawmail:/data"
     image: docker.io/axllent/mailpit
+    environment:
+      MP_DATABASE: /data/mailpit.db
     ports:
       - "8025:8025"
     restart: unless-stopped
@@ -66,3 +69,4 @@ services:
 
 volumes:
   oawdb:
+  oawmail:
