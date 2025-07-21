@@ -74,8 +74,6 @@ public class ManagementThread extends Thread {
 		while (!stop) {
 			try {
 				Thread.sleep(interval);
-				// Uso de CPU
-				checkCpuUsage();
 			} catch (InterruptedException ie) {
 				// Si se interrumpe este hilo y no es porque lo estamos parando logeamos
 				if (!stop) {
@@ -86,30 +84,6 @@ public class ManagementThread extends Thread {
 			}
 		}
 		Logger.putLog("ManagementThread finalizado", ManagementThread.class, Logger.LOG_LEVEL_INFO);
-	}
-
-	/**
-	 * Check cpu usage.
-	 */
-	private void checkCpuUsage() {
-		BigDecimal cpuUsage = getCpuLoad();
-		PropertiesManager pmgr = new PropertiesManager();
-		BigDecimal memoryPercentageLimit = new BigDecimal(pmgr.getValue("management.properties", "cpu.percentage.limit"));
-		if (cpuUsage.compareTo(memoryPercentageLimit) > 0) {
-			numWarningsCpu++;
-			if (numWarningsCpu >= Integer.parseInt(pmgr.getValue("management.properties", "management.cpu.num.intervals"))) {
-				Logger.putLog("El porcentaje de CPU utilizado es del " + cpuUsage.toPlainString() + "% . Se va a proceder a avisar a los administradores.", ManagementThread.class,
-						Logger.LOG_LEVEL_ERROR);
-				try {
-					sendCpuMail(cpuUsage);
-				} catch (Exception e) {
-					Logger.putLog("Error al intentar enviar el correo electrónico", ManagementThread.class, Logger.LOG_LEVEL_ERROR, e);
-				}
-				numWarningsCpu = 0;
-			}
-		} else {
-			numWarningsCpu = 0;
-		}
 	}
 
 	/**
