@@ -11,7 +11,6 @@ services:
       - MP_SMTP_RELAY_RETURN_PATH=noreply@example.com
 
 #Serve the web application via HTTPS (see nginx-front.sample.conf)
-services:
   oaw:
     ports: !reset null
   front:
@@ -24,6 +23,6 @@ services:
       - "/etc/ssl/certs:/etc/ssl/certs:ro"
       - "./nginx-front.conf:/etc/nginx/conf.d/default.conf"
     restart: unless-stopped
-    depends_on: 
+    depends_on:
       - oaw
 
