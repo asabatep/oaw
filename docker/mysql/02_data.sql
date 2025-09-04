@@ -59,7 +59,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `lista` WRITE;
 /*!40000 ALTER TABLE `lista` DISABLE KEYS */;
-INSERT INTO `lista` VALUES(1, 4, 'Semilla - DEMO', 'https://asturias.es', 110, 'S-DEMO', NULL, 1, 0, 0, 4, 4, 'Semilla de demostración');
+INSERT INTO `lista` VALUES(1, 4, 'Semilla - DEMO', 'http://oaw:8080/oaw/', 110, 'S-DEMO', NULL, 1, 0, 0, 4, 4, 'Semilla de demostración');
 /*!40000 ALTER TABLE `lista` ENABLE KEYS */;
 UNLOCK TABLES;
 
