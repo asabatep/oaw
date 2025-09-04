@@ -31,6 +31,8 @@ To enable actual email sending:
   - [SMTP Forwarding](https://mailpit.axllent.org/docs/configuration/smtp-forward/)
   - [SMTP Relaying](https://mailpit.axllent.org/docs/configuration/smtp-relay/)
 
+See `docker-compose.override.sample.yml` for an example.
+
 ### 🛠️ Technology Stack
 
 The Docker containers include:
