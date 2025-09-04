@@ -34,6 +34,7 @@ services:
     restart: unless-stopped
 
   renderer:
+    scale: 3
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
     build: ./motor-js/renderer
