@@ -9,6 +9,7 @@ services:
       - MP_SMTP_RELAY_PORT=25
       - MP_SMTP_RELAY_OVERRIDE_FROM=noreply@example.com
       - MP_SMTP_RELAY_RETURN_PATH=noreply@example.com
+      - MP_SMTP_RELAY_ALL=true
 
 #Serve the web application via HTTPS (see nginx-front.sample.conf)
   oaw:
