@@ -97,3 +97,4 @@ docker/volumes/*
 docker/tmp/*
 
 docker-compose.override.yml
+nginx-front.conf

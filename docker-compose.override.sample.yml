@@ -1,0 +1,29 @@
+#Copy this file to docker-compose.override.yml to apply local changes.
+
+#For example, to enable mailpit relay and disable its web interface:
+services:
+  mailer:
+    ports: !reset null
+    environment:
+      - MP_SMTP_RELAY_HOST=mail.example.com
+      - MP_SMTP_RELAY_PORT=25
+      - MP_SMTP_RELAY_OVERRIDE_FROM=noreply@example.com
+      - MP_SMTP_RELAY_RETURN_PATH=noreply@example.com
+
+#Serve the web application via HTTPS (see nginx-front.sample.conf)
+services:
+  oaw:
+    ports: !reset null
+  front:
+    ports:
+      - 80:80
+      - 443:443
+    image: docker.io/nginx:alpine
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/ssl/certs:/etc/ssl/certs:ro"
+      - "./nginx-front.conf:/etc/nginx/conf.d/default.conf"
+    restart: unless-stopped
+    depends_on: 
+      - oaw
+
