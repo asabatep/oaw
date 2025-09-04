@@ -36,9 +36,9 @@ To enable actual email sending:
 The Docker containers include:
 
 - **OS:** [Rocky Linux 9](https://rockylinux.org/)
-- **Java:** [OpenJDK 8](https://openjdk.org/projects/jdk8/)
-- **Maven:** [Maven 3](https://maven.apache.org/)
-- **Tomcat:** [Tomcat 9](https://tomcat.apache.org/)
+- **Runtime:** [OpenJDK 8](https://openjdk.org/projects/jdk8/)
+- **Build environment:** [Maven 3](https://maven.apache.org/)
+- **Application server:** [Tomcat 9](https://tomcat.apache.org/)
 - **Database:** [MariaDB 11.4](https://mariadb.org/)
 - **Proxy Renderer:** [Node.js 20](https://nodejs.org/)
 
