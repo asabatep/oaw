@@ -61,6 +61,8 @@ server.on('connect', function (req, socket, head) {
   const srvUrl = url.parse(endpoint);
 
   const srvSocket = net.connect(srvUrl.port, srvUrl.hostname, () => {
+    socket.on('error', () => {});
+    srvSocket.on('error', () => {});
     socket.write('HTTP/1.1 200 Connection Established\r\n' +
       'Proxy-agent: Node.js-Proxy\r\n' +
       '\r\n');
