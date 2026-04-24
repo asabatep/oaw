@@ -1,0 +1,14 @@
+{
+  "name": "oaw_maven",
+  "image": "observaccesibilidad/oaw_maven_bash:latest",
+  "remoteUser": "root",
+  "features": {},
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-maven",
+        "vscjava.vscode-java-pack"
+      ]
+    }
+  }
+}

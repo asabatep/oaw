@@ -53,14 +53,14 @@
 				<targetPath>${basedir}/target/oaw/WEB-INF</targetPath>
 			</resource>
 			<resource>
-				<directory>profiles/${profile.name}</directory>
+				<directory>${basedir}/profiles/${profile.name}</directory>
 				<includes>
 					<include>*.properties</include>
 				</includes>
 				<filtering>true</filtering>
 			</resource>
 			<resource>
-				<directory>profiles/${profile.name}</directory>
+				<directory>${basedir}/profiles/${profile.name}</directory>
 				<includes>
 					<include>context.xml</include>
 				</includes>
@@ -68,10 +68,17 @@
 					absoluta (usando la variable ${basedir}) -->
 				<targetPath>${basedir}/target/oaw/META-INF</targetPath>
 			</resource>
+			<!--El siguiente properties indica donde debe buscar la aplicación los demás-->
+			<!--Lo copiamos a classes dentro de la aplicación-->
+			<resource>
+				<directory>${basedir}/profiles/${profile.name}</directory>
+				<includes>
+					<include>propertiesmanager.properties</include>
+				</includes>
+			</resource>
 		</resources>
 		<!-- <plugins> <plugin> <artifactId>maven-war-plugin</artifactId> <configuration> <packagingExcludes>META-INF/context.xml</packagingExcludes> 
 			</configuration> </plugin> </plugins> -->
-
 	</build>
 
 	<dependencies>

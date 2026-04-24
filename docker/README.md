@@ -12,35 +12,13 @@ The following instructions have been performed on Ubuntu 22.04. It's possible th
 
 To perform the following steps, you need to navigate to the `docker` folder and have the following software installed on your system:
 
-* [Apache Maven](https://maven.apache.org/what-is-maven.html) 3.6.3 (Available in [SDKMan](https://sdkman.io/))
-* [OpenSSL](https://www.openssl.org/) 3.0.2
-* [openjdk-8-jdk](https://www.oracle.com/java/technologies/javase/javase8-archive-downloads.html) (Not compatible with higher versions)
-* [Docker](https://docs.docker.com/get-started/overview/) 24.0.5
-* [Docker Compose](https://docs.docker.com/compose/) 2.20.2
+* [Docker](https://docs.docker.com/get-started/overview/) 29.3.0
+* [Docker Compose](https://docs.docker.com/compose/) 5.1.0
+* [Git](https://git-scm.com/install/) 2.34.1
 
-*Note: The specified versions are those with which the dockerized version has been developed. It might work with other versions except for openjdk-8-jdk.
+*Note: The specified versions are those with which the dockerized version has been developed. It might work with other versions.
 
-### 2. Generating Nginx Certificates
-
-In order for our Nginx container to function, it's necessary to add a key and certificate to a specific folder within the Docker volume.
-
-You can generate the key using the following command:
-
-```bash
-openssl genpkey -algorithm RSA -out ../motor-js/nginx/certs/server.key
-```
-
-Once generated, we will use it to create a self-signed certificate:
-
-```bash
-openssl req -new -key ../motor-js/nginx/certs/server.key -x509 -out ../motor-js/nginx/certs/server.crt
-```
-
-Finally, you will be prompted to enter some details for the certificate generation. You can invent these details since this certificate will only be used as a test for our local deployment.
-
-*Note: The default validity period for a certificate is 30 days.
-
-### 3. Database Selection (Optional)
+### 2. Database Selection (Optional)
 
 This step is not necessary unless you want to change the name or URL to which the database points.
 
@@ -60,53 +38,31 @@ Inside this file, you can find the `url` of the database that will be used.
 </Context>
 ```
 
-### 4. Generating the War File
+### 3. Initializing the project and compiling the WAR files.
 
-Ensure that you have JDK version 8 installed beforehand, as higher versions are not compatible.
-
-```bash
-sudo apt install openjdk-8-jdk
-```
-
-Once installed, in the `/oaw/` folder within the root directory of the project, perform the following test:
+In the folder of the main proyect execute
 
 ```bash
-mvn compile
+git git submodule update --init --recursive
+./compile.sh
 ```
 
-If you encounter any failures, check the contents of the `$JAVA_HOME` environment variable. If it is empty or pointing to a different JDK version, copy and paste the following command in your terminal:
+### 4. Optional: do this step if you changed the docker profile properties in the project before compiling.
+
+This step copies the new properties to the `docker/oaw-properties` folder.
 
 ```bash
-export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+./updatePropertiesDocker.sh
 ```
 
-If you still encounter the same error, ensure that you have `jdk` installed and not just `jre`. You can have both versions, but you definitely need `jdk`.
-
-Other commands that might be helpful are:
-
-```bash
-# Selecting a specific version of Java from those installed on the system
-sudo update-alternatives --config java
-
-# Environment variable for the PATH (requires the previous export)
-export PATH=$PATH:$HOME/bin:$JAVA_HOME/bin
-```
-
-Once you've verified that the compilation is successful, generate the war file with the following command in the same directory mentioned earlier:
-
-```bash
-mvn clean install -P docker -Dmaven.test.skip=true
-```
-
-**Note:** `-P` refers to the specified profile, which in this case is `docker` since that's the one we're interested in. This profile contains various parameters, including the URL of the database that we will use once the `war` file is generated.
-
-Finally, you will find the generated `war` file in the `portal/target` folder with the name `oaw.war`. **Do not change the name or move the `war` file from this location.**
+**Note:** The default properties are located in the `docker/oaw-properties` folder. You can edit them here before starting the service (it's simpler). The most relevant properties file is `mail.properties`, which defines the mail service; by default, it uses the maildev service.
 
 ### 5. Startup
 
-Once the `war` file is generated, navigate to the `docker` folder located in the root directory and start the containers using `docker compose`.
+Once the `wars` files are generated, navigate to the `docker` folder located in the root directory and start the containers using `docker compose`.
 
 ```bash
+cd docker
 docker compose up -d --build
 ```
 
@@ -118,6 +74,8 @@ To reset the database, simply delete the `/docker/volumes/mysql` folder.
 
 ### 6. Checks
 
-Tomcat is running at [http://localhost:18081](http://localhost:7010/)
 
-If all the steps have been executed correctly, you should find the deployed application at [http://localhost:18081/oaw](http://localhost:7010/oaw)
+If all the steps have been executed correctly, you should find the deployed application at [http://localhost:7010/oaw](http://localhost:7010/oaw). The default user credentials are admin / admin.
+
+Mail service is located at http://localhost:1080. You can view the emails sent by the service. Download the email and open it with another application (such as Thunderbird or Outlook) to see the attachments (ZIP files).
+
