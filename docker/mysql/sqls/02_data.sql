@@ -103,7 +103,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `observatorio_validator` WRITE;
 /*!40000 ALTER TABLE `observatorio_validator` DISABLE KEYS */;
-INSERT INTO `observatorio_validator` VALUES (1,'https://des-validador-oaw.redsara.es/api/validation-request/tracker', 1, 10);
+INSERT INTO `observatorio_validator` VALUES (1,'http://validador-tomcat:8080/api/validation-request/tracker', 1, 10);
 /*!40000 ALTER TABLE `observatorio_validator` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -145,7 +145,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
-INSERT INTO `usuario` VALUES (1,'admin','5362f975ec84c11787df64965aaf0c84','Administrador','','',''),(2,'Programado','21232f297a57a5a743894a0e4a801fc3','','','','');
+INSERT INTO `usuario` VALUES (1,'admin','21232f297a57a5a743894a0e4a801fc3','Administrador','','','ejemplo@ejemplo.org'),(2,'Programado','21232f297a57a5a743894a0e4a801fc3','','','','ejemplo@ejemplo.org');
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 

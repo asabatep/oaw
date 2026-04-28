@@ -1,6 +1,4 @@
-FROM tomcat:7.0-jre8
-
-ENV JAVA_OPTS "-Dhttp.proxyHost=proxy -Dhttp.proxyPort=18088"
+FROM tomcat:9.0-jre8
 
 COPY start.sh /usr/local/start.sh 
 RUN chmod 755 /usr/local/start.sh 

@@ -1,0 +1,3 @@
+[submodule "validador"]
+	path = validador-oaw
+	url = https://gitlab-ic.scae.redsara.es/oaw/validador-oaw.git

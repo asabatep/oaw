@@ -76,21 +76,18 @@ target/
 
 **/.vscode
 **/.attach_*
-update-code.sh
-profiles/
-
-int-start-and-log.sh
-int-stop-and-clean.sh
+#update-code.sh
+#profiles/
 
 **/bower_components/**
 server.crt
 server.key
 
 ### Otros
-**/oaw_2017_2018/**
-**/portal/src/main/webapp/WEB-INF/templatesODT/**
-**/motor-js/**
-**/docker/** 
+#**/oaw_2017_2018/**
+#**/portal/src/main/webapp/WEB-INF/templatesODT/**
+#**/motor-js/**
+#**/docker/** 
 
 ### Volumes docker folder
 docker/volumes/*

@@ -1,9 +1,10 @@
-version: '2.2'
-
 networks:
   oaw-dev:
     driver: bridge
     name: oaw-dev
+#solo para usar en windows
+#volumes:
+#  mysql_data:
 
 services:
 
@@ -53,11 +54,19 @@ services:
       - oaw-dev
 
   nginx:
-    image: nginx:1.13.8-alpine
+    #Este contenedor necesita certificados. Se autogeneran y renuevan sólos en el arranque del servicio
+    #La variable CERT_DAYS especifica los días de vigencia del certificado
+    #image: nginx:1.13.8-alpine
+    build: ../motor-js/nginx
     volumes:
-      - ../motor-js/nginx/reverse.conf:/etc/nginx/conf.d/default.conf
-      - ../motor-js/nginx/certs/server.crt:/etc/nginx/ssl/server.crt
-      - ../motor-js/nginx/certs/server.key:/etc/nginx/ssl/server.key
+      #- ../motor-js/nginx/reverse.conf:/etc/nginx/conf.d/default.conf
+      #- ../motor-js/nginx/certs/server.crt:/etc/nginx/ssl/server.crt
+      #- ../motor-js/nginx/certs/server.key:/etc/nginx/ssl/server.key
+      - ../motor-js/nginx/certs:/etc/nginx/ssl
+    environment:
+      # Duración de los certificados del nginx
+      CERT_DAYS: 365
+
     links:
       - renderer-1
       - renderer-2
@@ -69,36 +78,65 @@ services:
 
   mysql:
     image: mysql:5.7.21
-    command: 
+    command:
       --max_allowed_packet=32505856
       --innodb_use_native_aio=0
     ports:
       - 7012:3306
     environment:
       MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_HOST: "%"
     volumes:
-      - ./mysql/01_schema.sql:/docker-entrypoint-initdb.d/01_schema.sql
-      - ./mysql/02_data.sql:/docker-entrypoint-initdb.d/02_data.sql
+      - ./mysql/sqls:/docker-entrypoint-initdb.d/
       - ./volumes/mysql/:/var/lib/mysql/
+       #- mysql_data:/var/lib/mysql #solo si se en un filesystem de windows
     container_name: oaw-dev-mysql
+    restart: always
     networks:
       - oaw-dev
-
-  tomcat:
-    build: ./tomcat
+  
+  oaw-tomcat:
+    build: ./oaw-tomcat
     ports:
       - 7010:8080
       - 7011:8443
     volumes:
       - ../portal/target/oaw.war:/usr/local/tomcat/webapps/oaw.war
-      - ./tomcat/server.xml:/usr/local/tomcat/conf/server.xml
+      - ./oaw-tomcat/server.xml:/usr/local/tomcat/conf/server.xml
       - ./tmp:/tmp
+      - ./oaw-properties:/app/properties/
     container_name: oaw-dev-tomcat
-    dns:
-      - 192.168.4.7
-      - 192.168.4.8
-    links:
+    depends_on:
       - mysql
     restart: always
     networks:
       - oaw-dev
+
+  #Validador, es el motor que contiene las reglas de validación así como las APIs
+  validador-tomcat:
+    build: ./validador-tomcat
+    ports:
+      - 7014:8080
+    volumes:
+      - ../validador-oaw/target:/usr/local/tomcat/target
+      - ../validador-oaw/config:/opt/usuarios/oaw-validador/config
+    container_name: validador-tomcat
+    restart: always
+    depends_on:
+      - oaw-tomcat
+    networks:
+      - oaw-dev
+  
+  #Servidor de correo para pruebas
+  #Se configura en portal/profiles/docker/mail.properties
+  maildev_oaw:
+    image: maildev/maildev
+    ports:
+      - "1080:1080"  #exponemos sólo el puerto para acceder a la interfaz gráfica vía web
+      #- "1025:1025"
+    container_name: maildev_oaw 
+    restart: always
+    networks:
+      - oaw-dev
+
+
