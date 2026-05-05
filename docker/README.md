@@ -43,7 +43,7 @@ Inside this file, you can find the `url` of the database that will be used.
 In the folder of the main proyect execute
 
 ```bash
-git git submodule update --init --recursive
+git submodule update --init --recursive
 ./compile.sh
 ```
 
