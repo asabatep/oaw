@@ -118,7 +118,8 @@ public class AnalysisFromCrawlerAction extends Action {
 				String aplicacion = CartuchoDAO.getApplicationFromAnalisisId(c, id);
 				if (Constants.NORMATIVA_ACCESIBILIDAD.equalsIgnoreCase(aplicacion)) {
 					messageResources = MessageResources.getMessageResources(Constants.MESSAGE_RESOURCES_ACCESIBILIDAD);
-				} else if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(aplicacion) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(aplicacion)) {
+				} else if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(aplicacion) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(aplicacion) || 
+						Constants.NORMATIVA_UNE_EN2019_NO_BROKEN_LNK.equalsIgnoreCase(aplicacion) || Constants.NORMATIVA_UNE_EN2019_PDF_NO_BROKEN_LNK.equalsIgnoreCase(aplicacion)) {
 					messageResources = MessageResources.getMessageResources(Constants.MESSAGE_RESOURCES_UNE_EN2019);
 				} else if (Constants.NORMATIVA_UNE_2012_B.equalsIgnoreCase(aplicacion)) {
 					messageResources = MessageResources.getMessageResources(Constants.MESSAGE_RESOURCES_2012_B);
@@ -128,7 +129,8 @@ public class AnalysisFromCrawlerAction extends Action {
 					long idExObs = Long.parseLong(request.getParameter(Constants.ID_EX_OBS));
 					String methodology = ObservatorioDAO.getMethodology(c, idExObs);
 					ObservatoryEvaluationForm evaluationForm = EvaluatorUtils.generateObservatoryEvaluationForm(evaluation, methodology, false,
-							(Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(aplicacion) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(aplicacion)) ? true : false);
+							(Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(aplicacion) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(aplicacion) ||
+						     Constants.NORMATIVA_UNE_EN2019_NO_BROKEN_LNK.equalsIgnoreCase(aplicacion) || Constants.NORMATIVA_UNE_EN2019_PDF_NO_BROKEN_LNK.equalsIgnoreCase(aplicacion) ) ? true : false);
 					evaluationForm.setSource(BasicServiceUtils.getTitleDocFromContent(evaluationForm.getSource(), true));
 					setDescription(evaluationForm, messageResources, locale);
 					request.setAttribute(Constants.FAILED_CHECKS,

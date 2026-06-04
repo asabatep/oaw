@@ -119,13 +119,13 @@ you may find it at http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:3201
 								</strong>
 							</label>
 							<c:choose>
-							<c:when test="${Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019 || Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019_PDF}">
+							<c:when test="${Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019 || Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019_PDF || Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019_NO_BROKEN_LNK || Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019_PDF_NO_BROKEN_LNK}">
 								<input style="width: 50%;" name="reportTitle" id="reportTitle" type="text"
 									value="<bean:message key="report.config.title.default" /> <c:out value="${ambito}" />" />
 							</c:when>
 							</c:choose>
 							<c:choose>
-							<c:when test="${Constants.APPLICATION != Constants.NORMATIVA_UNE_EN2019 && Constants.APPLICATION != Constants.NORMATIVA_UNE_EN2019_PDF}">
+							<c:when test="${Constants.APPLICATION != Constants.NORMATIVA_UNE_EN2019 && Constants.APPLICATION != Constants.NORMATIVA_UNE_EN2019_PDF && Constants.APPLICATION != Constants.NORMATIVA_UNE_EN2019_NO_BROKEN_LNK && Constants.APPLICATION != Constants.NORMATIVA_UNE_EN2019_PDF_NO_BROKEN_LNK}">
 								<input style="width: 50%;" name="reportTitle" id="reportTitle" type="text"
 									value="<bean:message key="report.config.title.default.acc" />" />
 							</c:when>
@@ -133,7 +133,7 @@ you may find it at http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:3201
 						</div>
 					</fieldset>
 					<c:choose>
-					<c:when test="${Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019 || Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019_PDF}">
+					<c:when test="${Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019 || Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019_PDF || Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019_NO_BROKEN_LNK || Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019_PDF_NO_BROKEN_LNK}">
 						<fieldset>
 							<legend>
 								<bean:message key="report.config.etiquetas.filter.title" />
@@ -201,7 +201,7 @@ you may find it at http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:3201
 					</c:when>
 					</c:choose>
 					<c:choose>
-					<c:when test="${Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019 || Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019_PDF}">
+					<c:when test="${Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019 || Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019_PDF || Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019_NO_BROKEN_LNK || Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019_PDF_NO_BROKEN_LNK}">
 						<fieldset>
 							<legend>
 								<bean:message key="report.config.graficas.filter.title" />
@@ -279,7 +279,7 @@ you may find it at http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:3201
 							</select>
 						</div>
 						<c:choose>
-						<c:when test="${Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019 || Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019_PDF}">
+						<c:when test="${Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019 || Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019_PDF || Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019_NO_BROKEN_LNK || Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019_PDF_NO_BROKEN_LNK}">
 							<div class="formItem">
 								<label for="url" class="control-label">
 									<strong class="labelVisu">
@@ -306,7 +306,7 @@ you may find it at http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:3201
 						</c:when>
 						</c:choose>
 						<c:choose>
-						<c:when test="${Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019 || Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019_PDF}">
+						<c:when test="${Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019 || Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019_PDF || Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019_NO_BROKEN_LNK || Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019_PDF_NO_BROKEN_LNK}">
 							<div class="formItem">
 								<label for="url" class="control-label">
 									<strong class="labelVisu">
@@ -333,7 +333,7 @@ you may find it at http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:3201
 						</c:when>
 						</c:choose>
 						<c:choose>
-						<c:when test="${Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019 || Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019_PDF}">
+						<c:when test="${Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019 || Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019_PDF || Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019_NO_BROKEN_LNK || Constants.APPLICATION == Constants.NORMATIVA_UNE_EN2019_PDF_NO_BROKEN_LNK}">
 							<div class="formItem">
 								<label for="url" class="control-label">
 									<strong class="labelVisu">

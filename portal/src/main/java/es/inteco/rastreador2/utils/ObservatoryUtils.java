@@ -205,7 +205,8 @@ public final class ObservatoryUtils {
 			aplicacion = CartuchoDAO.getApplicationFromAnalisisId(c, observatoryEvaluationForm.getIdAnalysis());
 			if (Constants.NORMATIVA_ACCESIBILIDAD.equalsIgnoreCase(aplicacion)) {
 				maxFails = Integer.parseInt(pmgr.getValue("intav.properties", "observatory.zero.red.max.number.2017"));
-			} else if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(aplicacion) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(aplicacion)) {
+			} else if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(aplicacion) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(aplicacion) ||
+		              Constants.NORMATIVA_UNE_EN2019_NO_BROKEN_LNK.equalsIgnoreCase(aplicacion) || Constants.NORMATIVA_UNE_EN2019_PDF_NO_BROKEN_LNK.equalsIgnoreCase(aplicacion)) {
 				maxFails = Integer.parseInt(pmgr.getValue("intav.properties", "observatory.zero.red.max.number.2017"));
 			} else if (Constants.NORMATIVA_UNE_2012_B.equalsIgnoreCase(aplicacion)) {
 				maxFails = Integer.parseInt(pmgr.getValue("intav.properties", "observatory.zero.red.max.number.2017"));
@@ -383,7 +384,8 @@ public final class ObservatoryUtils {
 					String aplicacion = CartuchoDAO.getApplicationFromExecutedObservatoryId(c, Long.parseLong(seedResult.getIdFulfilledCrawling()), Long.parseLong(seedResult.getIdCrawling()));
 					if (Constants.NORMATIVA_ACCESIBILIDAD.equalsIgnoreCase(aplicacion)) {
 						seedResult.setNivel(IntavUtils.generateScores(PropertyMessageResources.getMessageResources(Constants.MESSAGE_RESOURCES_ACCESIBILIDAD), paginas).getLevel());
-					} else if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(aplicacion) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(aplicacion)) {
+					} else if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(aplicacion) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(aplicacion) ||
+							Constants.NORMATIVA_UNE_EN2019_NO_BROKEN_LNK.equalsIgnoreCase(aplicacion) || Constants.NORMATIVA_UNE_EN2019_PDF_NO_BROKEN_LNK.equalsIgnoreCase(aplicacion)) {
 						seedResult.setNivel(IntavUtils.generateScores(PropertyMessageResources.getMessageResources(Constants.MESSAGE_RESOURCES_UNE_EN2019), paginas).getLevel());
 					} else if (Constants.NORMATIVA_UNE_2012_B.equalsIgnoreCase(aplicacion)) {
 						seedResult.setNivel(IntavUtils.generateScores(PropertyMessageResources.getMessageResources(Constants.MESSAGE_RESOURCES_2012_B), paginas).getLevel());
@@ -457,7 +459,8 @@ public final class ObservatoryUtils {
 					String aplicacion = CartuchoDAO.getApplicationFromExecutedObservatoryId(c, Long.parseLong(seedResult.getIdFulfilledCrawling()), Long.parseLong(seedResult.getIdCrawling()));
 					if (Constants.NORMATIVA_ACCESIBILIDAD.equalsIgnoreCase(aplicacion)) {
 						seedResult.setNivel(IntavUtils.generateScoresAccesibility(PropertyMessageResources.getMessageResources(Constants.MESSAGE_RESOURCES_ACCESIBILIDAD), paginas).getLevel());
-					} else if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(aplicacion) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(aplicacion)) {
+					} else if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(aplicacion) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(aplicacion) ||
+				              Constants.NORMATIVA_UNE_EN2019_NO_BROKEN_LNK.equalsIgnoreCase(aplicacion) || Constants.NORMATIVA_UNE_EN2019_PDF_NO_BROKEN_LNK.equalsIgnoreCase(aplicacion)) {
 						seedResult.setNivel(IntavUtils.generateScores2(PropertyMessageResources.getMessageResources(Constants.MESSAGE_RESOURCES_UNE_EN2019), paginas).getLevel());
 					} else if (Constants.NORMATIVA_UNE_2012_B.equalsIgnoreCase(aplicacion)) {
 						seedResult.setNivel(IntavUtils.generateScores(PropertyMessageResources.getMessageResources(Constants.MESSAGE_RESOURCES_2012_B), paginas).getLevel());

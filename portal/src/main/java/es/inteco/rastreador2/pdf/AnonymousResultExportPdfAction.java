@@ -136,7 +136,8 @@ public class AnonymousResultExportPdfAction extends Action {
 			return new AnonymousResultPdfUNE2012Builder(file, tipo);
 		} else if (Constants.NORMATIVA_UNE_2012_B.equalsIgnoreCase(version)) {
 			return new AnonymousResultPdfUNE2012bBuilder(file, tipo);
-		} else if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(version) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(version)) {
+		} else if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(version) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(version) || 
+	              Constants.NORMATIVA_UNE_EN2019_NO_BROKEN_LNK.equalsIgnoreCase(version) || Constants.NORMATIVA_UNE_EN2019_PDF_NO_BROKEN_LNK.equalsIgnoreCase(version)) {
 			return new AnonymousResultPdfUNEEN2019Builder(file, tipo);
 		} else if (Constants.NORMATIVA_ACCESIBILIDAD.equalsIgnoreCase(version)) {
 			return new AnonymousResultPdfAccesibilidadBuilder(file, tipo);

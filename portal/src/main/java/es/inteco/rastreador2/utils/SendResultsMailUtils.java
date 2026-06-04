@@ -246,7 +246,7 @@ public final class SendResultsMailUtils {
 			throws FileNotFoundException, IOException {
 		File directory = new File(exportPath);
 		if (!directory.exists() && !directory.mkdirs()) {
-			Logger.putLog("Fail creating export send file directoru", SendResultsMailUtils.class, Logger.LOG_LEVEL_ERROR);
+			Logger.putLog("Fail creating export send file directory", SendResultsMailUtils.class, Logger.LOG_LEVEL_ERROR);
 		}
 		ZipParameters zipParameters = new ZipParameters();
 		zipParameters.setEncryptFiles(true);
@@ -477,7 +477,8 @@ public final class SendResultsMailUtils {
 									PrimaryExportPdfUtils.exportToPdf(new AnonymousResultExportPdfAccesibilidad(), idRastreoRealizado, evaluationIds, previousEvaluationIds,
 											PropertyMessageResources.getMessageResources(Constants.MESSAGE_RESOURCES_ACCESIBILIDAD), pdfFile.getPath(), seed.getNombre(), "", idObservatoryExecution,
 											observatoryType);
-								} else if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(aplicacion) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(aplicacion)) {
+								} else if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(aplicacion) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(aplicacion) || 
+							              Constants.NORMATIVA_UNE_EN2019_NO_BROKEN_LNK.equalsIgnoreCase(aplicacion) || Constants.NORMATIVA_UNE_EN2019_PDF_NO_BROKEN_LNK.equalsIgnoreCase(aplicacion)) {
 									PrimaryExportPdfUtils.exportToPdf(new AnonymousResultExportPdfUNEEN2019(), idRastreoRealizado, evaluationIds, previousEvaluationIds,
 											PropertyMessageResources.getMessageResources(Constants.MESSAGE_RESOURCES_UNE_EN2019), pdfFile.getPath(), seed.getNombre(), "", idObservatoryExecution,
 											observatoryType);
@@ -554,7 +555,8 @@ public final class SendResultsMailUtils {
 			final Connection connection = DataBaseManager.getConnection();
 			final String application = CartuchoDAO.getApplication(connection, idCartucho);
 			DataBaseManager.closeConnection(connection);
-			if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(application) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(application)) {
+			if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(application) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(application) || 
+				Constants.NORMATIVA_UNE_EN2019_NO_BROKEN_LNK.equalsIgnoreCase(application) || Constants.NORMATIVA_UNE_EN2019_PDF_NO_BROKEN_LNK.equalsIgnoreCase(application)) {
 				messageResources = MessageResources.getMessageResources(Constants.MESSAGE_RESOURCES_UNE_EN2019);
 			} else if (Constants.NORMATIVA_ACCESIBILIDAD.equalsIgnoreCase(application)) {
 				messageResources = MessageResources.getMessageResources(Constants.MESSAGE_RESOURCES_ACCESIBILIDAD);

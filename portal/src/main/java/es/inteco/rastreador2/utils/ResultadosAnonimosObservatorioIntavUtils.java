@@ -1306,7 +1306,8 @@ public final class ResultadosAnonimosObservatorioIntavUtils {
 						String aplicacion = CartuchoDAO.getApplicationFromAnalisisId(conn, idAnalysis);
 						// Only in NORMATIVA UNE EN2019, warnings points 0.5
 						final ObservatoryEvaluationForm evaluationForm = EvaluatorUtils.generateObservatoryEvaluationForm(evaluation, methodology, false,
-								(Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(aplicacion) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(aplicacion)) ? true : false);
+								(Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(aplicacion) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(aplicacion) || 
+							    Constants.NORMATIVA_UNE_EN2019_NO_BROKEN_LNK.equalsIgnoreCase(aplicacion) || Constants.NORMATIVA_UNE_EN2019_PDF_NO_BROKEN_LNK.equalsIgnoreCase(aplicacion)) ? true : false);
 						evaluationForm.setObservatoryExecutionId(Long.parseLong(executionId));
 						final FulfilledCrawlingForm ffCrawling = RastreoDAO.getFullfilledCrawlingExecution(conn, evaluationForm.getCrawlerExecutionId());
 						if (ffCrawling != null) {
@@ -1368,7 +1369,8 @@ public final class ResultadosAnonimosObservatorioIntavUtils {
 				String aplicacion = CartuchoDAO.getApplicationFromAnalisisId(c, idAnalysis);
 				// Only in NORMATIVA UNE EN2019, warnings points 0.5
 				observatoryEvaluationForm = EvaluatorUtils.generateObservatoryEvaluationForm(evaluation, methodology, false,
-						(Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(aplicacion) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(aplicacion)) ? true : false);
+						(Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(aplicacion) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(aplicacion) ||
+					    Constants.NORMATIVA_UNE_EN2019_NO_BROKEN_LNK.equalsIgnoreCase(aplicacion) || Constants.NORMATIVA_UNE_EN2019_PDF_NO_BROKEN_LNK.equalsIgnoreCase(aplicacion)) ? true : false);
 				observatoryEvaluationForm.setObservatoryExecutionId(Long.parseLong(executionId));
 				final FulfilledCrawlingForm ffCrawling = RastreoDAO.getFullfilledCrawlingExecution(c, observatoryEvaluationForm.getCrawlerExecutionId());
 				if (ffCrawling != null) {
@@ -2106,7 +2108,8 @@ public final class ResultadosAnonimosObservatorioIntavUtils {
 			String aplicacion = CartuchoDAO.getApplicationFromAnalisisId(c, observatoryEvaluationList.get(0).getIdAnalysis());
 			if (Constants.NORMATIVA_ACCESIBILIDAD.equalsIgnoreCase(aplicacion)) {
 				maxFails = Integer.parseInt(pmgr.getValue("intav.properties", "observatory.zero.red.max.number.2017"));
-			} else if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(aplicacion) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(aplicacion)) {
+			} else if (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(aplicacion) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(aplicacion) ||
+		              Constants.NORMATIVA_UNE_EN2019_NO_BROKEN_LNK.equalsIgnoreCase(aplicacion) || Constants.NORMATIVA_UNE_EN2019_PDF_NO_BROKEN_LNK.equalsIgnoreCase(aplicacion)) {
 				maxFails = Integer.parseInt(pmgr.getValue("intav.properties", "observatory.zero.red.max.number.2017"));
 			} else if (Constants.NORMATIVA_UNE_2012_B.equalsIgnoreCase(aplicacion)) {
 				maxFails = Integer.parseInt(pmgr.getValue("intav.properties", "observatory.zero.red.max.number.2017"));

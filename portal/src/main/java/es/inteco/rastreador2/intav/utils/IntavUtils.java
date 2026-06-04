@@ -115,7 +115,8 @@ public final class IntavUtils {
 				Evaluation evaluation = evaluator.getAnalisisDB(conn, idAnalysis, EvaluatorUtils.getDocList(), true);
 				String methodology = ObservatorioDAO.getMethodology(c, idExObs);
 				String aplicacion = CartuchoDAO.getApplicationFromAnalisisId(c, idAnalysis);
-				boolean pointWarning = (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(aplicacion) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(aplicacion)) ? true : false;
+				boolean pointWarning = (Constants.NORMATIVA_UNE_EN2019.equalsIgnoreCase(aplicacion) || Constants.NORMATIVA_UNE_EN2019_PDF.equalsIgnoreCase(aplicacion) ||
+									Constants.NORMATIVA_UNE_EN2019_NO_BROKEN_LNK.equalsIgnoreCase(aplicacion) || Constants.NORMATIVA_UNE_EN2019_PDF_NO_BROKEN_LNK.equalsIgnoreCase(aplicacion)) ? true : false;
 				ObservatoryEvaluationForm evaluationForm = EvaluatorUtils.generateObservatoryEvaluationForm(evaluation, methodology, false, pointWarning);
 				scoreForm.setTotalScore(scoreForm.getTotalScore().add(evaluationForm.getScore()));
 				String pageSuitabilityLevel = ObservatoryUtils.pageSuitabilityLevel(evaluationForm);

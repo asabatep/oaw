@@ -196,3 +196,9 @@ UNLOCK TABLES;
 
 INSERT INTO tguidelines values (11, 'observatorio-une-en2019_pdf.xml');
 INSERT INTO cartucho values (11, 'es.inteco.accesibilidad.CartuchoAccesibilidad', 1 , 'UNE-EN-2019-PDF', 15, 50, 11);
+
+/*Caruchos sin comprobación de enlaces rotos*/
+insert into cartucho(nombre, instalado, aplicacion,numrastreos,numhilos,id_guideline) values ('es.inteco.accesibilidad.CartuchoAccesibilidad',1,'UNE-EN301549:2019_NO_BROKEN_LNK',15,50,12);
+insert into cartucho(nombre, instalado, aplicacion,numrastreos,numhilos,id_guideline) values ('es.inteco.accesibilidad.CartuchoAccesibilidad',1,'UNE-EN-2019-PDF_NO_BROKEN_LNK',15,50,13);
+insert into tguidelines(cod_guideline,des_guideline) values (12, 'observatorio-une-en2019-nobroken.xml');
+insert into tguidelines(cod_guideline,des_guideline) values (13, 'observatorio-une-en2019_pdf-nobroken.xml');

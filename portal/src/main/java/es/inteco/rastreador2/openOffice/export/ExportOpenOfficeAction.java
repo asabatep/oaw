@@ -80,7 +80,8 @@ public class ExportOpenOfficeAction extends Action {
 				Connection connection = DataBaseManager.getConnection();
 				application = CartuchoDAO.getApplication(connection, idCartucho);
 				// GET AMBIT BY ID
-				if (Constants.NORMATIVA_UNE_EN2019.equals(application) || Constants.NORMATIVA_UNE_EN2019_PDF.equals(application)) {
+				if (Constants.NORMATIVA_UNE_EN2019.equals(application) || Constants.NORMATIVA_UNE_EN2019_PDF.equals(application) ||
+			       Constants.NORMATIVA_UNE_EN2019_NO_BROKEN_LNK.equalsIgnoreCase(application) || Constants.NORMATIVA_UNE_EN2019_PDF_NO_BROKEN_LNK.equalsIgnoreCase(application)) {
 					AmbitoForm ambito = ObservatorioDAO.getAmbitByObservatoryId(connection, idObservatory);
 					if (ambito != null) {
 						request.setAttribute("ambito", ambito.getDescripcion());

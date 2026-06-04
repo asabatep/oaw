@@ -1873,8 +1873,12 @@ public interface Constants {
 	String NORMATIVA_UNE_2012_B = "UNE-2012-B";
 	/** The normativa une en2019. */
 	String NORMATIVA_UNE_EN2019 = "UNE-EN301549:2019";
+	/** The normativa une en2019. Sin comprobación de enlaces rotos.*/
+	String NORMATIVA_UNE_EN2019_NO_BROKEN_LNK = "UNE-EN301549:2019_NO_BROKEN_LNK";
 	/** The normativa une en2019-pdf */
 	String NORMATIVA_UNE_EN2019_PDF = "UNE-EN-2019-PDF";
+	/** The normativa une en2019-pdf . Sin comprobación de enlaces rotos.**/
+	String NORMATIVA_UNE_EN2019_PDF_NO_BROKEN_LNK = "UNE-EN-2019-PDF_NO_BROKEN_LNK";
 	/** The normativa accesibilidad. */
 	String NORMATIVA_ACCESIBILIDAD = "Accesibilidad";
 	/** The message resources 2012 b. */
