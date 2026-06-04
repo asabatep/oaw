@@ -9,19 +9,20 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>portal</artifactId>
-	<version>5.8.6</version>
+	<version>5.8.7</version>
 	<packaging>war</packaging>
 
 	<name>oaw-portal</name>
 
 	<properties>
-		<oaw.version>5.8.6</oaw.version>
+		<oaw.version>5.8.7</oaw.version>
+		<oaw.build_date>29/05/2026</oaw.build_date>
 	</properties>
 
 	<parent>
 		<groupId>es.minhap.oaw</groupId>
 		<artifactId>oaw</artifactId>
-		<version>5.8.6</version>
+		<version>5.8.7</version>
 		<relativePath>../oaw/pom.xml</relativePath>
 	</parent>
 
@@ -76,9 +77,39 @@
 					<include>propertiesmanager.properties</include>
 				</includes>
 			</resource>
+			<!--Para actualizar la versión del oaw directamente con la variable ${oaw.version} ${oaw.build_date y lo dejamos ya en la ruta final}-->
+			<resource>
+            	<directory>src/main/webapp</directory>
+            	<targetPath>${project.build.directory}/${project.build.finalName}</targetPath>
+            	<filtering>true</filtering>
+            	<includes>
+                	<include>**/diagnostico.html</include>
+                	<include>**/crawler_footer.jsp</include>
+                	<include>**/html_headData.jsp</include>
+            	</includes>
+        	</resource>
 		</resources>
 		<!-- <plugins> <plugin> <artifactId>maven-war-plugin</artifactId> <configuration> <packagingExcludes>META-INF/context.xml</packagingExcludes> 
 			</configuration> </plugin> </plugins> -->
+		<!--
+			Para actualizar la versión del oaw directamente con la variable ${oaw.version} ${oaw.build_date}
+			Le decimos que ya no los toque, que los hemos cambiado y movido antes
+		-->
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>3.3.2</version>
+				<configuration>
+					<warSourceExcludes>
+						diagnostico.html,
+						**/crawler_footer.jsp,
+						**/html_headData.jsp
+					</warSourceExcludes>
+				</configuration>
+			</plugin>
+		</plugins>
+
 	</build>
 
 	<dependencies>
