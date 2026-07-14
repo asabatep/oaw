@@ -33,6 +33,19 @@ services:
       timeout: 10s
     restart: unless-stopped
 
+  cleanup:
+    build: ./ops/cleanup
+    depends_on:
+      - oawdb
+    environment:
+      - DB_HOST=oawdb
+      - DB_USER=oawdb
+      - DB_PASS=oawdb
+      - DB_NAME=oawdb
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+    restart: unless-stopped
+
   renderer:
     scale: 3
     volumes:
