@@ -1,142 +1,100 @@
-# OAW
-Rastreador Observatorio de Accesibilidad Web
+# 🚀 OAW (Observatorio de Accesibilidad Web)
 
-This repository contains 3 applications:
+A web accessibility tracker and analysis platform.
 
-* OAW: Java Web Application.
-* Motor JS: An implementation of https://github.com/prerender/prerender to render web pages and return code.
-* WCAG EM Tool: An fork of https://github.com/w3c/wcag-em-report-tool with capabiluty to exports as ODS format.
+## ⚡ Quick Start
 
-## OAW (Observatorio de Accesibilidad Web)
-
-The application code is distributed in several maven projects:
-
-* common: library with common functions
-* crawler: web crawler
-* intavcore: analyzer core code
-* oaw: "father" project to generate all the libraries and dependencies
-* portal: web project of the accessibility observatory
-
-To compile the application, we will use maven (version 3.0.0 or higher). It will be necessary to download a number of dependencies from the central repositories so it needs to be properly frozen. It may be necessary to configure the proxy or a mirror:
-
-* https://maven.apache.org/guides/mini/guide-proxies.html
-* https://maven.apache.org/guides/mini/guide-mirror-settings.html
-
-To do this, inside the oaw directory we will execute the following command so that it builds us the complete project:
-
->	mvn clean install -P development -DskipTests
-
-If everything goes well, a war will be generated in the portal/target folder which will be the one we should display this war in the webapps folder of the tomcat server. 
-
-### Requirements
-
-Currently OAW is deployment under this configuration:
-
-* [Java 1.8.0_202](https://www.oracle.com/es/java/technologies/javase/javase8-archive-downloads.html) 
-* [Apache Tomcat 7](https://tomcat.apache.org/tomcat-7.0-doc/)
-* [MySQL 5](https://dev.mysql.com/doc/relnotes/mysql/5.7/en/news-5-7-21.html)
-
-This is a Maven projet that requieres version 3.0.0 or high
-
-### Quick Deployment (Linux & Docker)
-
-You can deploy all application running `deploy.sh` script.
-
-But first, you need the following requirements:
-
-* [OpenSSL](https://www.openssl.org/) 3.0.2: Used for Nginx certificate generation
-* [java-8-openjdk-amd64](https://www.oracle.com/es/java/technologies/javase/javase8-archive-downloads.html): JDK, not JRE
-* [Apache Maven](https://maven.apache.org/what-is-maven.html) 3.6.3: Compile and war creation (Available in [SDKMan](https://sdkman.io/))
-* [Docker](https://docs.docker.com/get-started/overview/) 24.0.5 and [Docker Compose](https://docs.docker.com/compose/) 2.20.2
-
-*Note: The quick Deployment was built with all of these specific versions. We do not guarantee that it will work with other versions. Especially lower versions.
-
-Run this command in your terminal at the root path:
+On a machine with Docker and Docker Compose installed, clone this repository and run:
 
 ```bash
-./deploy.sh
+docker-compose up -d
 ```
 
-This script performs the following tasks:
+Please be patient—the build process and initial database population may take several minutes.
 
-1. Set JAVA_HOME environment variable
-2. Generate Nginx certificates, if it doesn't already exist
-3. War generation
-4. Build and run docker containers
+Once the application is running, access it at: [http://localhost:8080/oaw](http://localhost:8080/oaw)  
+Login with:
 
-### Instalation
+- **Username:** `admin`
+- **Password:** `changeme`
 
-You can find full documentacion (in Spanish) at https://administracionelectronica.gob.es/ctt/oaw/descargas in __Rastreador OAW WCAG 2.1__ section. At this moment, the last documentation avalaible can be downloaded [here](https://administracionelectronica.gob.es/ctt/resources/Soluciones/2431/Descargas/Liberacion-codigo-OAW---MAETD-v5-0-4.zip?idIniciativa=2431&idElemento=19053)
+> ⚠️ You should change the password on your first login.
 
-#### MySQL Database
+### 📧 Email Interception with Mailpit
 
-To fresh install execute the scripts locates in folder /portal/scripts from version 4.0.0 to higher version.
+Emails sent by the application are intercepted by [Mailpit](https://github.com/axllent/mailpit) and can be viewed at:  
+[http://localhost:8025](http://localhost:8025)
 
-#### Tomcat
+To enable actual email sending:
+- Remove the `ports` configuration from the `mailpit` service in `docker-compose.yml`.
+- Configure environment variables as needed for either:
+  - [SMTP Forwarding](https://mailpit.axllent.org/docs/configuration/smtp-forward/)
+  - [SMTP Relaying](https://mailpit.axllent.org/docs/configuration/smtp-relay/)
 
-Create a context configuration like this in *server.xml*:
-```xml
-<Context path="/oaw" reloadable="true">
-    <Resource auth="Container" driverClassName="com.mysql.jdbc.Driver" type="javax.sql.DataSource" name="jdbc/oaw" url="jdbc:mysql://<server>:<port>/<schema>"
-    maxActive="100"  maxIdle="10"  maxWait="-1" validationQuery="SELECT 1 as dbcp_connection_test"
-    removeAbandoned="true" testOnBorrow="true"
-    timeBetweenEvictionRunsMillis="60000" testWhileIdle="true"                                         
-    defaultTransactionIsolation="READ_UNCOMMITTED" username="<username>" password="<password>"/>
-</Context>
+See `docker-compose.override.sample.yml` for an example.
+
+### 🛠️ Technology Stack
+
+The Docker containers include:
+
+- **OS:** [Rocky Linux 9](https://rockylinux.org/)
+- **Runtime:** [OpenJDK 8](https://openjdk.org/projects/jdk8/)
+- **Build environment:** [Maven 3](https://maven.apache.org/)
+- **Application server:** [Tomcat 9](https://tomcat.apache.org/)
+- **Database:** [MariaDB 11.4](https://mariadb.org/)
+- **Proxy Renderer:** [Node.js 20](https://nodejs.org/)
+
+---
+
+## 🧩 Components
+
+This repository includes three main applications:
+
+- **OAW:** Java web application.
+- **Motor JS:** Proxy-based rendering tool built on [Prerender](https://github.com/prerender/prerender).
+- **WCAG EM Tool:** Custom fork of the [WCAG-EM Report Tool](https://github.com/w3c/wcag-em-report-tool) with export support for ODS format.
+
+---
+
+### 💻 OAW (Java Web Application)
+
+The OAW application is structured into several Maven modules:
+
+- `common`: Common utility functions.
+- `crawler`: Web crawler implementation.
+- `intavcore`: Core analysis engine.
+- `oaw`: Parent project for building the full system.
+- `portal`: Web front-end for the Accessibility Observatory.
+
+#### 🏗️ Build Instructions
+
+1. Install Java 8 and Maven 3.
+2. Update the following configuration files to match your environment:
+
+   - `oaw/pom.xml` — Path to Tomcat installation.
+   - `portal/profiles/desarrollo/context.xml` — Database connection settings.
+   - `portal/profiles/desarrollo/mail.properties` — Mail configuration.
+
+3. Compile the project:
+
+```bash
+mvn clean install -P desarrollo -DskipTests
 ```
-Note to change *url*, *port*, *user* and *password* values. In folder *profiles* exists an example of this configuracion. Adapt to your environment.
 
+The resulting `.war` file will be located in the `portal/target` directory.
 
-#### Profiles
+---
 
-There are several parameters that are configurable by environment, as well as configuration files that depend on the environment. In the current project there are two default compilation profiles: development and integration. 
+### 🔄 Motor JS (Proxy Rendering Service)
 
-In the oaw project's pom.xml is reflected the configuration for each profile, being possible to create new ones or take advantage of the existing ones. There are also profiles in the portal project folder. 
+The `motor-js` directory contains a three-part proxy rendering system:
 
-__It is necessary to review and adapt the configuration of the profiles if necessary.__
+- `proxy`: Entry point that listens for HTTP/S requests.
+- `nginx`: Forwards incoming requests to the rendering service and handles HTTPS.
+- `renderer`: Runs [Prerender](https://github.com/prerender/prerender) to render requested web pages and return the HTML content.
 
-#### External properties
+---
 
-In the file /portal/profiles/<profile>/propertiesmanager.properties a series of properties files and their location are indicated. You should configure the files paths according to the information of this file.
+### 📊 WCAG EM Tool (Customized Report Tool)
 
-* context.xml: Database connection parameters
-* mail.properties: Mailing parameters
-* basic.service.properties: Parameters of the mail sent by the diagnostic service
-* check.descriptions.properties: Explanatory texts for problem solving included in the reports
-* check.patterns.properties: Regural expressions and validation patterns
-
-
-#### Unsatisfied dependencies  in Maven Central
-
-Some of the links are not available in Maven's central repository. They can be downloaded at the following links:1
-
-* javax.jms:jms:jar:1.1: http://www.java2s.com/Code/Jar/j/Downloadjavaxjms11jar.htm
-* javax.transaction:jta:jar:1.0.1B: http://www.java2s.com/Code/Jar/j/Downloadjta101bjar.htm
-
-They need to be installed manually: https://maven.apache.org/guides/mini/guide-3rd-party-jars-local.html 
-
-## Motor JS
-
-Into folder motor-js contains this tool has 3 packages:
-
-* proxy: entrypoint of tool. Listen for petitions http/s.
-* nginx: recivies proxy petitions and handle http and https to renderer.
-* renderer: executes https://github.com/prerender/prerender ths listen to http/s requests, renderer the page and return result html
-
-This project is configuring to execute as docker solution
-
-## WCAG EM Tool
-
-Into folder wcagemtool is an customitation of https://github.com/w3c/wcag-em-report-tool that can export result in ODS custom format.
-
-## Templates
-
-From version 5.6.0 new versions of templates are available that must be incorporated into the application. 
-
-These templates can be found in the following path -> /portal/scripts/5.6.0
-
-* hallazgos.odt -> Must be saved as "hallazgos" in the system
-* generica_accesible_v1.odt
-* segmentos_accesible_v1.odt
-* complejidades_accesible_v1.odt
-* evolucion_segmentos_accesible_v1.odt
+The `wcagemtool` directory contains a custom version of the [WCAG-EM Report Tool](https://github.com/w3c/wcag-em-report-tool), modified to allow exporting results in a custom ODS (OpenDocument Spreadsheet) format.
