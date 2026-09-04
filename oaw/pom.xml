@@ -125,8 +125,8 @@
 			<id>docker</id>
 			<properties>
 				<profile.name>docker</profile.name>
-				<deploy.path>/usr/local/tomcat/webapps/oaw</deploy.path>
-				<files.path>/tmp/oaw/files</files.path>
+				<deploy.path>/var/lib/tomcat/webapps/oaw</deploy.path>
+				<files.path>/srv/files</files.path>
 			</properties>
 		</profile>
 	</profiles>

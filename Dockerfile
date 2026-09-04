@@ -2,7 +2,7 @@ FROM quay.io/rockylinux/rockylinux:9 AS build
 RUN dnf -y install maven-openjdk8 && dnf -y clean all
 COPY . /oaw
 RUN cd /oaw/oaw && \
-    mvn clean install -P desarrollo -DskipTests
+    mvn clean install -P docker -DskipTests
 
 FROM quay.io/rockylinux/rockylinux:9
 RUN dnf -y install --setopt=install_weak_deps=false tomcat java-1.8.0-openjdk-headless && \
