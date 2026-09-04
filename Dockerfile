@@ -5,6 +5,8 @@ RUN cd /oaw/oaw && \
     mvn clean install -P docker -DskipTests
 
 FROM quay.io/rockylinux/rockylinux:9
+ENV LANG=en_US.utf8 \
+    LC_ALL=en_US.utf8
 RUN dnf -y install --setopt=install_weak_deps=0 epel-release && \
     dnf -y install --setopt=install_weak_deps=0 tomcat tomcat-native java-1.8.0-openjdk-headless fontconfig && \
     alternatives --set java java-1.8.0-openjdk.x86_64 && \
