@@ -2,6 +2,13 @@
 
 A web accessibility tracker and analysis platform.
 
+## 🌿 Branches
+
+- **[`main`](https://github.com/asabatep/oaw/tree/main)** — tracks upstream's `main`, plus the minimum set of patches needed to keep it usable
+- **[`ajr-prod`](https://github.com/asabatep/oaw/tree/ajr-prod)** *(default branch)* — an opinionated Docker Compose deployment, built on updated/supported base images with a fronting nginx reverse proxy. This is what runs in our institution.
+- **[`5.7.2`](https://github.com/asabatep/oaw/tree/5.7.2)** — the legacy release branch, kept for reference.
+
+
 ## ⚡ Quick Start
 
 On a machine with Docker and Docker Compose installed, clone this repository and run:
