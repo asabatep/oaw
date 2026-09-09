@@ -495,6 +495,14 @@ CREATE TABLE `observatorio_proxy` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `observatorio_validator` (
+  `status` tinyint(1) NOT NULL,
+  `url` varchar(1024) NOT NULL,
+  `pdf_percentage` int(3) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `observatorio_range` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
@@ -563,6 +571,10 @@ CREATE TABLE `observatorio_send_historic_ranges` (
   `max_value` float(4,2) DEFAULT NULL,
   `min_value_operator` varchar(255) NOT NULL,
   `max_value_operator` varchar(255) DEFAULT NULL,
+  `min_position_value` float(4,2) DEFAULT NULL,
+  `max_position_value` float(4,2) DEFAULT NULL,
+  `min_position_value_operator` varchar(255) DEFAULT NULL,
+  `max_position_value_operator` varchar(255) DEFAULT NULL,
   `template` mediumtext NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -583,6 +595,7 @@ CREATE TABLE `observatorio_send_historic_results` (
   `send_error` varchar(255) DEFAULT NULL,
   `file_link` varchar(1024) DEFAULT NULL,
   `file_pass` varchar(64) DEFAULT NULL,
+  `mid_previous_score` float(4,2) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -596,6 +609,10 @@ CREATE TABLE `observatorio_template_range` (
   `max_value` float(4,2) DEFAULT NULL,
   `min_value_operator` varchar(255) NOT NULL,
   `max_value_operator` varchar(255) DEFAULT NULL,
+  `min_position_value` float(4,2) DEFAULT NULL,
+  `max_position_value` float(4,2) DEFAULT NULL,
+  `min_position_value_operator` varchar(255) DEFAULT NULL,
+  `max_position_value_operator` varchar(255) DEFAULT NULL,
   `template` mediumtext NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -623,6 +640,7 @@ CREATE TABLE `observatorio_ura_send_results` (
   `send_error` varchar(255) DEFAULT NULL,
   `file_link` varchar(1024) DEFAULT NULL,
   `file_pass` varchar(64) DEFAULT NULL,
+  `mid_previous_score` float(4,2) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_index` (`id_observatory_execution`,`id_ura`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
@@ -703,6 +721,8 @@ CREATE TABLE `rastreos_realizados` (
   `id_lista` bigint(20) DEFAULT NULL,
   `level` varchar(128) COLLATE utf8_bin DEFAULT NULL,
   `score` varchar(32) COLLATE utf8_bin DEFAULT NULL,
+  `score_html` varchar(32) COLLATE utf8_bin DEFAULT NULL,
+  `score_pdf` varchar(32) COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id_usuario` (`id_usuario`),
   KEY `id_rastreo` (`id_rastreo`),
@@ -854,15 +874,28 @@ CREATE TABLE `usuario_rol` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `apiKey`(
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `apiKey` varchar(300) NOT NULL,
-  `nombre` varchar(100) NOT NULL,
-  `descripcion` varchar(200),
-  `activa` tinyint (1) DEFAULT '0',
+CREATE TABLE apikey (
+  id bigint(20) NOT NULL AUTO_INCREMENT,
+  nombre varchar(100) COLLATE utf8_bin NOT NULL,
+  descripcion varchar(200) COLLATE utf8_bin DEFAULT NULL,
+  apikey varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  activa bit(1) DEFAULT b'0',
+  PRIMARY KEY (id),
+  KEY id (id)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tanalisis_accesibilidad` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_analisis` int(11) NOT NULL,
+  `url` varchar(256) DEFAULT NULL,
+  `checks_ok` int(11) DEFAULT '0',
+  `cod_fuente` mediumtext,
   PRIMARY KEY (`id`),
-  KEY `id` (`id`)
-)ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+  UNIQUE KEY `id_analisis_UNIQUE` (`id_analisis`,`url`(255))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!50001 DROP VIEW IF EXISTS `oaw_dashboard`*/;

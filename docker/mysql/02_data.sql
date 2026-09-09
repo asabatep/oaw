@@ -99,6 +99,13 @@ INSERT INTO `observatorio_proxy` VALUES (1,'proxy','18088');
 /*!40000 ALTER TABLE `observatorio_proxy` ENABLE KEYS */;
 UNLOCK TABLES;
 
+LOCK TABLES `observatorio_validator` WRITE;
+/*!40000 ALTER TABLE `observatorio_validator` DISABLE KEYS */;
+-- Set to 1 if you happen to have access to redsara:
+INSERT INTO `observatorio_validator` VALUES (0,'https://pre-validador-oaw.redsara.es/api/validation-request/tracker', 10);
+/*!40000 ALTER TABLE `observatorio_validator` ENABLE KEYS */;
+UNLOCK TABLES;
+
 LOCK TABLES `observatorio_tipo` WRITE;
 /*!40000 ALTER TABLE `observatorio_tipo` DISABLE KEYS */;
 INSERT INTO `observatorio_tipo` VALUES (1,'AGE'),(2,'CCAA'),(3,'EELL'),(4,'OTROS');
@@ -149,7 +156,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `usuario_rol` WRITE;
 /*!40000 ALTER TABLE `usuario_rol` DISABLE KEYS */;
-INSERT INTO `usuario_rol` VALUES (1,1),(2,1);
+INSERT INTO `usuario_rol` VALUES (1,1);
 /*!40000 ALTER TABLE `usuario_rol` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -185,3 +192,12 @@ UNLOCK TABLES;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+INSERT INTO tguidelines values (11, 'observatorio-une-en2019_pdf.xml');
+INSERT INTO cartucho values (11, 'es.inteco.accesibilidad.CartuchoAccesibilidad', 1 , 'UNE-EN-2019-PDF', 15, 50, 11);
+
+/*Caruchos sin comprobación de enlaces rotos*/
+insert into cartucho(nombre, instalado, aplicacion,numrastreos,numhilos,id_guideline) values ('es.inteco.accesibilidad.CartuchoAccesibilidad',1,'UNE-EN301549:2019_NO_BROKEN_LNK',15,50,12);
+insert into cartucho(nombre, instalado, aplicacion,numrastreos,numhilos,id_guideline) values ('es.inteco.accesibilidad.CartuchoAccesibilidad',1,'UNE-EN-2019-PDF_NO_BROKEN_LNK',15,50,13);
+insert into tguidelines(cod_guideline,des_guideline) values (12, 'observatorio-une-en2019-nobroken.xml');
+insert into tguidelines(cod_guideline,des_guideline) values (13, 'observatorio-une-en2019_pdf-nobroken.xml');
