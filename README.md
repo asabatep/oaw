@@ -45,7 +45,7 @@ See `docker-compose.override.sample.yml` for an example.
 The Docker containers include:
 
 - **OS:** [Rocky Linux 9](https://rockylinux.org/)
-- **Runtime:** [OpenJDK 8](https://openjdk.org/projects/jdk8/)
+- **Runtime:** [Amazon Corretto 8](https://aws.amazon.com/corretto/)
 - **Build environment:** [Maven 3](https://maven.apache.org/)
 - **Application server:** [Tomcat 9](https://tomcat.apache.org/)
 - **Database:** [MariaDB 11.4](https://mariadb.org/)
